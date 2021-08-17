@@ -41,7 +41,6 @@ const Input = ({ text, setText, handleCreate }) => {
         style={{
           width: "98%",
           background: "white",
-          marginBottom: "0.5%",
         }}
       >
         <div

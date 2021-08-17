@@ -6,8 +6,30 @@ import user from "./routes/user.js";
 import Conversation from "./models/conversation.js";
 import Rep from "./models/reply.js";
 import AddFriend from "./models/addfriend.js";
+import swaggerUi from "swagger-ui-express";
+import swaggerJSDoc from "swagger-jsdoc";
+
 const port = process.env.PORT || 3001;
 const app = express();
+
+const swaggerDefinition = {
+  openapi: "3.0.0",
+  info: {
+    title: "Express API for JSONPlaceholder",
+    version: "1.0.0",
+  },
+};
+
+const options = {
+  swaggerDefinition,
+  // Paths to files containing OpenAPI definitions
+  apis: ["./routes/*.js"],
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 //Middlewares
 app.use(express.json());
 app.use(Cors());
@@ -51,7 +73,7 @@ app.get("/chatList/:conversationId", async (req, res) => {
 });
 app.get("/replyList/:conversationId", async (req, res) => {
   const conversationId = req.params.conversationId;
-  console.log("Erhe");
+
   try {
     const data = await Rep.find({ conversationId });
     console.log(data);
@@ -64,7 +86,7 @@ app.get("/replyList/:conversationId", async (req, res) => {
 //Post Messages
 app.post("/create", (req, res) => {
   const data = req.body;
-  console.log(data);
+
   try {
     Conversation.create(data, (err, data) => {
       if (err) {
@@ -79,7 +101,7 @@ app.post("/create", (req, res) => {
 });
 app.post("/reply", (req, res) => {
   const data = req.body;
-  console.log(data);
+
   try {
     Rep.create(data, (err, data) => {
       if (err) {
@@ -127,9 +149,9 @@ app.delete("/delete/:id", async (req, res) => {
 
   try {
     const user = await Conversation.deleteOne({ _id: id }).lean();
-    console.log(user.deletedCount, "user is");
   } catch (error) {
     console.log(error);
   }
 });
+
 app.listen(port, () => console.log(`Listening on Port:${port}`));
