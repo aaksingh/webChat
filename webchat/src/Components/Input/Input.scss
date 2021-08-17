@@ -1,0 +1,28 @@
+@import "../../Styles/style.scss";
+
+.completeInput {
+  width: 100%;
+  justify-content: space-evenly;
+  position: relative;
+  .emoji {
+    top: -500%;
+    left: 0;
+    z-index: 100;
+  }
+  .inputSection {
+    border: 1px solid #e4e3e3;
+    background-color: white;
+    width: 98%;
+    #textarea {
+      width: 99%;
+      outline: none;
+      border: none;
+      background-color: transparent;
+      color: black;
+      font-weight: 500;
+      letter-spacing: 2px;
+      resize: none;
+      height: 3rem;
+    }
+  }
+}

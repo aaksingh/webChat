@@ -1,0 +1,73 @@
+.font-family {
+  font-family: "Poppins";
+}
+.fontWeight {
+  font-weight: 400;
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.font-h5 {
+  @extend .font-family;
+  font-size: 16px;
+}
+
+.font-h4 {
+  @extend .font-family;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.font-h3 {
+  @extend .font-family;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.font-h2 {
+  @extend .font-family;
+  font-size: 30px;
+}
+
+.font-h1 {
+  @extend .font-family;
+  font-size: 36px;
+}
+
+.font-700 {
+  font-weight: 700;
+}
+.font-600 {
+  font-weight: 600;
+}
+
+.adjust {
+  justify-content: center;
+  align-items: center;
+}
+
+.adspbtw {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.link {
+  color: #6bbaff;
+  cursor: pointer;
+}
+
+$signUpBorder: #e3e3e3;
+$signUpBackground: #164a41;
+$chatBackground: #40444b;
+$chatStartBackground: #f6f4f4;
+$emojiColor: #f0d182;
+$dashBoardBackground: #292b2f;
+$dashBoardBackgroundHover: #4f545c;
+$dashboardText: #dcddde;

@@ -1,0 +1,23 @@
+@import "../../Styles/style.scss";
+
+.nameProfile {
+  color: $dashboardText;
+}
+.selectChat {
+  margin: auto;
+  letter-spacing: 0.3em;
+
+  color: $dashboardText;
+  animation: App-logo-spin 0.4s linear;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: translateX(-30vh);
+    letter-spacing: 0;
+  }
+  to {
+    transform: translateX(0);
+    letter-spacing: 0.3em;
+  }
+}

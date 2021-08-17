@@ -1,0 +1,67 @@
+@import "../../Styles/style.scss";
+.message {
+  font-weight: 700;
+  color: black;
+  width: 96%;
+  position: relative;
+  align-items: flex-start;
+  .nameTime {
+    align-items: center;
+    .name {
+      font-size: 20px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+  }
+  .menulist {
+    opacity: 0;
+    background: $dashBoardBackground;
+    width: 5%;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0.09%;
+    position: absolute;
+    right: 0;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .messageSection {
+    align-items: flex-start;
+    width: 92%;
+    height: 98%;
+    margin-left: 2%;
+    &:hover {
+      background: #f0f0f0;
+      border-radius: 4px;
+    }
+    .time {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      position: absolute;
+      left: 0.25%;
+      top: 22%;
+      opacity: 0;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .replySpan {
+      color: blue;
+      cursor: pointer;
+    }
+  }
+}
+
+.show {
+  margin-top: 2rem;
+}
+
+.focus {
+  background-color: #6f96e46b;
+}
