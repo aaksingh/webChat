@@ -20,7 +20,7 @@ const Chat = ({ user, conversationId, messages, send, clear, add, detail }) => {
   const [show, setShow] = useState(false);
   const scrollRefArray = useRef();
 
-  const handleCreate = (e) => {
+  const handleCreate = async (e) => {
     e.preventDefault();
     let currentTimestamp = new Date();
 
@@ -52,9 +52,8 @@ const Chat = ({ user, conversationId, messages, send, clear, add, detail }) => {
         },
       };
       try {
-        // await create(messageData);
-        // add(messageData);
-        console.log(messageData);
+        await create(messageData);
+        add(messageData);
       } catch (err) {
         console.log(err.message, "Fail to send message");
         return;
@@ -69,14 +68,12 @@ const Chat = ({ user, conversationId, messages, send, clear, add, detail }) => {
       clear();
       let data = await chatList(conversationId);
       send(data.data);
-      console.log(data.data);
     })();
   }, [conversationId]);
 
   useEffect(() => {
     scrollRefArray.current?.scrollIntoView({ behaviour: "smooth" });
   }, [messages]);
-
   return (
     <div className="chatReply flex-row">
       <div className="chat flex-column font-family">

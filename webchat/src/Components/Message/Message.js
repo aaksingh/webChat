@@ -54,7 +54,7 @@ const Message = ({ message, handleClick, visible, detail, id }) => {
           onClick={() => (link ? window.open(message?.chat) : null)}
           className={link ? "link" : null}
         >
-          {message?.chat}
+          {message?.message.message}
         </span>
         <span className="replySpan" onClick={handleClick}>
           {num > 0 ? (num > 1 ? `${num} replies` : `${num} reply`) : null}
