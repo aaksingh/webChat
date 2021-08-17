@@ -19,18 +19,19 @@ jobs:
         node-version: [14.x, 16.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
-    - run: yarn ci
-    - run: yarn run build --if-present
-    - run: yarn test
-    
-    - name: Build and Push Docker Image on DockerHub
+        steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Packages
+        run: npm install
+
+      - name: Build
+        run: npm run build
+ 
+      - name: Build and Push Docker Image on DockerHub
         uses: docker/build-push-action@v1
         with:
           image: aak12sin/netflix_clone
