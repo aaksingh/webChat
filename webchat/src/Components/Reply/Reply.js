@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import Message from "../Message/Message";
 import Input from "../Input/Input";
 import { days, months } from "../../Constants/Array.js";
-import { replyList, replymessage } from "../../api/api";
+import { chatList, create, replyList, replymessage } from "../../api/api";
 import {
   addReply,
   clearReply,
@@ -40,16 +40,22 @@ const Reply = ({
     time.push(months[currentTimestamp.getMonth()]);
 
     if (text) {
-      let replyMessage = {
-        chat: text,
-        senderId: localStorage.getItem("userId"),
-        conversationId: message._id,
-        receiverId: user,
+      let messageData = {
         time: time,
+        senderId: localStorage.getItem("userId"),
+        receiverId: user,
+        conversationId: message._id,
+        message: {
+          message: text,
+          referenceId: message._id,
+          read: false,
+          authorId: localStorage.getItem("userId"),
+          attachments: [],
+        },
       };
       try {
-        await replymessage(replyMessage);
-        addreply(replyMessage);
+        await create(messageData);
+        addreply(messageData);
       } catch (err) {
         console.log(err.message, "Fail to send message");
         return;
@@ -62,8 +68,8 @@ const Reply = ({
   useEffect(() => {
     (async () => {
       clear();
-      let data = await replyList(message._id);
-
+      let data = await chatList(message._id);
+      console.log(data);
       sendreply(data.data);
     })();
   }, [message._id]);
