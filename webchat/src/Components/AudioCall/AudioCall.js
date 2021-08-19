@@ -46,6 +46,7 @@ export default function CustomizedDialogs() {
       <DialogContent dividers>
         <div className="userdetails flex-column">
           <Avatar
+            src="https://thumbs.dreamstime.com/b/portrait-lion-black-detail-face-lion-hight-quality-portrait-lion-portrait-animal-portrait-lion-black-detail-145612151.jpg"
             style={{ width: "20rem", height: "20rem", borderRadius: "2rem" }}
           />
           <span className="font-h2">Aakash Singh</span>

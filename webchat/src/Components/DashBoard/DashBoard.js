@@ -12,8 +12,9 @@ import UserAvatar from "../Avatar/Avatar";
 import { userDetail } from "../../Redux/actions/friendDetails";
 import CButton from "../Button/CButton";
 import Wait from "../Wait/Wait";
+import { showProfile } from "../../Redux/actions/profileActions";
 
-const DashBoard = ({ userName, onClick, send, users, details }) => {
+const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
   const [id, setId] = useState(null);
   const [conversationId, setConversationId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -43,6 +44,9 @@ const DashBoard = ({ userName, onClick, send, users, details }) => {
       }
     }
   };
+  function handleClick() {
+    profile(true);
+  }
 
   return (
     <>
@@ -52,7 +56,7 @@ const DashBoard = ({ userName, onClick, send, users, details }) => {
         <>
           <div className="dashboard flex-column font-family">
             <div className="logo flex-row">WebChat</div>
-            <UserInfo detail={userName} />
+            <UserInfo detail={userName} onClick={handleClick} />
             <Welcome />
             <div className="dm adspbtw font-h2 font-600">{String.CHAT}</div>
             <div className="userList flex-column">
@@ -93,6 +97,7 @@ const DashBoard = ({ userName, onClick, send, users, details }) => {
 const mapStateToProps = (state) => {
   const { users } = state.users;
 
+  console.log(state);
   return {
     users: users[0],
   };
@@ -105,6 +110,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     details: (data) => {
       dispatch(userDetail(data));
+    },
+    profile: (data) => {
+      dispatch(showProfile(data));
     },
   };
 };

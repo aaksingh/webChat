@@ -1,56 +1,70 @@
-import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import MuiDialogContent from "@material-ui/core/DialogContent";
-import MuiDialogActions from "@material-ui/core/DialogActions";
-import Typography from "@material-ui/core/Typography";
 import WDialog from "../Dialog/Dialog";
+import "./Welcome.scss";
+import ClearTwoToneIcon from "@material-ui/icons/ClearTwoTone";
+import EditTwoToneIcon from "@material-ui/icons/EditTwoTone";
+import MoodRoundedIcon from "@material-ui/icons/MoodRounded";
+import MoreHorizTwoToneIcon from "@material-ui/icons/MoreHorizTwoTone";
 import { Avatar } from "@material-ui/core";
+import { connect } from "react-redux";
+import { showProfile } from "../../Redux/actions/profileActions";
+import { useState } from "react";
 
-const styles = (theme) => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(2),
-  },
-  closeButton: {
-    position: "absolute",
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500],
-  },
-});
-
-const DialogContent = withStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-}))(MuiDialogContent);
-
-const DialogActions = withStyles((theme) => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(1),
-  },
-}))(MuiDialogActions);
-
-export default function Welcome() {
-  const [open, setOpen] = React.useState(false);
-
+function Welcome({ show, profile }) {
   const handleClose = () => {
-    setOpen(false);
+    profile(false);
   };
 
+  const [set, setSet] = useState(false);
+
   return (
-    <WDialog>
-      <DialogContent dividers>
-        <div className="userdetails flex-column">
-          <Avatar
-            style={{ width: "20rem", height: "20rem", borderRadius: "2rem" }}
-          />
-          <span className="font-h2">Aakash Singh</span>
+    <WDialog full={set} show={show}>
+      <div className={"profile flex-column adjust" + (set ? " flexSet" : "")}>
+        {/* <ClearTwoToneIcon className="cancel" onClick={handleClose} /> */}
+        <Avatar
+          alt="Aakash Singh"
+          src="https://thumbs.dreamstime.com/b/portrait-lion-black-detail-face-lion-hight-quality-portrait-lion-portrait-animal-portrait-lion-black-detail-145612151.jpg"
+        />
+        <div>{localStorage.getItem("userName")}</div>
+        <div className="status font-700">
+          Life Shrinks, or expand in proportion to one's courage
         </div>
-      </DialogContent>
-      <DialogActions></DialogActions>
+        <ProfileOptions onClick={() => setSet(!set)} />
+      </div>
     </WDialog>
   );
 }
+
+function ProfileOptions({ onClick }) {
+  return (
+    <div className="profileOptions flex-row">
+      <div className="icon-1 flex-column adjust font-700">
+        <MoodRoundedIcon onClick={onClick} />
+        Set Status
+      </div>
+      <div className="icon-2 flex-column adjust font-700">
+        <EditTwoToneIcon onClick={onClick} />
+        Edit Profile
+      </div>
+      <div className="icon-3 flex-column adjust font-700">
+        <MoreHorizTwoToneIcon onClick={onClick} />
+        More
+      </div>
+    </div>
+  );
+}
+const mapStateToProps = (state) => {
+  const { show } = state.showProfile;
+  console.log(show);
+  return {
+    show: show,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    profile: (data) => {
+      dispatch(showProfile(data));
+    },
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Welcome);

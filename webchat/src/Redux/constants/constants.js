@@ -10,3 +10,4 @@ export const ADD_REPLY = "ADD_REPLY";
 export const LOAD_REPLY = "LOAD_REPLY";
 
 export const USER_DETAIL = "USER_DETAILS";
+export const SHOW_PROFILE = "SHOW_PROFILE";

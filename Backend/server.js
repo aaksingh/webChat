@@ -6,29 +6,9 @@ import user from "./routes/user.js";
 import Conversation from "./models/conversation.js";
 import Rep from "./models/reply.js";
 import AddFriend from "./models/addfriend.js";
-import swaggerUi from "swagger-ui-express";
-import swaggerJSDoc from "swagger-jsdoc";
 
 const port = process.env.PORT || 3001;
 const app = express();
-
-const swaggerDefinition = {
-  openapi: "3.0.0",
-  info: {
-    title: "Express API for JSONPlaceholder",
-    version: "1.0.0",
-  },
-};
-
-const options = {
-  swaggerDefinition,
-  // Paths to files containing OpenAPI definitions
-  apis: ["./routes/*.js"],
-};
-
-const swaggerSpec = swaggerJSDoc(options);
-
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //Middlewares
 app.use(express.json());

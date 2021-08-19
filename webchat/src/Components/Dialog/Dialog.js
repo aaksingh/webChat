@@ -8,6 +8,11 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     height: "none",
   },
+  profileDialog: {
+    position: "relative",
+    height: "none",
+    height: "30rem",
+  },
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -20,9 +25,9 @@ const WDialog = (props) => {
     <div>
       <Dialog
         maxWidth="lg"
-        open={false}
+        open={props.show}
         TransitionComponent={Transition}
-        className={classes.dialog}
+        className={props.full ? classes.dialog : classes.profileDialog}
       >
         {props.children}
       </Dialog>
