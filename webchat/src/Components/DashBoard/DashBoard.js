@@ -13,11 +13,14 @@ import { userDetail } from "../../Redux/actions/friendDetails";
 import CButton from "../Button/CButton";
 import Wait from "../Wait/Wait";
 import { showProfile } from "../../Redux/actions/profileActions";
+import { io } from "socket.io-client";
 
 const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
   const [id, setId] = useState(null);
+  const [socket, setSocket] = useState();
   const [conversationId, setConversationId] = useState(null);
   const [loading, setLoading] = useState(false);
+
   useEffect(async () => {
     (async () => {
       try {
@@ -31,6 +34,22 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:3002", {
+      transports: ["websocket"],
+    });
+    setSocket(newSocket);
+    return () => newSocket.close();
+  }, []);
+
+  useEffect(() => {
+    socket?.emit("message", localStorage.getItem("userId"));
+
+    socket?.on("Online", (mess) => {
+      console.log(mess, "is online");
+    });
+  }, [socket]);
 
   const handleChat = async (j) => {
     const data = await friendlist(localStorage.getItem("userId"));
@@ -81,12 +100,17 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
                 );
               })}
             </div>
+            <div className="dm adspbtw font-h2 font-600">Groups</div>
+            <div>--None--</div>
             <CButton title="Logout" disabled={false} onClick={onClick} />
           </div>
           {conversationId ? (
-            <Chat user={id} conversationId={conversationId} />
+            <Chat user={id} conversationId={conversationId} socket={socket} />
           ) : (
-            <Connected />
+            <>
+              <Connected />
+              {/* <CreateGroup /> */}
+            </>
           )}
         </>
       )}
@@ -97,7 +121,6 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
 const mapStateToProps = (state) => {
   const { users } = state.users;
 
-  console.log(state);
   return {
     users: users[0],
   };

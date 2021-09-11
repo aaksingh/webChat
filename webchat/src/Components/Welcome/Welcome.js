@@ -54,7 +54,6 @@ function ProfileOptions({ onClick }) {
 }
 const mapStateToProps = (state) => {
   const { show } = state.showProfile;
-  console.log(show);
   return {
     show: show,
   };

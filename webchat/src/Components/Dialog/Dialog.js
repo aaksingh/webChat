@@ -27,7 +27,8 @@ const WDialog = (props) => {
         maxWidth="lg"
         open={props.show}
         TransitionComponent={Transition}
-        className={props.full ? classes.dialog : classes.profileDialog}
+        // className={props.full ? classes.dialog : classes.profileDialog}
+        className={classes.dialog}
       >
         {props.children}
       </Dialog>

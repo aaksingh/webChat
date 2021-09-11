@@ -1,9 +1,12 @@
 const io = require("socket.io")(3002);
 
-io.on("connection", (socket) => {
-  socket.emit("chat-message", "Online");
+var id = [];
 
-  socket.on("id", (data) => {
-    socket.emit("userId", data);
+io.on("connection", (socket) => {
+  socket.on("message", (data) => {
+    id = [...id, data];
+    console.log(id);
+
+    socket.broadcast.emit("Online", id);
   });
 });

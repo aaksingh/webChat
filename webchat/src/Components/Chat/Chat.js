@@ -14,12 +14,27 @@ import {
 } from "../../Redux/actions/messageActions";
 import Reply from "../Reply/Reply";
 
-const Chat = ({ user, conversationId, messages, send, clear, add, detail }) => {
+const Chat = ({
+  user,
+  conversationId,
+  messages,
+  send,
+  clear,
+  add,
+  detail,
+  socket,
+}) => {
   const [text, setText] = useState("");
   const [repMessage, setRepMessage] = useState("");
   const [show, setShow] = useState(false);
   const scrollRefArray = useRef();
 
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    console.log("gere");
+    socket?.emit("message", message);
+  }, [socket, setMessage, message]);
   const handleCreate = async (e) => {
     e.preventDefault();
     let currentTimestamp = new Date();
@@ -53,6 +68,7 @@ const Chat = ({ user, conversationId, messages, send, clear, add, detail }) => {
       };
       try {
         await create(messageData);
+        setMessage(messageData);
         add(messageData);
       } catch (err) {
         console.log(err.message, "Fail to send message");
@@ -108,7 +124,11 @@ const Chat = ({ user, conversationId, messages, send, clear, add, detail }) => {
             })}
           </div>
           <div className="chatInput flex-row adjust">
-            <Input {...{ text, setText }} handleCreate={handleCreate} />
+            <Input
+              {...{ text, setText }}
+              handleCreate={handleCreate}
+              variant="Message"
+            />
           </div>
         </div>
       </div>

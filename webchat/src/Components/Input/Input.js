@@ -6,7 +6,8 @@ import EmojiEmotionsRoundedIcon from "@material-ui/icons/EmojiEmotionsRounded";
 import CButton from "../Button/CButton";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 
-const Input = ({ text, setText, handleCreate }) => {
+const Input = ({ text, setText, handleCreate, variant }) => {
+  // variant = Message or Group
   const [show, setShow] = useState(false);
 
   const onEmojiClick = (event, emojiObject) => {
@@ -26,7 +27,9 @@ const Input = ({ text, setText, handleCreate }) => {
       )}
       <div className="inputSection flex-row adjust">
         <input
-          placeholder="Type your message..."
+          placeholder={
+            variant === "Message" ? "Type your message..." : "Enter Group Name"
+          }
           id="textarea"
           className="font-h5"
           value={text}
@@ -49,19 +52,23 @@ const Input = ({ text, setText, handleCreate }) => {
           }}
           className="flex-row adspbtw"
         >
-          <MicRoundedIcon />
+          {variant === "Message" ? <MicRoundedIcon /> : null}
 
           <EmojiEmotionsRoundedIcon
             onClick={() => setShow(!show)}
             style={{ cursor: "pointer" }}
           />
-          <AttachFileRoundedIcon />
+          {variant === "Message" ? <AttachFileRoundedIcon /> : null}
         </div>
-        <CButton
-          title="Send"
-          disabled={false}
-          onClick={(e) => handleCreate(e)}
-        />
+        {variant === "Message" ? (
+          <CButton
+            title="Send"
+            disabled={false}
+            onClick={(e) => handleCreate(e)}
+          />
+        ) : (
+          <CButton title="Create" disabled={true} onClick={null} />
+        )}
       </div>
     </div>
   );

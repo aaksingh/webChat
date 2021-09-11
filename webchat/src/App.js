@@ -1,35 +1,24 @@
-import DashBoard from "./Components/DashBoard/DashBoard.js";
 import { signIn, signUp } from "./api/api";
 import { useEffect, useState } from "react";
-// import SignUp from "./Components/SignUp/aa.tsx";
-// import { io } from "socket.io-client";
-
-import Login from "./Components/SignUp/Login.js";
-// import Login from "./Components/SignUp/Login.js";
-
-import React from "react";
+import { io } from "socket.io-client";
+import loadable from "@loadable/component";
+const Login = loadable(() => import("./Components/SignUp/Login.js"), {
+  fallback: <></>,
+});
+const DashBoard = loadable(
+  () => import("./Components/DashBoard/DashBoard.js"),
+  {
+    fallback: <></>,
+  }
+);
 
 const App = () => {
-  const [socket, setSocket] = React.useState();
-  const [id, setID] = React.useState();
+  const [socket, setSocket] = useState();
+  const [id, setID] = useState();
   const [login, setlogin] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setpassword] = useState("");
   const [passwordConfirm, setpasswordConfirm] = useState("");
-  // useEffect(() => {
-  //   const newSocket = io("http://localhost:3002", {
-  //     transports: ["websocket"],
-  //   });
-
-  //   setSocket(newSocket);
-  //   return () => newSocket.close();
-  // }, []);
-
-  // useEffect(() => {
-  //   socket?.on("chat-message", (message) => {
-  //     console.log(message, "here in useEffect socket");
-  //   });
-  // }, [socket]);
 
   useEffect(() => {
     if (localStorage.getItem("Login") === "true") {
@@ -39,27 +28,8 @@ const App = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   socket?.on("chat-message", (message) => {
-  //     console.log(message, "here in useEffect socket");
-  //   });
-
-  //   socket?.emit("id", {
-  //     id: localStorage.getItem("userId"),
-  //   });
-
-  //   socket?.on("userId", (data) => {
-  //     setID(data.id);
-  //   });
-  // }, [socket]);
-
   const handleClick = async (e, i) => {
     e.preventDefault();
-
-    if (password === "" || username === "") {
-      alert("Enter Valid Credentials");
-      return;
-    }
 
     if (i === 0) {
       await signUp({
@@ -114,3 +84,16 @@ const App = () => {
 };
 
 export default App;
+// useEffect(() => {
+//   socket?.on("chat-message", (message) => {
+//     console.log(message, "here in useEffect socket");
+//   });
+
+//   socket?.emit("id", {
+//     id: localStorage.getItem("userId"),
+//   });
+
+//   socket?.on("userId", (data) => {
+//     setID(data.id);
+//   });
+// }, [socket]);

@@ -108,7 +108,11 @@ const Reply = ({
         })}
       </div>
       <div className="replyInput">
-        <Input {...{ text, setText }} handleCreate={handleCreate} />
+        <Input
+          {...{ text, setText }}
+          handleCreate={handleCreate}
+          variant="Message"
+        />
       </div>
     </div>
   );
