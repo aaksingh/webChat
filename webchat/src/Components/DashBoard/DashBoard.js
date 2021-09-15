@@ -20,7 +20,7 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
   const [socket, setSocket] = useState();
   const [conversationId, setConversationId] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [active, setActive] = useState(null);
   useEffect(async () => {
     (async () => {
       try {
@@ -38,17 +38,23 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
   useEffect(() => {
     const newSocket = io("http://localhost:3002", {
       transports: ["websocket"],
+      autoConnect: false,
     });
+    newSocket.connect();
     setSocket(newSocket);
     return () => newSocket.close();
   }, []);
 
   useEffect(() => {
-    socket?.emit("message", localStorage.getItem("userId"));
-
+    socket?.emit("uniqueId", localStorage.getItem("userId"));
     socket?.on("Online", (mess) => {
-      console.log(mess, "is online");
+      console.log(mess);
+      setActive(mess);
     });
+
+    // socket?.on("privatemessage", ({ content, from }) => {
+    //   console.log(content, from, "dfgv");
+    // });
   }, [socket]);
 
   const handleChat = async (j) => {
@@ -64,7 +70,8 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
     }
   };
   function handleClick() {
-    profile(true);
+    socket?.emit("dct", localStorage.getItem("userId"));
+    onClick();
   }
 
   return (
@@ -77,6 +84,7 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
             <div className="logo flex-row">WebChat</div>
             <UserInfo detail={userName} onClick={handleClick} />
             <Welcome />
+
             <div className="dm adspbtw font-h2 font-600">{String.CHAT}</div>
             <div className="userList flex-column">
               {users?.map((user, i) => {
@@ -95,6 +103,9 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
                           {user.username}
                         </div>
                       </div>
+                      {active?.includes(user?._id) && (
+                        <div className="onLineTag"></div>
+                      )}
                     </div>
                   )
                 );
@@ -102,7 +113,7 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
             </div>
             <div className="dm adspbtw font-h2 font-600">Groups</div>
             <div>--None--</div>
-            <CButton title="Logout" disabled={false} onClick={onClick} />
+            <CButton title="Logout" disabled={false} onClick={handleClick} />
           </div>
           {conversationId ? (
             <Chat user={id} conversationId={conversationId} socket={socket} />

@@ -32,11 +32,20 @@ const Chat = ({
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    console.log("gere");
-    socket?.emit("message", message);
-  }, [socket, setMessage, message]);
+    socket.on("privatemessage", (data) => {
+      console.log(data);
+    });
+  }, [socket]);
+
   const handleCreate = async (e) => {
     e.preventDefault();
+
+    socket.emit("private message", {
+      content: text,
+      to: user,
+      from: localStorage.getItem("userId"),
+    });
+
     let currentTimestamp = new Date();
 
     const dateDetails = new Intl.DateTimeFormat("en-US", {
