@@ -31,19 +31,13 @@ const Chat = ({
 
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    socket.on("privatemessage", (data) => {
-      console.log(data);
-    });
-  }, [socket]);
-
   const handleCreate = async (e) => {
     e.preventDefault();
 
-    socket.emit("private message", {
-      content: text,
-      to: user,
-      from: localStorage.getItem("userId"),
+    socket.current.emit("sendmessage", {
+      senderId: localStorage.getItem("userId"),
+      receiverId: user,
+      text: text,
     });
 
     let currentTimestamp = new Date();
@@ -76,7 +70,7 @@ const Chat = ({
         },
       };
       try {
-        await create(messageData);
+        // await create(messageData);
         setMessage(messageData);
         add(messageData);
       } catch (err) {

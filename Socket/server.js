@@ -4,29 +4,44 @@ const io = require("socket.io")(3002, {
   },
 });
 
-var id = [];
+let id = [];
+
+const addUser = (userId, socketId) => {
+  !id.some((id) => id.userId === userId) && id.push({ userId, socketId });
+};
+
+const removeUser = (socketId) => {
+  id = id.filter((id) => id.socketId !== socketId);
+};
+
+const getUser = (receiverId) => {
+  return id.find((id) => id.userId === receiverId);
+};
 
 io.on("connection", (socket) => {
-  socket.on("uniqueId", (data) => {
-    if (!id.includes(data)) {
-      id = [...id, data];
-    }
-    socket.broadcast.emit("Online", id);
+  //When Socket Connects
+
+  console.log("A user Connected");
+  socket.on("addUser", (userId) => {
+    addUser(userId, socket.id);
+    io.emit("getUsers", id);
   });
+  //send and get message
 
-  socket?.on("dct", (data) => {
-    id = id.filter((id) => data !== id);
+  console.log(id);
+  socket.on("sendmessage", ({ senderId, receiverId, text }) => {
+    const user = getUser(receiverId);
 
-    socket.disconnect();
-    socket.broadcast.emit("Online", id);
-    console.log(id);
-  });
-
-  socket.on("private message", ({ content, to, from }) => {
-    console.log(to, from);
-    socket.to(to).emit("privatemessage", {
-      content,
-      from,
+    io.to(user.socketId).emit("getMessage", {
+      senderId,
+      text,
     });
+  });
+
+  //When Socket Disconnects
+  socket.on("disconnect", () => {
+    console.log("a user disconnected");
+    removeUser(socket.id);
+    io.emit("getUsers", id);
   });
 });

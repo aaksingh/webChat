@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import UserInfo from "../UserInfo/UserInfo";
 import "./DashBoard.scss";
 import { userDetails, addFriends, friendlist } from "../../api/api";
@@ -17,10 +17,11 @@ import { io } from "socket.io-client";
 
 const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
   const [id, setId] = useState(null);
-  const [socket, setSocket] = useState();
+
   const [conversationId, setConversationId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [active, setActive] = useState(null);
+  const socket = useRef();
   useEffect(async () => {
     (async () => {
       try {
@@ -36,26 +37,24 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
   }, []);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:3002", {
-      transports: ["websocket"],
-      autoConnect: false,
-    });
-    newSocket.connect();
-    setSocket(newSocket);
-    return () => newSocket.close();
+    socket.current = io("ws://localhost:3002");
   }, []);
 
   useEffect(() => {
-    socket?.emit("uniqueId", localStorage.getItem("userId"));
-    socket?.on("Online", (mess) => {
-      console.log(mess);
-      setActive(mess);
-    });
+    socket.current.emit("addUser", localStorage.getItem("userId"));
+  }, [localStorage.getItem("userId")]);
 
-    // socket?.on("privatemessage", ({ content, from }) => {
-    //   console.log(content, from, "dfgv");
-    // });
+  useEffect(() => {
+    socket.current.on("getUsers", (data) => {
+      console.log(data);
+    });
   }, [socket]);
+
+  useEffect(() => {
+    socket.current.on("getMessage", (data) => {
+      console.log(data);
+    });
+  }, []);
 
   const handleChat = async (j) => {
     const data = await friendlist(localStorage.getItem("userId"));
@@ -70,7 +69,6 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
     }
   };
   function handleClick() {
-    socket?.emit("dct", localStorage.getItem("userId"));
     onClick();
   }
 
