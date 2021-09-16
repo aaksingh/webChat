@@ -5,6 +5,7 @@ import { messageList } from "./Redux/reducers/messageReducer";
 import { myReply } from "./Redux/reducers/replyReducer.js";
 import { detailsReducer } from "./Redux/reducers/friendDetailsReducer.js";
 import { showProfileReducer } from "./Redux/reducers/profileReducer.js";
+import { showOnlineUsers } from "./Redux/reducers/socketReducer.js";
 
 const reducer = combineReducers({
   users: usersList,
@@ -12,6 +13,7 @@ const reducer = combineReducers({
   reply: myReply,
   friendDetails: detailsReducer,
   showProfile: showProfileReducer,
+  showOnlineUsers: showOnlineUsers,
 });
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

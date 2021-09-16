@@ -23,6 +23,7 @@ const Chat = ({
   add,
   detail,
   socket,
+  check,
 }) => {
   const [text, setText] = useState("");
   const [repMessage, setRepMessage] = useState("");
@@ -33,12 +34,6 @@ const Chat = ({
 
   const handleCreate = async (e) => {
     e.preventDefault();
-
-    socket.current.emit("sendmessage", {
-      senderId: localStorage.getItem("userId"),
-      receiverId: user,
-      text: text,
-    });
 
     let currentTimestamp = new Date();
 
@@ -70,9 +65,16 @@ const Chat = ({
         },
       };
       try {
-        // await create(messageData);
+        await create(messageData);
         setMessage(messageData);
         add(messageData);
+        if (check.some((check) => check.userId === user)) {
+          socket.current.emit("sendmessage", {
+            senderId: localStorage.getItem("userId"),
+            receiverId: user,
+            text: text,
+          });
+        }
       } catch (err) {
         console.log(err.message, "Fail to send message");
         return;
@@ -169,25 +171,3 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);
-
-// onClick={m.referenceId ? () => showDiv(m?.referenceId) : null}
-
-// function addToRefs(el) {
-//   console.log(el);
-//   if (el) {
-//     scrollRefArray.current.push(el);
-//   }
-// }
-
-// function showDiv(id) {
-// for (let j = 0; j < messages.length; j++) {
-//   if (messages[j]?._id === id) {
-//     setfocus(j);
-//     scrollRefArray.current[j]?.scrollIntoView({
-//       behaviour: "smooth",
-//       block: "start",
-//     });
-//     return;
-//   }
-// }
-// }

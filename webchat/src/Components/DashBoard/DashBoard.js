@@ -14,6 +14,7 @@ import CButton from "../Button/CButton";
 import Wait from "../Wait/Wait";
 import { showProfile } from "../../Redux/actions/profileActions";
 import { io } from "socket.io-client";
+import { loadOnlineUsers } from "../../Redux/actions/socketActions";
 
 const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
   const [id, setId] = useState(null);
@@ -21,6 +22,7 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
   const [conversationId, setConversationId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [active, setActive] = useState(null);
+  const [checking, setChecking] = useState();
   const socket = useRef();
   useEffect(async () => {
     (async () => {
@@ -46,7 +48,8 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
 
   useEffect(() => {
     socket.current.on("getUsers", (data) => {
-      console.log(data);
+      console.log(data, "direct users");
+      setChecking(data);
     });
   }, [socket]);
 
@@ -101,9 +104,9 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
                           {user.username}
                         </div>
                       </div>
-                      {active?.includes(user?._id) && (
-                        <div className="onLineTag"></div>
-                      )}
+                      {checking?.some(
+                        (check) => check.userId === user?._id
+                      ) && <div className="onLineTag"></div>}
                     </div>
                   )
                 );
@@ -114,7 +117,12 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
             <CButton title="Logout" disabled={false} onClick={handleClick} />
           </div>
           {conversationId ? (
-            <Chat user={id} conversationId={conversationId} socket={socket} />
+            <Chat
+              user={id}
+              conversationId={conversationId}
+              socket={socket}
+              check={checking}
+            />
           ) : (
             <>
               <Connected />
@@ -129,9 +137,11 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
 
 const mapStateToProps = (state) => {
   const { users } = state.users;
+  const { showOnlineUsers } = state.showOnlineUsers;
 
   return {
     users: users[0],
+    showOnlineUsers: showOnlineUsers,
   };
 };
 
@@ -146,26 +156,10 @@ const mapDispatchToProps = (dispatch) => {
     profile: (data) => {
       dispatch(showProfile(data));
     },
+    onlineUsers: (data) => {
+      dispatch(loadOnlineUsers(data));
+    },
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashBoard);
-
-// const addFriend = async (i, id) => {
-//   const data = await addFriends({
-//     userId: localStorage.getItem("userId"),
-//     friendId: id,
-//   });
-//   console.log(data);
-// };
-{
-  /* <CButton title="Logout" disabled={false} onClick={onClick} /> */
-}
-
-// {['All mail', 'Trash', 'Spam'].map((text, index) => (
-//   <ListItem button key={text}>
-//     <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-//     <ListItemText primary={text} />
-//   </ListItem>
-// ))}
-// </List>

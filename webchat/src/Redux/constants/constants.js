@@ -11,3 +11,4 @@ export const LOAD_REPLY = "LOAD_REPLY";
 
 export const USER_DETAIL = "USER_DETAILS";
 export const SHOW_PROFILE = "SHOW_PROFILE";
+export const UPDATE_USER = "Update User";
