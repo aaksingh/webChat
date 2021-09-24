@@ -5,32 +5,36 @@ import ChatHeader from "../ChatHeader/ChatHeader";
 import { create, chatList } from "../../api/api";
 import Message from "../Message/Message";
 import Input from "../Input/Input";
-import { connect } from "react-redux";
 import { days, months } from "../../Constants/Array.js";
+import { useSelector, useDispatch } from "react-redux";
 import {
   clearMessages,
   loadMeesages,
   addMessage,
 } from "../../Redux/actions/messageActions";
-import Reply from "../Reply/Reply";
+const Chat = ({ user, conversationId, socket, check }) => {
+  const dispatch = useDispatch();
 
-const Chat = ({
-  user,
-  conversationId,
-  messages,
-  send,
-  clear,
-  add,
-  detail,
-  socket,
-  check,
-}) => {
+  useEffect(() => {
+    (async () => {
+      dispatch(clearMessages());
+
+      let data = await chatList(conversationId);
+
+      dispatch(loadMeesages(data.data));
+    })();
+  }, [conversationId]);
+
+  const { messages } = useSelector((state) => state.messages);
+  const { detail } = useSelector((state) => state.friendDetails);
+
+  const [mess, setMess] = useState([]);
+  useEffect(() => {
+    setMess(messages[0]);
+  }, [messages, socket]);
+
   const [text, setText] = useState("");
-  const [repMessage, setRepMessage] = useState("");
-  const [show, setShow] = useState(false);
   const scrollRefArray = useRef();
-
-  const [message, setMessage] = useState("");
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -66,13 +70,20 @@ const Chat = ({
       };
       try {
         await create(messageData);
-        setMessage(messageData);
-        add(messageData);
-        if (check.some((check) => check.userId === user)) {
+
+        dispatch(addMessage(messageData));
+        if (check?.some((check) => check.userId === user)) {
           socket.current.emit("sendmessage", {
+            time: time,
             senderId: localStorage.getItem("userId"),
             receiverId: user,
-            text: text,
+            conversationId: conversationId,
+
+            message: text,
+            referenceId: null,
+            read: false,
+            authorId: localStorage.getItem("userId"),
+            attachments: [],
           });
         }
       } catch (err) {
@@ -85,16 +96,8 @@ const Chat = ({
   };
 
   useEffect(() => {
-    (async () => {
-      clear();
-      let data = await chatList(conversationId);
-      send(data.data);
-    })();
-  }, [conversationId]);
-
-  useEffect(() => {
     scrollRefArray.current?.scrollIntoView({ behaviour: "smooth" });
-  }, [messages]);
+  }, [mess, messages]);
   return (
     <div className="chatReply flex-row">
       <div className="chat flex-column font-family">
@@ -103,25 +106,22 @@ const Chat = ({
         </div>
         <div className="chatSection flex-column">
           <div className="chatStart flex-column">
-            {messages?.map((m, i) => {
+            {mess?.map((m, i) => {
               return (
                 <div className="messageSpan flex-column" ref={scrollRefArray}>
                   <Message
                     visible={
-                      !(
-                        i > 0 &&
-                        messages[i - 1]?.senderId === messages[i]?.senderId
-                      )
+                      !(i > 0 && mess[i - 1]?.senderId === mess[i]?.senderId)
                     }
                     userName={detail}
                     conId={conversationId}
-                    id={m?._id}
+                    // id={m?._id}
                     i={i}
                     message={m}
-                    handleClick={() => {
-                      setShow(true);
-                      setRepMessage(m);
-                    }}
+                    // handleClick={() => {
+                    // setShow(true);
+                    // setRepMessage(m);
+                    // }}
                     id={1}
                   />
                 </div>
@@ -137,37 +137,65 @@ const Chat = ({
           </div>
         </div>
       </div>
-      {show && (
-        <Reply message={repMessage} {...{ show, setShow }} user={user} />
-      )}
     </div>
   );
 };
 
-const mapStateToProps = (state) => {
-  const { messages } = state.messages;
+export default Chat;
+/* {show && (
+  <Reply message={repMessage} {...{ show, setShow }} user={user} />
+  )} */
 
-  const { friendDetail } = state.friendDetails;
+// import Reply from "../Reply/Reply";
+// import WDialog from "../Dialog/Dialog";
+// import { ReactComponent as ShareScreen } from "../../Assets/ShareScreen.svg";
 
-  return {
-    messages: messages[0],
+// const [repMessage, setRepMessage] = useState("");
+// const [show, setShow] = useState(false);
 
-    detail: friendDetail,
-  };
-};
+//Video call code
+// const [stream, setStream] = useState(null);
+// const [screen, setScreen] = useState(null);
+// const myVideo = useRef();
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    add: (data) => {
-      dispatch(addMessage(data));
-    },
-    clear: () => {
-      dispatch(clearMessages());
-    },
-    send: (data) => {
-      dispatch(loadMeesages(data));
-    },
-  };
-};
+// const videoCall = () => {
+//   navigator.mediaDevices
+//     .getUserMedia({ video: true, audio: true })
+//     .then((currentStream) => {
+//       setStream(currentStream);
+//       myVideo.current.srcObject = currentStream;
+//     })
+//     .catch((err) => console.log(err));
+// };
+// useEffect(() => {
+//   videoCall();
+// }, []);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Chat);
+// const screenShare = () => {
+//   navigator.mediaDevices
+//     .getDisplayMedia({ video: true })
+//     .then((currentStream) => {
+//       setStream(currentStream);
+//       myVideo.current.srcObject = currentStream;
+//     })
+//     .catch((err) => console.log(err));
+// };
+
+//Video call code ends here
+
+{
+  /* <WDialog show={true}> 118
+              <div className="video">
+              <video
+              playsInline
+              muted
+              ref={myVideo}
+              autoPlay
+              className="videoCont"
+              />
+              <button className="videoButton" onClick={screenShare}>
+              <ShareScreen />
+              </button>
+              </div>
+            </WDialog> */
+}

@@ -72,6 +72,7 @@ const App = () => {
       ) : (
         <>
           <DashBoard
+            socket={socket}
             onClick={logout}
             userName={localStorage.getItem("userName")}
           />

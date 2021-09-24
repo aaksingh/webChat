@@ -24,18 +24,52 @@ io.on("connection", (socket) => {
   console.log("A user Connected");
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
+
     io.emit("getUsers", id);
   });
   //send and get message
 
-  console.log(id);
-  socket.on("sendmessage", ({ senderId, receiverId, text }) => {
-    const user = getUser(receiverId);
-
-    io.to(user.socketId).emit("getMessage", {
+  socket.on(
+    "sendmessage",
+    ({
+      time,
       senderId,
-      text,
+      receiverId,
+      conversationId,
+      message,
+      referenceId,
+      read,
+      authorId,
+      attachments,
+    }) => {
+      const user = getUser(receiverId);
+
+      io.to(user.socketId).emit("getMessage", {
+        time,
+        senderId,
+        receiverId,
+        conversationId,
+        message,
+        referenceId,
+        read,
+        authorId,
+        attachments,
+      });
+    }
+  );
+
+  //calling user
+
+  socket.on("calluser", ({ userToCall, signalData, from, name }) => {
+    io.to(userToCall).emit("calluser", {
+      signal: signalData,
+      from: from,
+      name: name,
     });
+  });
+
+  socket.on("answerCall", (data) => {
+    io.to(data.to).emit("callaccepted", data.signal);
   });
 
   //When Socket Disconnects

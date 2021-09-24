@@ -7,7 +7,6 @@ export const login = async (req, res) => {
   const { username, password } = req.body;
 
   const user = await User.findOne({ username }).lean();
-  console.log(user, "user is");
   if (user === null) {
     return res.json({ status: "error", error: "Invalid" });
   }

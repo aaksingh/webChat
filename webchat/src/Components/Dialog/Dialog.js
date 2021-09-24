@@ -5,13 +5,16 @@ import "./Dialog.scss";
 import Slide from "@material-ui/core/Slide";
 const useStyles = makeStyles((theme) => ({
   dialog: {
+    // display: "flex",
+    // flexDirection: "column",
+    // alignItems: "center",
+    // justifyContent: "center",
     position: "relative",
-    height: "none",
+    width: "100%",
   },
   profileDialog: {
     position: "relative",
     height: "none",
-    height: "30rem",
   },
 }));
 
@@ -22,17 +25,15 @@ const WDialog = (props) => {
   const classes = useStyles();
 
   return (
-    <div>
-      <Dialog
-        maxWidth="lg"
-        open={props.show}
-        TransitionComponent={Transition}
-        // className={props.full ? classes.dialog : classes.profileDialog}
-        className={classes.dialog}
-      >
-        {props.children}
-      </Dialog>
-    </div>
+    <Dialog
+      fullScreen
+      open={props.show}
+      TransitionComponent={Transition}
+      className={classes.dialog}
+    >
+      <div style={{ height: "3rem", background: "black" }}></div>
+      {props.children}
+    </Dialog>
   );
 };
 

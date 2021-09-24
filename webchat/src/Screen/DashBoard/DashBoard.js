@@ -9,6 +9,7 @@ import { io } from "socket.io-client";
 import { loadOnlineUsers } from "../../Redux/actions/socketActions";
 import loadable from "@loadable/component";
 import "./DashBoard.scss";
+import { addMessage } from "../../Redux/actions/messageActions";
 
 const Wait = loadable(() => import("../../Components/Wait/Wait"), {
   fallback: <></>,
@@ -35,13 +36,21 @@ const CButton = loadable(() => import("../../Components/Button/CButton"), {
   fallback: <></>,
 });
 
-const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
+const DashBoard = ({
+  userName,
+  onClick,
+  send,
+  users,
+  details,
+  profile,
+  add,
+}) => {
   const [id, setId] = useState(null);
 
   const [conversationId, setConversationId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [active, setActive] = useState(null);
-  const [checking, setChecking] = useState("");
+  const [checking, setChecking] = useState([]);
   const socket = useRef();
 
   useEffect(() => {
@@ -75,7 +84,20 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
 
   useEffect(() => {
     socket.current.on("getMessage", (data) => {
-      console.log(data);
+      let messageData = {
+        time: data.time,
+        senderId: data.senderId,
+        receiverId: data.receiverId,
+        conversationId: data.conversationId,
+        message: {
+          message: data.message,
+          referenceId: data.referenceId,
+          read: data.read,
+          authorId: data.authorId,
+          attachments: data.attachments,
+        },
+      };
+      add(messageData);
     });
   }, []);
 
@@ -125,7 +147,7 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
                         </div>
                       </div>
                       {checking?.some(
-                        (check) => check.userId === user?._id
+                        (check) => check?.userId === user?._id
                       ) && <div className="onLineTag"></div>}
                     </div>
                   )
@@ -138,9 +160,9 @@ const DashBoard = ({ userName, onClick, send, users, details, profile }) => {
           </div>
           {conversationId ? (
             <Chat
+              socket={socket}
               user={id}
               conversationId={conversationId}
-              socket={socket}
               check={checking}
             />
           ) : (
@@ -178,6 +200,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     onlineUsers: (data) => {
       dispatch(loadOnlineUsers(data));
+    },
+    add: (data) => {
+      dispatch(addMessage(data));
     },
   };
 };

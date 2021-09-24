@@ -9,6 +9,7 @@ var INITIAL_STATE = {
 };
 
 export const messageList = (state = INITIAL_STATE, action) => {
+  console.log(action);
   switch (action.type) {
     case LOAD_MESSAGES:
       return {

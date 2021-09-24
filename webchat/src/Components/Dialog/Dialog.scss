@@ -1,11 +1,30 @@
 .MuiDialog-scrollPaper {
   display: flex !important;
+  flex-direction: column !important;
+
   justify-content: center !important;
 
-  align-items: unset !important;
+  align-items: center !important;
 }
 
-.MuiDialog-paperWidthLg {
-  min-width: 400px;
-  width: 700px;
+.MuiDialog-paperFullScreen {
+  width: 90% !important;
+  height: 90% !important;
+  border-radius: 10px !important;
+}
+.video {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  object-fit: cover !important;
+  position: relative;
+
+  .videoCont {
+    width: 60%;
+  }
+  .videoButton {
+    bottom: 0;
+    position: absolute;
+  }
 }

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import express from "express";
-import Cors from "cors";
+import cors from "cors";
 // import auth from "./middleware/auth.js";
 import user from "./routes/user.js";
 import Conversation from "./models/conversation.js";
@@ -10,9 +10,11 @@ import AddFriend from "./models/addfriend.js";
 const port = process.env.PORT || 3001;
 const app = express();
 
+// const io = require("socket.io")
+
 //Middlewares
 app.use(express.json());
-app.use(Cors());
+app.use(cors());
 
 //DB configuration
 const config_url =
@@ -56,7 +58,7 @@ app.get("/replyList/:conversationId", async (req, res) => {
 
   try {
     const data = await Rep.find({ conversationId });
-    console.log(data);
+    // console.log(data);
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json(err);

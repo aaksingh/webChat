@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import UserAvatar from "../Avatar/Avatar";
 import { replyList } from "../../api/api";
 import { ReactComponent as Reply } from "../../Assets/Reply.svg";
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 
 const Message = ({ message, handleClick, visible, detail, id }) => {
   const [link, setLink] = useState(false);
