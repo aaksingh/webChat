@@ -5,6 +5,7 @@ import ChatHeader from "../ChatHeader/ChatHeader";
 import { create, chatList } from "../../api/api";
 import Message from "../Message/Message";
 import Input from "../Input/Input";
+import WDialog from "../Dialog/Dialog";
 import { days, months } from "../../Constants/Array.js";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -36,6 +37,23 @@ const Chat = ({ user, conversationId, socket, check }) => {
   const [text, setText] = useState("");
   const scrollRefArray = useRef();
 
+  // Video call code
+  // const [stream, setStream] = useState(null);
+  // const [screen, setScreen] = useState(null);
+  // const myVideo = useRef();
+
+  // const videoCall = () => {
+  //   navigator.mediaDevices
+  //     .getUserMedia({ video: true, audio: true })
+  //     .then((currentStream) => {
+  //       setStream(currentStream);
+  //       myVideo.current.srcObject = currentStream;
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+  // useEffect(() => {
+  //   videoCall();
+  // }, []);
   const handleCreate = async (e) => {
     e.preventDefault();
 
@@ -100,6 +118,19 @@ const Chat = ({ user, conversationId, socket, check }) => {
   }, [mess, messages]);
   return (
     <div className="chatReply flex-row">
+      {/* <WDialog show={true}>
+        {" "}
+        118
+        <div className="video">
+          <video
+            playsInline
+            muted
+            ref={myVideo}
+            autoPlay
+            className="videoCont"
+          />
+        </div>
+      </WDialog> */}
       <div className="chat flex-column font-family">
         <div className="chat__Header flex-row">
           <ChatHeader detail={detail} show={true} />
@@ -147,29 +178,10 @@ export default Chat;
   )} */
 
 // import Reply from "../Reply/Reply";
-// import WDialog from "../Dialog/Dialog";
 // import { ReactComponent as ShareScreen } from "../../Assets/ShareScreen.svg";
 
 // const [repMessage, setRepMessage] = useState("");
 // const [show, setShow] = useState(false);
-
-//Video call code
-// const [stream, setStream] = useState(null);
-// const [screen, setScreen] = useState(null);
-// const myVideo = useRef();
-
-// const videoCall = () => {
-//   navigator.mediaDevices
-//     .getUserMedia({ video: true, audio: true })
-//     .then((currentStream) => {
-//       setStream(currentStream);
-//       myVideo.current.srcObject = currentStream;
-//     })
-//     .catch((err) => console.log(err));
-// };
-// useEffect(() => {
-//   videoCall();
-// }, []);
 
 // const screenShare = () => {
 //   navigator.mediaDevices
@@ -184,18 +196,4 @@ export default Chat;
 //Video call code ends here
 
 {
-  /* <WDialog show={true}> 118
-              <div className="video">
-              <video
-              playsInline
-              muted
-              ref={myVideo}
-              autoPlay
-              className="videoCont"
-              />
-              <button className="videoButton" onClick={screenShare}>
-              <ShareScreen />
-              </button>
-              </div>
-            </WDialog> */
 }

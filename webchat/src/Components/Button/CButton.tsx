@@ -9,6 +9,7 @@ type CbuttonProps = {
   onClick: () => void;
 };
 var fontWeight: number = 700;
+
 const CButton: FC<CbuttonProps> = (props) => {
   return (
     <Button
