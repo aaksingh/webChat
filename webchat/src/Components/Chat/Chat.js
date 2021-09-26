@@ -21,7 +21,7 @@ const Chat = ({ user, conversationId, socket, check }) => {
       dispatch(clearMessages());
 
       let data = await chatList(conversationId);
-
+      console.log(data);
       dispatch(loadMeesages(data.data));
     })();
   }, [conversationId]);

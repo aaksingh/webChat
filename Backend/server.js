@@ -1,8 +1,8 @@
-// npm install morgan
+//import auth from "./middleware/auth.js";
+import redis from "redis";
 import mongoose from "mongoose";
 import express from "express";
 import cors from "cors";
-// import auth from "./middleware/auth.js";
 import user from "./routes/user.js";
 import Conversation from "./models/conversation.js";
 import Rep from "./models/reply.js";
@@ -10,9 +10,7 @@ import AddFriend from "./models/addfriend.js";
 
 const port = process.env.PORT || 3001;
 const app = express();
-
-// const io = require("socket.io")
-
+// const client = redis.createClient(6379);
 //Middlewares
 app.use(express.json());
 app.use(cors());
@@ -26,34 +24,37 @@ mongoose.connect(config_url, {
   useUnifiedTopology: true,
 });
 
-const db = mongoose.connection;
-
-// API routes
-
 app.get("/", (req, res) => {
   res.status(200).send("Hello");
 });
-
-// signup route
 app.post("/signUp", user);
-
-// login route
 app.post("/login", user);
-
-// user info
 app.get("/userDetails", user);
 
 // get Messages
 app.get("/chatList/:conversationId", async (req, res) => {
   const conversationId = req.params.conversationId;
 
+  // client.get("postData", (err, redis_data) => {
+  //   if (err) {
+  //     throw error;
+  //   }
+  //   if (redis_data) {
+  //     console.log(JSON.parse(redis_data));
+
+  //     return res.status(200).send(JSON.parse(redis_data));
+  //   }
+  // });
+
   try {
     const data = await Conversation.find({ conversationId });
+    client.setex("postData", 3600, JSON.stringify(data));
     res.status(200).json(data);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).send(err);
   }
 });
+
 app.get("/replyList/:conversationId", async (req, res) => {
   const conversationId = req.params.conversationId;
 
@@ -66,7 +67,6 @@ app.get("/replyList/:conversationId", async (req, res) => {
   }
 });
 
-//Post Messages
 app.post("/create", (req, res) => {
   const data = req.body;
 
@@ -82,6 +82,7 @@ app.post("/create", (req, res) => {
     console.log(error.message, "chat creation failed.");
   }
 });
+
 app.post("/reply", (req, res) => {
   const data = req.body;
 
@@ -98,7 +99,6 @@ app.post("/reply", (req, res) => {
   }
 });
 
-//users signed up on chatapp
 app.get("/friendslist/:id", async (req, res) => {
   try {
     const data = await AddFriend.find({
@@ -113,7 +113,6 @@ app.get("/friendslist/:id", async (req, res) => {
   }
 });
 
-// these two endpoints are for later
 app.post("/addfriend", async (req, res) => {
   const AddFriends = new AddFriend({
     members: [req.body.userId, req.body.friendId],
