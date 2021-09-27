@@ -48,7 +48,7 @@ app.get("/chatList/:conversationId", async (req, res) => {
 
   try {
     const data = await Conversation.find({ conversationId });
-    client.setex("postData", 3600, JSON.stringify(data));
+    // client.setex("postData", 3600, JSON.stringify(data));
     res.status(200).json(data);
   } catch (err) {
     res.status(500).send(err);

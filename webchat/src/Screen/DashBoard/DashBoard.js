@@ -10,6 +10,7 @@ import { loadOnlineUsers } from "../../Redux/actions/socketActions";
 import loadable from "@loadable/component";
 import "./DashBoard.scss";
 import { addMessage } from "../../Redux/actions/messageActions";
+import Users from "../../Components/Users/Users";
 
 const Wait = loadable(() => import("../../Components/Wait/Wait"), {
   fallback: <></>,
@@ -44,12 +45,12 @@ const DashBoard = ({
   details,
   profile,
   add,
+  loadOnlineUsers,
 }) => {
   const [id, setId] = useState(null);
 
   const [conversationId, setConversationId] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [active, setActive] = useState(null);
   const [checking, setChecking] = useState([]);
   const socket = useRef();
 
@@ -77,7 +78,7 @@ const DashBoard = ({
 
   useEffect(() => {
     socket.current.on("getUsers", (data) => {
-      // console.log(data, "direct users");
+      loadOnlineUsers(data);
       setChecking(data);
     });
   }, [socket]);
@@ -139,16 +140,9 @@ const DashBoard = ({
                         details(user.username);
                         handleChat(i, user._id);
                       }}
+                      key={i}
                     >
-                      <UserAvatar id="2" />
-                      <div className="nameMessage flex-column">
-                        <div className="chatName flex-column font-h4 font-600">
-                          {user.username}
-                        </div>
-                      </div>
-                      {checking?.some(
-                        (check) => check?.userId === user?._id
-                      ) && <div className="onLineTag"></div>}
+                      <Users userName={user.username} id={user._id} index={i} />
                     </div>
                   )
                 );
@@ -203,6 +197,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     add: (data) => {
       dispatch(addMessage(data));
+    },
+    loadOnlineUsers: (data) => {
+      dispatch(loadOnlineUsers(data));
     },
   };
 };

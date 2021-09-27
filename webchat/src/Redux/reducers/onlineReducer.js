@@ -1,10 +1,10 @@
-import { UPDATE_USER } from "../constants/constants.js";
+import { ADDONLINEUSER } from "../constants/constants.js";
 
 var INITIAL_STATE = {};
 
-export const showOnlineUsers = (state = INITIAL_STATE, action) => {
+export const onlineUserReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case UPDATE_USER:
+    case ADDONLINEUSER:
       return {
         ...state,
         users: action.payload,
