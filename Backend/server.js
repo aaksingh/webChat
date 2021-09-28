@@ -32,26 +32,33 @@ app.post("/login", user);
 app.get("/userDetails", user);
 
 // get Messages
-app.get("/chatList/:conversationId", async (req, res) => {
-  const conversationId = req.params.conversationId;
-
+app.get("/chatList", async (req, res) => {
+  const senderId = req.query.s1;
+  const receiverId = req.query.s2;
+  console.log(senderId, receiverId);
   // client.get("postData", (err, redis_data) => {
   //   if (err) {
   //     throw error;
   //   }
   //   if (redis_data) {
   //     console.log(JSON.parse(redis_data));
-
   //     return res.status(200).send(JSON.parse(redis_data));
   //   }
   // });
-
   try {
-    const data = await Conversation.find({ conversationId });
+    const data = await Conversation.find({
+      $or: [
+        { $and: [{ senderId: senderId }, { receiverId: receiverId }] },
+        { $and: [{ senderId: receiverId }, { receiverId: senderId }] },
+      ],
+    });
+
+    console.log(data);
     // client.setex("postData", 3600, JSON.stringify(data));
     res.status(200).json(data);
   } catch (err) {
     res.status(500).send(err);
+    console.log(err);
   }
 });
 

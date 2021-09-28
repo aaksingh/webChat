@@ -4,12 +4,11 @@ const conversationSchema = mongoose.Schema({
   time: Array,
   senderId: String,
   receiverId: String,
-  conversationId: String,
+  messageID: String,
   message: {
     message: String,
     referenceId: String,
     read: Boolean,
-    authorId: String,
     attachments: Array,
   },
 });

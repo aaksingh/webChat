@@ -43,15 +43,11 @@ const DashBoard = ({
   send,
   users,
   details,
-  profile,
   add,
   loadOnlineUsers,
 }) => {
-  const [id, setId] = useState(null);
-
-  const [conversationId, setConversationId] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [checking, setChecking] = useState([]);
+
   const socket = useRef();
 
   useEffect(() => {
@@ -79,7 +75,6 @@ const DashBoard = ({
   useEffect(() => {
     socket.current.on("getUsers", (data) => {
       loadOnlineUsers(data);
-      setChecking(data);
     });
   }, [socket]);
 
@@ -89,12 +84,11 @@ const DashBoard = ({
         time: data.time,
         senderId: data.senderId,
         receiverId: data.receiverId,
-        conversationId: data.conversationId,
+        messageID: data.messageID,
         message: {
           message: data.message,
           referenceId: data.referenceId,
           read: data.read,
-          authorId: data.authorId,
           attachments: data.attachments,
         },
       };
@@ -102,18 +96,14 @@ const DashBoard = ({
     });
   }, []);
 
+  const [senderId, setsenderId] = useState("");
+  const [receiverId, setreceiverId] = useState("");
+
   const handleChat = async (j) => {
-    const data = await friendlist(localStorage.getItem("userId"));
-
-    for (let i = 0; i < data.data?.length; i++) {
-      let idList = data.data[i]?.members;
-
-      if (idList.includes(localStorage.getItem("userId") && users[j]._id)) {
-        setId(users[j]._id);
-        setConversationId(data.data[i]?._id);
-      }
-    }
+    setreceiverId(users[j]._id);
+    setsenderId(localStorage.getItem("userId"));
   };
+
   function handleClick() {
     onClick();
   }
@@ -131,38 +121,37 @@ const DashBoard = ({
 
             <div className="dm adspbtw font-h2 font-600">{String.CHAT}</div>
             <div className="userList flex-column">
-              {users?.map((user, i) => {
-                return (
-                  user?._id !== localStorage.getItem("userId") && (
-                    <div
-                      className="list flex-row"
-                      onClick={() => {
-                        details(user.username);
-                        handleChat(i, user._id);
-                      }}
-                      key={i}
-                    >
-                      <Users userName={user.username} id={user._id} index={i} />
-                    </div>
-                  )
-                );
-              })}
+              {users &&
+                users.map((user, i) => {
+                  return (
+                    user?._id !== localStorage.getItem("userId") && (
+                      <div
+                        className="list flex-row"
+                        onClick={() => {
+                          details(user.username);
+                          handleChat(i, user._id);
+                        }}
+                        key={i}
+                      >
+                        <Users
+                          userName={user.username}
+                          id={user._id}
+                          index={i}
+                        />
+                      </div>
+                    )
+                  );
+                })}
             </div>
             <div className="dm adspbtw font-h2 font-600">Groups</div>
             <div>--None--</div>
             <CButton title="Logout" disabled={false} onClick={handleClick} />
           </div>
-          {conversationId ? (
-            <Chat
-              socket={socket}
-              user={id}
-              conversationId={conversationId}
-              check={checking}
-            />
+          {receiverId ? (
+            <Chat socket={socket} sender={senderId} receiver={receiverId} />
           ) : (
             <>
               <Connected />
-              {/* <CreateGroup /> */}
             </>
           )}
         </>
@@ -192,9 +181,9 @@ const mapDispatchToProps = (dispatch) => {
     profile: (data) => {
       dispatch(showProfile(data));
     },
-    onlineUsers: (data) => {
-      dispatch(loadOnlineUsers(data));
-    },
+    // onlineUsers: (data) => {
+    //   dispatch(loadOnlineUsers(data));
+    // },
     add: (data) => {
       dispatch(addMessage(data));
     },

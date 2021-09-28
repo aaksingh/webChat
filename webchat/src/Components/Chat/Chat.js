@@ -5,7 +5,6 @@ import ChatHeader from "../ChatHeader/ChatHeader";
 import { create, chatList } from "../../api/api";
 import Message from "../Message/Message";
 import Input from "../Input/Input";
-import WDialog from "../Dialog/Dialog";
 import { days, months } from "../../Constants/Array.js";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -13,18 +12,19 @@ import {
   loadMeesages,
   addMessage,
 } from "../../Redux/actions/messageActions";
-const Chat = ({ user, conversationId, socket, check }) => {
+// import WDialog from "../Dialog/Dialog";
+const Chat = ({ socket, sender, receiver }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
       dispatch(clearMessages());
-
-      let data = await chatList(conversationId);
+      setTimeout(() => {}, 100);
+      let data = await chatList(sender, receiver);
       console.log(data);
       dispatch(loadMeesages(data.data));
     })();
-  }, [conversationId]);
+  }, [sender, receiver]);
 
   const { messages } = useSelector((state) => state.messages);
   const { detail } = useSelector((state) => state.friendDetails);
@@ -75,14 +75,13 @@ const Chat = ({ user, conversationId, socket, check }) => {
     if (text) {
       let messageData = {
         time: time,
-        senderId: localStorage.getItem("userId"),
-        receiverId: user,
-        conversationId: conversationId,
+        senderId: sender,
+        receiverId: receiver,
+        messageID: new Date(),
         message: {
           message: text,
           referenceId: null,
           read: false,
-          authorId: localStorage.getItem("userId"),
           attachments: [],
         },
       };
@@ -90,20 +89,18 @@ const Chat = ({ user, conversationId, socket, check }) => {
         await create(messageData);
 
         dispatch(addMessage(messageData));
-        if (check?.some((check) => check.userId === user)) {
-          socket.current.emit("sendmessage", {
-            time: time,
-            senderId: localStorage.getItem("userId"),
-            receiverId: user,
-            conversationId: conversationId,
-
-            message: text,
-            referenceId: null,
-            read: false,
-            authorId: localStorage.getItem("userId"),
-            attachments: [],
-          });
-        }
+        // if (check?.some((check) => check.userId === receiver)) {
+        //   socket.current.emit("sendmessage", {
+        //     time: time,
+        //     senderId: sender,
+        //     receiverId: receiver,
+        //     messageId: new Date(),
+        //     message: text,
+        //     referenceId: null,
+        //     read: false,
+        //     attachments: [],
+        //   });
+        // }
       } catch (err) {
         console.log(err.message, "Fail to send message");
         return;
@@ -145,7 +142,6 @@ const Chat = ({ user, conversationId, socket, check }) => {
                       !(i > 0 && mess[i - 1]?.senderId === mess[i]?.senderId)
                     }
                     userName={detail}
-                    conId={conversationId}
                     // id={m?._id}
                     i={i}
                     message={m}
@@ -194,6 +190,3 @@ export default Chat;
 // };
 
 //Video call code ends here
-
-{
-}
