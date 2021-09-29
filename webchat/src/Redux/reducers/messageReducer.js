@@ -10,14 +10,19 @@ var INITIAL_STATE = {
 
 export const messageList = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case LOAD_MESSAGES:
+    case LOAD_MESSAGES: {
       return {
         ...state,
-        messages: [...state.messages, action.payload],
+
+        messages: [
+          ...state.messages,
+          [action.payload.receiver, action.payload.messages],
+        ],
       };
+    }
 
     case CLEAR_MESSAGES: {
-      INITIAL_STATE.messages = [];
+      // INITIAL_STATE.messages = [];
       return INITIAL_STATE;
     }
 

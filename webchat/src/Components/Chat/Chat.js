@@ -18,17 +18,17 @@ const Chat = ({ socket, sender, receiver }) => {
 
   useEffect(() => {
     (async () => {
-      dispatch(clearMessages());
+      // dispatch(clearMessages());
       setTimeout(() => {}, 100);
       let data = await chatList(sender, receiver);
-      console.log(data);
-      dispatch(loadMeesages(data.data));
+
+      dispatch(loadMeesages({ messages: data.data, receiver }));
     })();
   }, [sender, receiver]);
 
   const { messages } = useSelector((state) => state.messages);
   const { detail } = useSelector((state) => state.friendDetails);
-
+  console.log(messages);
   const [mess, setMess] = useState([]);
   useEffect(() => {
     setMess(messages[0]);
@@ -131,7 +131,7 @@ const Chat = ({ socket, sender, receiver }) => {
           <ChatHeader detail={detail} show={true} />
         </div>
         <div className="chatSection flex-column">
-          <div className="chatStart flex-column">
+          {/* <div className="chatStart flex-column">
             {mess?.map((m, i) => {
               return (
                 <div className="messageSpan flex-column" ref={scrollRefArray}>
@@ -152,7 +152,7 @@ const Chat = ({ socket, sender, receiver }) => {
                 </div>
               );
             })}
-          </div>
+          </div> */}
           <div className="chatInput flex-row adjust">
             <Input
               {...{ text, setText }}
