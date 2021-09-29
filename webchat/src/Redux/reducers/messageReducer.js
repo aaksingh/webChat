@@ -4,32 +4,21 @@ import {
   ADD_MESSAGES,
 } from "../constants/constants.js";
 
-var INITIAL_STATE = {
-  messages: [],
-};
-
-export const messageList = (state = INITIAL_STATE, action) => {
+export const messageList = (state = {}, action) => {
   switch (action.type) {
     case LOAD_MESSAGES: {
       return {
         ...state,
-
-        messages: [
-          ...state.messages,
-          { a: action.payload.receiver, b: action.payload.messages },
-        ],
+        [action.payload.receiver]: action.payload.messages,
       };
     }
 
-    case CLEAR_MESSAGES: {
-      // INITIAL_STATE.messages = [];
-      return INITIAL_STATE;
-    }
-
     case ADD_MESSAGES: {
+      var a = state[action.payload.receiver];
+      a.push(action.payload.message);
       return {
         ...state,
-        messages: [...state.messages, state.messages[0].push(action.payload)],
+        [action.payload.receiver]: a,
       };
     }
 

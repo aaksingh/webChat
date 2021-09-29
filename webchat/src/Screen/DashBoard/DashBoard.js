@@ -92,8 +92,7 @@ const DashBoard = ({
           attachments: data.attachments,
         },
       };
-      add(messageData);
-      console.log(messageData, "Message");
+      add({ message: messageData, receiver: data.receiverId });
     });
   }, []);
 

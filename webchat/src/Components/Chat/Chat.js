@@ -7,53 +7,30 @@ import Message from "../Message/Message";
 import Input from "../Input/Input";
 import { days, months } from "../../Constants/Array.js";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  clearMessages,
-  loadMeesages,
-  addMessage,
-} from "../../Redux/actions/messageActions";
-// import WDialog from "../Dialog/Dialog";
+import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
 const Chat = ({ socket, sender, receiver }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
-      // dispatch(clearMessages());
       setTimeout(() => {}, 100);
       let data = await chatList(sender, receiver);
 
       dispatch(loadMeesages({ messages: data.data, receiver }));
     })();
-  }, [sender, receiver]);
+  }, [sender, receiver, dispatch]);
 
-  const { messages } = useSelector((state) => state.messages);
+  const messages = useSelector((state) => state.messages);
   const { detail } = useSelector((state) => state.friendDetails);
-  console.log(messages);
-  const [mess, setMess] = useState([]);
+  console.log(messages, "IN chat");
+  const [mess, setMess] = useState();
   useEffect(() => {
-    setMess(messages[0]);
-  }, [messages, socket]);
+    setMess(messages[receiver]);
+  }, [messages, socket, receiver]);
 
   const [text, setText] = useState("");
   const scrollRefArray = useRef();
 
-  // Video call code
-  // const [stream, setStream] = useState(null);
-  // const [screen, setScreen] = useState(null);
-  // const myVideo = useRef();
-
-  // const videoCall = () => {
-  //   navigator.mediaDevices
-  //     .getUserMedia({ video: true, audio: true })
-  //     .then((currentStream) => {
-  //       setStream(currentStream);
-  //       myVideo.current.srcObject = currentStream;
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-  // useEffect(() => {
-  //   videoCall();
-  // }, []);
   const handleCreate = async (e) => {
     e.preventDefault();
 
@@ -88,17 +65,17 @@ const Chat = ({ socket, sender, receiver }) => {
       try {
         await create(messageData);
 
-        dispatch(addMessage(messageData));
-        socket.current.emit("sendmessage", {
-          time: time,
-          senderId: sender,
-          receiverId: receiver,
-          messageId: new Date(),
-          message: text,
-          referenceId: null,
-          read: false,
-          attachments: [],
-        });
+        dispatch(addMessage({ message: messageData, receiver: receiver }));
+        // socket.current.emit("sendmessage", {
+        //   time: time,
+        //   senderId: sender,
+        //   receiverId: receiver,
+        //   messageId: new Date(),
+        //   message: text,
+        //   referenceId: null,
+        //   read: false,
+        //   attachments: [],
+        // });
       } catch (err) {
         console.log(err.message, "Fail to send message");
         return;
@@ -113,25 +90,12 @@ const Chat = ({ socket, sender, receiver }) => {
   }, [mess, messages]);
   return (
     <div className="chatReply flex-row">
-      {/* <WDialog show={true}>
-        {" "}
-        118
-        <div className="video">
-          <video
-            playsInline
-            muted
-            ref={myVideo}
-            autoPlay
-            className="videoCont"
-          />
-        </div>
-      </WDialog> */}
       <div className="chat flex-column font-family">
         <div className="chat__Header flex-row">
           <ChatHeader detail={detail} show={true} />
         </div>
         <div className="chatSection flex-column">
-          {/* <div className="chatStart flex-column">
+          <div className="chatStart flex-column">
             {mess?.map((m, i) => {
               return (
                 <div className="messageSpan flex-column" ref={scrollRefArray}>
@@ -152,7 +116,7 @@ const Chat = ({ socket, sender, receiver }) => {
                 </div>
               );
             })}
-          </div> */}
+          </div>
           <div className="chatInput flex-row adjust">
             <Input
               {...{ text, setText }}
@@ -188,3 +152,39 @@ export default Chat;
 // };
 
 //Video call code ends here
+
+// Video call code
+// const [stream, setStream] = useState(null);
+// const [screen, setScreen] = useState(null);
+// const myVideo = useRef();
+
+// const videoCall = () => {
+//   navigator.mediaDevices
+//     .getUserMedia({ video: true, audio: true })
+//     .then((currentStream) => {
+//       setStream(currentStream);
+//       myVideo.current.srcObject = currentStream;
+//     })
+//     .catch((err) => console.log(err));
+// };
+// useEffect(() => {
+//   videoCall();
+// }, []);
+
+// import WDialog from "../Dialog/Dialog";
+
+/* <WDialog show={true}>
+            {" "}
+            118
+            <div className="video">
+            <video
+            playsInline
+            muted
+            ref={myVideo}
+            autoPlay
+            className="videoCont"
+            />
+            </div>
+            </WDialog> */
+
+// dispatch(clearMessages());
