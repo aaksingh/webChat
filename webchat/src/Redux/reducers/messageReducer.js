@@ -16,7 +16,7 @@ export const messageList = (state = INITIAL_STATE, action) => {
 
         messages: [
           ...state.messages,
-          [action.payload.receiver, action.payload.messages],
+          { a: action.payload.receiver, b: action.payload.messages },
         ],
       };
     }
