@@ -89,18 +89,16 @@ const Chat = ({ socket, sender, receiver }) => {
         await create(messageData);
 
         dispatch(addMessage(messageData));
-        // if (check?.some((check) => check.userId === receiver)) {
-        //   socket.current.emit("sendmessage", {
-        //     time: time,
-        //     senderId: sender,
-        //     receiverId: receiver,
-        //     messageId: new Date(),
-        //     message: text,
-        //     referenceId: null,
-        //     read: false,
-        //     attachments: [],
-        //   });
-        // }
+        socket.current.emit("sendmessage", {
+          time: time,
+          senderId: sender,
+          receiverId: receiver,
+          messageId: new Date(),
+          message: text,
+          referenceId: null,
+          read: false,
+          attachments: [],
+        });
       } catch (err) {
         console.log(err.message, "Fail to send message");
         return;

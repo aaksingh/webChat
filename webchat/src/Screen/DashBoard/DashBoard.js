@@ -18,9 +18,9 @@ const Wait = loadable(() => import("../../Components/Wait/Wait"), {
 const Welcome = loadable(() => import("../../Components/Welcome/Welcome"), {
   fallback: <></>,
 });
-const UserAvatar = loadable(() => import("../../Components/Avatar/Avatar"), {
-  fallback: <></>,
-});
+// const UserAvatar = loadable(() => import("../../Components/Avatar/Avatar"), {
+//   fallback: <></>,
+// });
 const UserInfo = loadable(() => import("../../Components/UserInfo/UserInfo"), {
   fallback: <></>,
 });
@@ -93,6 +93,7 @@ const DashBoard = ({
         },
       };
       add(messageData);
+      console.log(messageData, "Message");
     });
   }, []);
 
