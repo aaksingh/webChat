@@ -1,8 +1,4 @@
-import {
-  CLEAR_MESSAGES,
-  LOAD_MESSAGES,
-  ADD_MESSAGES,
-} from "../constants/constants.js";
+import { LOAD_MESSAGES, ADD_MESSAGES } from "../constants/constants.js";
 
 export const messageList = (state = {}, action) => {
   switch (action.type) {
@@ -14,11 +10,13 @@ export const messageList = (state = {}, action) => {
     }
 
     case ADD_MESSAGES: {
-      var a = state[action.payload.receiver];
-      a.push(action.payload.message);
+      let a = action.payload.message;
+      var message = state[action.payload.receiver];
+      console.log(a, "reducer", message);
+      message.push(a);
       return {
         ...state,
-        [action.payload.receiver]: a,
+        [action.payload.receiver]: message,
       };
     }
 

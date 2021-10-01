@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { userDetails, addFriends, friendlist } from "../../api/api";
+import { userDetails } from "../../api/api";
 import { connect } from "react-redux";
 import { loadUsers } from "../../Redux/actions/usersAction.js";
 import { String } from "../../Constants/String";
@@ -11,6 +11,7 @@ import loadable from "@loadable/component";
 import "./DashBoard.scss";
 import { addMessage } from "../../Redux/actions/messageActions";
 import Users from "../../Components/Users/Users";
+import { useSelector, useDispatch } from "react-redux";
 
 const Wait = loadable(() => import("../../Components/Wait/Wait"), {
   fallback: <></>,
@@ -18,9 +19,6 @@ const Wait = loadable(() => import("../../Components/Wait/Wait"), {
 const Welcome = loadable(() => import("../../Components/Welcome/Welcome"), {
   fallback: <></>,
 });
-// const UserAvatar = loadable(() => import("../../Components/Avatar/Avatar"), {
-//   fallback: <></>,
-// });
 const UserInfo = loadable(() => import("../../Components/UserInfo/UserInfo"), {
   fallback: <></>,
 });
@@ -46,7 +44,13 @@ const DashBoard = ({
   add,
   loadOnlineUsers,
 }) => {
+  const dispatch = useDispatch();
+
+  const val = localStorage.getItem("userId");
+
   const [loading, setLoading] = useState(false);
+  const [senderId, setsenderId] = useState("");
+  const [receiverId, setreceiverId] = useState("");
 
   const socket = useRef();
 
@@ -66,17 +70,23 @@ const DashBoard = ({
 
   useEffect(() => {
     socket.current = io("ws://localhost:3002");
+
+    return () => {
+      socket.current.close();
+    };
   }, []);
 
   useEffect(() => {
     socket.current.emit("addUser", localStorage.getItem("userId"));
-  }, [localStorage.getItem("userId")]);
+  }, [val]);
 
   useEffect(() => {
     socket.current.on("getUsers", (data) => {
+      console.log(data, "Online users");
       loadOnlineUsers(data);
     });
-  }, [socket]);
+  }, [socket, loadOnlineUsers]);
+  const user = useSelector((state) => state.showOnlineUsers);
 
   useEffect(() => {
     socket.current.on("getMessage", (data) => {
@@ -92,12 +102,13 @@ const DashBoard = ({
           attachments: data.attachments,
         },
       };
-      add({ message: messageData, receiver: data.receiverId });
-    });
-  }, []);
 
-  const [senderId, setsenderId] = useState("");
-  const [receiverId, setreceiverId] = useState("");
+      messageData.senderId &&
+        dispatch(
+          addMessage({ message: messageData, receiver: messageData.senderId })
+        );
+    });
+  }, [add]);
 
   const handleChat = async (j) => {
     setreceiverId(users[j]._id);

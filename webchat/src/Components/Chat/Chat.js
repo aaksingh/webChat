@@ -8,8 +8,17 @@ import Input from "../Input/Input";
 import { days, months } from "../../Constants/Array.js";
 import { useSelector, useDispatch } from "react-redux";
 import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
+
 const Chat = ({ socket, sender, receiver }) => {
+  const messages = useSelector((state) => state.messages);
+  const { detail } = useSelector((state) => state.friendDetails);
+  const user = useSelector((state) => state.showOnlineUsers);
+  console.log(user, "OnlineUsers");
   const dispatch = useDispatch();
+
+  const [mess, setMess] = useState();
+  const [text, setText] = useState("");
+  const scrollRefArray = useRef();
 
   useEffect(() => {
     (async () => {
@@ -20,16 +29,9 @@ const Chat = ({ socket, sender, receiver }) => {
     })();
   }, [sender, receiver, dispatch]);
 
-  const messages = useSelector((state) => state.messages);
-  const { detail } = useSelector((state) => state.friendDetails);
-  console.log(messages, "IN chat");
-  const [mess, setMess] = useState();
   useEffect(() => {
     setMess(messages[receiver]);
   }, [messages, socket, receiver]);
-
-  const [text, setText] = useState("");
-  const scrollRefArray = useRef();
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -64,18 +66,18 @@ const Chat = ({ socket, sender, receiver }) => {
       };
       try {
         await create(messageData);
-
         dispatch(addMessage({ message: messageData, receiver: receiver }));
-        // socket.current.emit("sendmessage", {
-        //   time: time,
-        //   senderId: sender,
-        //   receiverId: receiver,
-        //   messageId: new Date(),
-        //   message: text,
-        //   referenceId: null,
-        //   read: false,
-        //   attachments: [],
-        // });
+
+        socket.current.emit("sendmessage", {
+          time: time,
+          senderId: sender,
+          receiverId: receiver,
+          messageId: new Date(),
+          message: text,
+          referenceId: null,
+          read: false,
+          attachments: [],
+        });
       } catch (err) {
         console.log(err.message, "Fail to send message");
         return;
@@ -88,6 +90,7 @@ const Chat = ({ socket, sender, receiver }) => {
   useEffect(() => {
     scrollRefArray.current?.scrollIntoView({ behaviour: "smooth" });
   }, [mess, messages]);
+
   return (
     <div className="chatReply flex-row">
       <div className="chat flex-column font-family">
