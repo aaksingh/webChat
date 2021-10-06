@@ -35,6 +35,22 @@
         position: absolute;
         border-radius: 50%;
       }
+      .newMessage {
+        height: 30px;
+        width: 30px;
+        background: red;
+        right: 10%;
+        position: absolute;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .new {
+          color: white;
+          font-weight: 700;
+        }
+      }
     }
   }
 }

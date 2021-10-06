@@ -14,3 +14,6 @@ export const SHOW_PROFILE = "SHOW_PROFILE";
 export const UPDATE_USER = "Update User";
 
 export const ADDONLINEUSER = "Oline User";
+export const ADD_NEW_MESSAGE = "Add new Message";
+
+export const CLEAR_NEW_MESSAGE = "Clear new Message";

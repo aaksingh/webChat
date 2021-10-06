@@ -18,6 +18,7 @@ const App = () => {
   const [passwordConfirm, setpasswordConfirm] = useState("");
 
   useEffect(() => {
+    localStorage.removeItem("roomId");
     if (localStorage.getItem("Login") === "true") {
       setlogin(true);
     } else if (localStorage.getItem("Login") === "false") {

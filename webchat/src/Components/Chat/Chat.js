@@ -9,6 +9,10 @@ import { days, months } from "../../Constants/Array.js";
 import { useSelector, useDispatch } from "react-redux";
 import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
 import Peer from "simple-peer";
+import {
+  clearNewMessage,
+  clearNewMessageses,
+} from "../../Redux/actions/newMessageAction";
 const Chat = ({ socket, sender, receiver }) => {
   const messages = useSelector((state) => state.messages);
   const { detail } = useSelector((state) => state.friendDetails);
@@ -19,6 +23,10 @@ const Chat = ({ socket, sender, receiver }) => {
   const [mess, setMess] = useState();
   const [text, setText] = useState("");
   const scrollRefArray = useRef();
+
+  useEffect(() => {
+    dispatch(clearNewMessageses(receiver));
+  }, [receiver]);
 
   useEffect(() => {
     (async () => {

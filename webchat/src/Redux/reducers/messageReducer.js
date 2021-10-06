@@ -12,7 +12,7 @@ export const messageList = (state = {}, action) => {
     case ADD_MESSAGES: {
       let a = action.payload.message;
       var message = state[action.payload.receiver];
-      console.log(a, "reducer", message);
+
       message.push(a);
       return {
         ...state,

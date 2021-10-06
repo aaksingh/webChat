@@ -12,7 +12,7 @@ import "./DashBoard.scss";
 import { addMessage } from "../../Redux/actions/messageActions";
 import Users from "../../Components/Users/Users";
 import { useSelector, useDispatch } from "react-redux";
-
+import { loadNewMessage } from "../../Redux/actions/newMessageAction";
 const Wait = loadable(() => import("../../Components/Wait/Wait"), {
   fallback: <></>,
 });
@@ -101,15 +101,22 @@ const DashBoard = ({
           attachments: data.attachments,
         },
       };
-
-      messageData.senderId &&
+      localStorage.removeItem("roomId");
+      if (messageData.senderId === localStorage.getItem("roomId")) {
         dispatch(
           addMessage({ message: messageData, receiver: messageData.senderId })
         );
+      } else {
+        console.log("ewifwenf");
+        dispatch(loadNewMessage({ id: messageData.senderId }));
+      }
     });
   }, [add]);
 
   const handleChat = async (j) => {
+    console.log(users[j]._id);
+    localStorage.setItem("roomId", users[j]._id);
+
     setreceiverId(users[j]._id);
     setsenderId(localStorage.getItem("userId"));
   };

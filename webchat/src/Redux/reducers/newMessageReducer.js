@@ -1,22 +1,22 @@
-import {
-  CLEAR_MESSAGES,
-  LOAD_MESSAGES,
-  ADD_MESSAGES,
-} from "../constants/constants.js";
+import { ADD_NEW_MESSAGE, CLEAR_NEW_MESSAGE } from "../constants/constants.js";
 
-var MESSAGE_STATE = {};
+var initial = {
+  ids: [],
+};
 
-let hash = new Map();
-
-export const messagesList = (state = MESSAGE_STATE, action) => {
+export const newMessageList = (state = initial, action) => {
   switch (action.type) {
-    case LOAD_MESSAGES: {
-      hash = [[action.payload.receiverId, action.payload.messages]];
-
-      console.log(hash);
+    case ADD_NEW_MESSAGE: {
       return {
         ...state,
-        messages: [...state.messages, hash],
+        ids: [...state.ids, action.payload.id],
+      };
+    }
+
+    case CLEAR_NEW_MESSAGE: {
+      return {
+        ...state,
+        ids: state.ids.filter((ids) => ids === action.payload.id),
       };
     }
     default:

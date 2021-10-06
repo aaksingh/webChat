@@ -1,9 +1,14 @@
 import UserAvatar from "../Avatar/Avatar";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const Users = ({ userName, id, index }) => {
   const user = useSelector((state) => state.showOnlineUsers);
+  const newMessages = useSelector((state) => state.newMessages);
 
+  useEffect(() => {
+    console.log(newMessages.ids.includes(id));
+  }, [newMessages]);
   return (
     <>
       <UserAvatar id="2" />
@@ -17,6 +22,11 @@ const Users = ({ userName, id, index }) => {
       {/* {
         Show Message one message received
       } */}
+      {newMessages.ids.includes(id) && (
+        <div className="newMessage">
+          <div className="new">1</div>
+        </div>
+      )}
     </>
   );
 };
