@@ -2,7 +2,7 @@ import { signIn, signUp } from "./api/api";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import loadable from "@loadable/component";
-const Login = loadable(() => import("./Screen/SignUp/Login.js"), {
+const Login = loadable(() => import("./Screen/Authentication/Login.js"), {
   fallback: <></>,
 });
 const DashBoard = loadable(() => import("./Screen/DashBoard/DashBoard.js"), {

@@ -8,6 +8,7 @@ import { Avatar } from "@material-ui/core";
 import { connect } from "react-redux";
 import { showProfile } from "../../Redux/actions/profileActions";
 import { useState } from "react";
+import { String } from "../../Constants/String";
 
 function Welcome({ show, profile }) {
   const handleClose = () => {
@@ -39,15 +40,15 @@ function ProfileOptions({ onClick }) {
     <div className="profileOptions flex-row">
       <div className="icon-1 flex-column adjust font-700">
         <MoodRoundedIcon onClick={onClick} />
-        Set Status
+        {String.SET_STATUS}
       </div>
       <div className="icon-2 flex-column adjust font-700">
         <EditTwoToneIcon onClick={onClick} />
-        Edit Profile
+        {String.PROFILE};
       </div>
       <div className="icon-3 flex-column adjust font-700">
         <MoreHorizTwoToneIcon onClick={onClick} />
-        More
+        {String.MORE}
       </div>
     </div>
   );

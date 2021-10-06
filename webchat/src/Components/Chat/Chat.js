@@ -8,12 +8,12 @@ import Input from "../Input/Input";
 import { days, months } from "../../Constants/Array.js";
 import { useSelector, useDispatch } from "react-redux";
 import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
-
+import Peer from "simple-peer";
 const Chat = ({ socket, sender, receiver }) => {
   const messages = useSelector((state) => state.messages);
   const { detail } = useSelector((state) => state.friendDetails);
   const user = useSelector((state) => state.showOnlineUsers);
-  console.log(user, "OnlineUsers");
+
   const dispatch = useDispatch();
 
   const [mess, setMess] = useState();
@@ -68,16 +68,18 @@ const Chat = ({ socket, sender, receiver }) => {
         await create(messageData);
         dispatch(addMessage({ message: messageData, receiver: receiver }));
 
-        socket.current.emit("sendmessage", {
-          time: time,
-          senderId: sender,
-          receiverId: receiver,
-          messageId: new Date(),
-          message: text,
-          referenceId: null,
-          read: false,
-          attachments: [],
-        });
+        user?.users &&
+          user?.users?.some((user) => user?.userId === receiver) &&
+          socket.current.emit("sendmessage", {
+            time: time,
+            senderId: sender,
+            receiverId: receiver,
+            messageId: new Date(),
+            message: text,
+            referenceId: null,
+            read: false,
+            attachments: [],
+          });
       } catch (err) {
         console.log(err.message, "Fail to send message");
         return;

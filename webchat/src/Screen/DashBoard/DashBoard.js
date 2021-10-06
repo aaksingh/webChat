@@ -82,11 +82,10 @@ const DashBoard = ({
 
   useEffect(() => {
     socket.current.on("getUsers", (data) => {
-      console.log(data, "Online User");
       loadOnlineUsers(data);
     });
   }, [socket, loadOnlineUsers]);
-  const user = useSelector((state) => state.showOnlineUsers);
+  // const user = useSelector((state) => state.showOnlineUsers);
 
   useEffect(() => {
     socket.current.on("getMessage", (data) => {

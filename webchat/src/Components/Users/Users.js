@@ -3,13 +3,7 @@ import { useSelector } from "react-redux";
 
 const Users = ({ userName, id, index }) => {
   const user = useSelector((state) => state.showOnlineUsers);
-  console.log(
-    index,
-    "index is",
-    user && user?.users[index]?.userId,
-    "Online users",
-    id
-  );
+
   return (
     <>
       <UserAvatar id="2" />
@@ -17,12 +11,12 @@ const Users = ({ userName, id, index }) => {
         <div className="chatName flex-column font-h4 font-600">{userName}</div>
       </div>
 
-      {/* {user?.users && user?.users[index]?.userId === id && (
-        <div className="onLineTag"></div>
-      )} */}
       {user?.users && user?.users?.some((user) => user?.userId === id) && (
         <div className="onLineTag"></div>
       )}
+      {/* {
+        Show Message one message received
+      } */}
     </>
   );
 };

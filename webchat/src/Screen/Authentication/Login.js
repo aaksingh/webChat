@@ -2,7 +2,8 @@ import { useState } from "react";
 import "./Login.scss";
 import MyButton from "../../Components/InputComponents/MyButton";
 import Input from "../../Components/InputComponents/Input";
-
+import PopUp from "../../Components/PopUp/PopUp";
+import { String } from "../../Constants/String";
 const Login = (props) => {
   const [active, setActive] = useState(false);
   return (
@@ -11,14 +12,14 @@ const Login = (props) => {
         <div className={"bluebg " + (active ? "" : " blueActive")}>
           {active ? (
             <div className="box" onClick={() => setActive(false)}>
-              <h2>Welcome Back</h2>
-              <h1>Sign in to chat</h1>
+              <h2>{String.WELCOME}</h2>
+              <h1>{String.SIGN}</h1>;
               <MyButton title="SIGN IN" id="1" />
             </div>
           ) : (
             <div className="box" onClick={() => setActive(true)}>
-              <h2>Hello, Friend!</h2>
-              <h1>Create Account</h1>
+              <h2>{String.HELLO}</h2>
+              <h1>{String.CREATE}</h1>
               <MyButton title="SIGN UP" id="1" />
             </div>
           )}
@@ -27,19 +28,14 @@ const Login = (props) => {
         <div className={"formBx" + (active ? " active" : "")}>
           {active ? (
             <>
-              <span className="signText">Sign Up to WebTalk</span>
-              <div className="social flex-row">
-                <div className="popUp flex-column">
-                  <img src="https://img.icons8.com/ios-glyphs/30/000000/facebook.png" />
-                </div>
-                <div className="popUp flex-column">
-                  <img src="https://img.icons8.com/ios-glyphs/30/000000/google-logo.png" />
-                </div>
-                <div className="popUp flex-column">
-                  <img src="https://img.icons8.com/ios-glyphs/30/000000/twitter--v1.png" />
-                </div>
+              <span className="signText">{String.SIGNUP}</span>
+              <div
+                className="social"
+                style={{ display: "flex", flexDirection: "row" }}
+              >
+                <PopUp />
               </div>
-              <span>or signup using credentials</span>
+              <span>{String.CREAD}</span>
               <Input
                 id="1"
                 value={props.username}
@@ -62,19 +58,14 @@ const Login = (props) => {
             </>
           ) : (
             <>
-              <span className="signText">Sign in to WebTalk</span>
-              <div className="social flex-row">
-                <div className="popUp flex-column">
-                  <img src="https://img.icons8.com/ios-glyphs/30/000000/facebook.png" />
-                </div>
-                <div className="popUp flex-column">
-                  <img src="https://img.icons8.com/ios-glyphs/30/000000/google-logo.png" />
-                </div>
-                <div className="popUp flex-column">
-                  <img src="https://img.icons8.com/ios-glyphs/30/000000/twitter--v1.png" />
-                </div>
+              <span className="signText">{String.SIGNIN}</span>
+              <div
+                className="social"
+                style={{ display: "flex", flexDirection: "row" }}
+              >
+                <PopUp />
               </div>
-              <span>or signin using credentials</span>
+              <span>{String.CREAD}</span>
 
               <Input
                 id="1"
