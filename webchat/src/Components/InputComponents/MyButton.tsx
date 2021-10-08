@@ -1,5 +1,12 @@
 import "./MyButton.scss";
-const MyButton = ({ title, id, handleClick }) => {
+
+interface MyButtonProps {
+  title: string;
+  id: string;
+  handleClick?: (e: any) => void;
+}
+
+const MyButton: React.FC<MyButtonProps> = ({ title, id, handleClick }) => {
   return (
     <div
       className={"myButton " + (id === "1" ? " oneButton" : " twoButton")}

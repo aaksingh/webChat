@@ -5,6 +5,7 @@ import Input from "../../Components/InputComponents/Input";
 import PopUp from "../../Components/PopUp/PopUp";
 import { String } from "../../Constants/String";
 const Login = (props) => {
+  console.log(props, "in augh");
   const [active, setActive] = useState(false);
   return (
     <div className="login">

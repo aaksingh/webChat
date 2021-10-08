@@ -11,7 +11,7 @@ import loadable from "@loadable/component";
 import "./DashBoard.scss";
 import { addMessage } from "../../Redux/actions/messageActions";
 import Users from "../../Components/Users/Users";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loadNewMessage } from "../../Redux/actions/newMessageAction";
 const Wait = loadable(() => import("../../Components/Wait/Wait"), {
   fallback: <></>,
@@ -45,6 +45,8 @@ const DashBoard = ({
   loadOnlineUsers,
 }) => {
   const dispatch = useDispatch();
+  // const { users } = useSelector((state) => state.users);
+  // console.log(users);
 
   const val = localStorage.getItem("userId");
 
@@ -82,6 +84,7 @@ const DashBoard = ({
 
   useEffect(() => {
     socket.current.on("getUsers", (data) => {
+      console.log(data, "Omline");
       loadOnlineUsers(data);
     });
   }, [socket, loadOnlineUsers]);
@@ -101,7 +104,7 @@ const DashBoard = ({
           attachments: data.attachments,
         },
       };
-      localStorage.removeItem("roomId");
+      // localStorage.removeItem("roomId");
       if (messageData.senderId === localStorage.getItem("roomId")) {
         dispatch(
           addMessage({ message: messageData, receiver: messageData.senderId })

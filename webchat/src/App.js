@@ -1,6 +1,5 @@
 import { signIn, signUp } from "./api/api";
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import loadable from "@loadable/component";
 const Login = loadable(() => import("./Screen/Authentication/Login.js"), {
   fallback: <></>,
@@ -11,7 +10,6 @@ const DashBoard = loadable(() => import("./Screen/DashBoard/DashBoard.js"), {
 
 const App = () => {
   const [socket, setSocket] = useState();
-  const [id, setID] = useState();
   const [login, setlogin] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setpassword] = useState("");
@@ -97,3 +95,7 @@ export default App;
 //     setID(data.id);
 //   });
 // }, [socket]);
+
+// const [id, setID] = useState();
+
+// import { io } from "socket.io-client";
