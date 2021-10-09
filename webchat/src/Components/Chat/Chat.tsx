@@ -33,7 +33,7 @@ interface MessageState {
 const Chat = ({ socket, sender, receiver }: Props) => {
   type RootState = ReturnType<typeof reducer>;
 
-  const messages = useSelector((state: RootState) => state.messages);
+  const messages: any = useSelector((state: RootState) => state.messages);
   const { friendDetail } = useSelector(
     (state: RootState) => state.friendDetails
   );

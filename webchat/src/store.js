@@ -1,7 +1,7 @@
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import thunk from "redux-thunk";
 import { usersList } from "./Redux/reducers/usersReducers.js";
-import { messageList } from "./Redux/reducers/messageReducer";
+import { messageList } from "./Redux/reducers/messageReducer.ts";
 import { myReply } from "./Redux/reducers/replyReducer.js";
 import { detailsReducer } from "./Redux/reducers/friendDetailsReducer.js";
 import { showProfileReducer } from "./Redux/reducers/profileReducer.js";
