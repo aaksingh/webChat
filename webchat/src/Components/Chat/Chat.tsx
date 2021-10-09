@@ -13,9 +13,10 @@ import { reducer } from "../../store";
 
 interface Props {
   socket: any;
-  sender: string;
+  sender: string | null;
   receiver: string;
 }
+
 interface MessageState {
   messageId: string;
   senderId: string;
@@ -36,7 +37,7 @@ const Chat = ({ socket, sender, receiver }: Props) => {
   const { friendDetail } = useSelector(
     (state: RootState) => state.friendDetails
   );
-  const user = useSelector((state: RootState) => state.showOnlineUsers);
+  const { users } = useSelector((state: RootState) => state.showOnlineUsers);
 
   const dispatch = useDispatch();
 
@@ -58,7 +59,7 @@ const Chat = ({ socket, sender, receiver }: Props) => {
   }, [sender, receiver, dispatch]);
 
   useEffect(() => {
-    setMess(messages[receiver]);
+    messages && setMess(messages[receiver]);
   }, [messages, socket, receiver]);
 
   const handleCreate = async (
@@ -98,8 +99,8 @@ const Chat = ({ socket, sender, receiver }: Props) => {
         await create(messageData);
         dispatch(addMessage({ message: messageData, receiver: receiver }));
 
-        user &&
-          user?.users?.some((user) => user?.userId === receiver) &&
+        users &&
+          users?.some((user: any) => user?.userId === receiver) &&
           socket.current.emit("sendmessage", {
             time: time,
             senderId: sender,
