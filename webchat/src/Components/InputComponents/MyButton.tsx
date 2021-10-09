@@ -3,10 +3,10 @@ import "./MyButton.scss";
 interface MyButtonProps {
   title: string;
   id: string;
-  handleClick?: (e: any) => void;
+  handleClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
-const MyButton: React.FC<MyButtonProps> = ({ title, id, handleClick }) => {
+const MyButton = ({ title, id, handleClick }: MyButtonProps) => {
   return (
     <div
       className={"myButton " + (id === "1" ? " oneButton" : " twoButton")}

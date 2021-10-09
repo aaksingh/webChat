@@ -3,7 +3,7 @@ import "./Chat.scss";
 import "../../Styles/style.scss";
 import ChatHeader from "../ChatHeader/ChatHeader";
 import { create, chatList } from "../../api/api";
-import Message from "../Message/Message";
+import Message from "../Message/Message.tsx";
 import Input from "../Input/Input";
 import { days, months } from "../../Constants/Array.js";
 import { useSelector, useDispatch } from "react-redux";

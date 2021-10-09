@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import "./Message.scss";
 import { connect } from "react-redux";
 import UserAvatar from "../Avatar/Avatar";
-import { replyList } from "../../api/api";
-import { ReactComponent as Reply } from "../../Assets/Reply.svg";
+// import { replyList } from "../../api/api";
+// import { ReactComponent as Reply } from "../../Assets/Reply.svg";
 // import { io } from "socket.io-client";
 
 const Message = ({ message, handleClick, visible, detail, id }) => {
+  console.log(message, visible, detail, "Messages are");
+
   const [link, setLink] = useState(false);
   const [num, setNum] = useState();
 
@@ -19,12 +21,12 @@ const Message = ({ message, handleClick, visible, detail, id }) => {
   }, [message]);
 
   //IIFE practice
-  useEffect(() => {
-    (async () => {
-      let data = await replyList(message._id);
-      setNum(data.data.length);
-    })();
-  }, [message._id]);
+  // useEffect(() => {
+  //   (async () => {
+  //     let data = await replyList(message._id);
+  //     setNum(data.data.length);
+  //   })();
+  // }, [message._id]);
 
   return (
     <div className={"message flex-column" + (visible ? " show" : "")}>
@@ -40,14 +42,14 @@ const Message = ({ message, handleClick, visible, detail, id }) => {
       ) : null}
 
       <div className="messageSection flex-column">
-        {id === 1 && (
+        {/* {id === 1 && (
           <div className={"menulist flex-row"}>
             <Reply
               onClick={handleClick}
               style={{ cursor: "pointer", color: "white", width: "16px" }}
             />
           </div>
-        )}
+        )} */}
         {/* <div className="time">
           {message?.time[1]} {message?.time[2]}
         </div>{" "} */}
@@ -57,9 +59,9 @@ const Message = ({ message, handleClick, visible, detail, id }) => {
         >
           {message?.message.message}
         </span>
-        <span className="replySpan" onClick={handleClick}>
+        {/* <span className="replySpan" onClick={handleClick}>
           {num > 0 ? (num > 1 ? `${num} replies` : `${num} reply`) : null}
-        </span>
+        </span> */}
       </div>
     </div>
   );
