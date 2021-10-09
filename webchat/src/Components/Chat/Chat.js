@@ -9,13 +9,10 @@ import { days, months } from "../../Constants/Array.js";
 import { useSelector, useDispatch } from "react-redux";
 import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
 import Peer from "simple-peer";
-import {
-  clearNewMessage,
-  clearNewMessageses,
-} from "../../Redux/actions/newMessageAction";
+import { clearNewMessageses } from "../../Redux/actions/newMessageAction";
 const Chat = ({ socket, sender, receiver }) => {
   const messages = useSelector((state) => state.messages);
-  const { detail } = useSelector((state) => state.friendDetails);
+  const { friendDetail } = useSelector((state) => state.friendDetails);
   const user = useSelector((state) => state.showOnlineUsers);
 
   const dispatch = useDispatch();
@@ -105,7 +102,7 @@ const Chat = ({ socket, sender, receiver }) => {
     <div className="chatReply flex-row">
       <div className="chat flex-column font-family">
         <div className="chat__Header flex-row">
-          <ChatHeader detail={detail} show={true} />
+          <ChatHeader detail={friendDetail} show={true} />
         </div>
         <div className="chatSection flex-column">
           <div className="chatStart flex-column">
@@ -116,7 +113,7 @@ const Chat = ({ socket, sender, receiver }) => {
                     visible={
                       !(i > 0 && mess[i - 1]?.senderId === mess[i]?.senderId)
                     }
-                    userName={detail}
+                    userName={friendDetail}
                     // id={m?._id}
                     i={i}
                     message={m}

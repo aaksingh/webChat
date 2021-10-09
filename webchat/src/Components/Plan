@@ -1,8 +1,0 @@
-1. Chat Room Redux 
- 
- Storing which chat window is open 
-
-
-2. Incoming message reducer if the receiverID chat room is not open 
-
-3. Render 1 in front of chat room which received a message

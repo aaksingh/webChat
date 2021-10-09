@@ -2,15 +2,13 @@ import { useState, useEffect } from "react";
 import "./Message.scss";
 import UserAvatar from "../Avatar/Avatar";
 
-type IMessage = {
-  attachments: Array<any>;
-  message: string | number;
-  read: boolean;
-  referenceId: string;
-};
-
 type IMessageProps = {
-  message: IMessage;
+  message: {
+    attachments: Array<any>;
+    message: string | number;
+    read: boolean;
+    referenceId: string;
+  };
   messageId: string;
   receiverId: string;
   senderId: string;
@@ -20,10 +18,10 @@ type IMessageProps = {
 interface IProps {
   message: IMessageProps;
   visible: boolean;
-  detail: string;
+  userName: string;
 }
 
-const Message = ({ message, visible, detail }: IProps) => {
+const Message = ({ message, visible, userName }: IProps) => {
   const [link, setLink] = useState(false);
 
   useEffect(() => {
@@ -42,7 +40,7 @@ const Message = ({ message, visible, detail }: IProps) => {
           <div className="name">
             {localStorage.getItem("userId") === message.senderId
               ? localStorage.getItem("userName")
-              : detail}
+              : userName}
           </div>
         </div>
       ) : null}

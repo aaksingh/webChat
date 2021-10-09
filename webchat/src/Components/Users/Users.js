@@ -6,9 +6,9 @@ const Users = ({ userName, id, index }) => {
   const user = useSelector((state) => state.showOnlineUsers);
   const newMessages = useSelector((state) => state.newMessages);
 
-  useEffect(() => {
-    console.log(newMessages.ids.includes(id));
-  }, [newMessages]);
+  // useEffect(() => {
+  //   console.log(newMessages.ids.includes(id));
+  // }, [newMessages]);
   return (
     <>
       <UserAvatar id="2" />

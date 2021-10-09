@@ -4,12 +4,11 @@ import loadable from "@loadable/component";
 const Login = loadable(() => import("./Screen/Authentication/Login.js"), {
   fallback: <></>,
 });
-const DashBoard = loadable(() => import("./Screen/DashBoard/DashBoard.js"), {
+const DashBoard = loadable(() => import("./Screen/DashBoard/DashBoard.jsx"), {
   fallback: <></>,
 });
 
 const App = () => {
-  const [socket, setSocket] = useState();
   const [login, setlogin] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setpassword] = useState("");
@@ -44,7 +43,6 @@ const App = () => {
 
         localStorage.setItem("userId", data.data.user?._id);
         localStorage.setItem("conversationId", data.data.user?._id);
-        console.log("here");
 
         setlogin(true);
       } else {
@@ -70,11 +68,7 @@ const App = () => {
         />
       ) : (
         <>
-          <DashBoard
-            socket={socket}
-            onClick={logout}
-            userName={localStorage.getItem("userName")}
-          />
+          <DashBoard onClick={logout} />
         </>
       )}
     </div>
