@@ -7,7 +7,7 @@ import { detailsReducer } from "./Redux/reducers/friendDetailsReducer.js";
 import { showProfileReducer } from "./Redux/reducers/profileReducer.js";
 import { showOnlineUsers } from "./Redux/reducers/socketReducer.js";
 import { newMessageList } from "./Redux/reducers/newMessageReducer.js";
-const reducer = combineReducers({
+export const reducer = combineReducers({
   users: usersList,
   messages: messageList,
   reply: myReply,

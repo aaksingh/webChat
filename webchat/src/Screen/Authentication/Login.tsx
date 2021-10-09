@@ -1,10 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "./Login.scss";
 import MyButton from "../../Components/InputComponents/MyButton";
 import Input from "../../Components/InputComponents/Input";
 import PopUp from "../../Components/PopUp/PopUp";
 import { String } from "../../Constants/String";
-const Login = (props) => {
+const Login = (props: any) => {
+  console.log(props);
   const [active, setActive] = useState(false);
   return (
     <div className="login">
@@ -39,7 +40,7 @@ const Login = (props) => {
               <Input
                 id="1"
                 value={props.username}
-                onChange={(e) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   props.setUsername(e.target.value);
                 }}
               />
@@ -70,13 +71,17 @@ const Login = (props) => {
               <Input
                 id="1"
                 value={props.username}
-                onChange={(e) => props.setUsername(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  props.setUsername(e.target.value)
+                }
               />
 
               <Input
                 id="2"
                 value={props.password}
-                onChange={(e) => props.setpassword(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  props.setpassword(e.target.value)
+                }
               />
 
               <MyButton

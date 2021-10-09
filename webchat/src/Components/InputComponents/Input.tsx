@@ -2,8 +2,8 @@ import "./Input.scss";
 
 interface InputProps {
   id: string;
-  value: string;
-  onChange: () => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Input = ({ id, value, onChange }: InputProps) => {

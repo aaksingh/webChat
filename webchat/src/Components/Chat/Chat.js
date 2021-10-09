@@ -12,6 +12,7 @@ import Peer from "simple-peer";
 import { clearNewMessageses } from "../../Redux/actions/newMessageAction";
 const Chat = ({ socket, sender, receiver }) => {
   const messages = useSelector((state) => state.messages);
+  console.log(messages);
   const { friendDetail } = useSelector((state) => state.friendDetails);
   const user = useSelector((state) => state.showOnlineUsers);
 
@@ -115,13 +116,12 @@ const Chat = ({ socket, sender, receiver }) => {
                     }
                     userName={friendDetail}
                     // id={m?._id}
-                    i={i}
+
                     message={m}
                     // handleClick={() => {
                     // setShow(true);
                     // setRepMessage(m);
                     // }}
-                    id={1}
                   />
                 </div>
               );
