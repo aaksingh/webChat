@@ -1,4 +1,4 @@
-import { SET_ROOMID } from "../constants/constants";
+import { RoomId } from "../constants/constantsTypes";
 
 export interface RoomIdReducer {
   roomId: string;
@@ -13,7 +13,7 @@ export const roomIdReducer = (
   action: { type: string; payload: string }
 ) => {
   switch (action.type) {
-    case SET_ROOMID:
+    case RoomId.SET_ROOMID:
       return {
         roomId: action.payload,
       };

@@ -1,19 +1,22 @@
-import { ADD_NEW_MESSAGE, CLEAR_NEW_MESSAGE } from "../constants/constants.js";
+import { NewMessages } from "../constants/constantsTypes";
 
-var initial = {
+interface STATE {
+  ids: Array<string>;
+}
+var initial: STATE = {
   ids: [],
 };
 
-export const newMessageList = (state = initial, action) => {
+export const newMessageList = (state = initial, action: any) => {
   switch (action.type) {
-    case ADD_NEW_MESSAGE: {
+    case NewMessages.ADD_NEW_MESSAGE: {
       return {
         ...state,
         ids: [...state.ids, action.payload.id],
       };
     }
 
-    case CLEAR_NEW_MESSAGE: {
+    case NewMessages.CLEAR_NEW_MESSAGE: {
       return {
         ...state,
         ids: state.ids.filter((ids) => ids === action.payload.id),

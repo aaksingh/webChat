@@ -1,4 +1,4 @@
-import { UPDATE_USER } from "../constants/constants.js";
+import { OnlineUser } from "../constants/constantsTypes";
 
 var INITIAL_STATE = {
   users: [],
@@ -6,7 +6,7 @@ var INITIAL_STATE = {
 
 export const showOnlineUsers = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case UPDATE_USER:
+    case OnlineUser.UPDATE_USER:
       return {
         ...state,
         users: action.payload,

@@ -1,8 +1,8 @@
-import { LOAD_USERS } from "../constants/constants.js";
+import { Users } from "../constants/constantsTypes";
 
 export const loadUsers = (data) => {
   return {
-    type: LOAD_USERS,
+    type: Users.LOAD_USERS,
     payload: data,
   };
 };

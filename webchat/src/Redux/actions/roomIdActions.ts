@@ -1,8 +1,8 @@
-import { SET_ROOMID } from "../constants/constants";
+import { RoomId } from "../constants/constantsTypes";
 
 export const setRoomId = (id: string) => {
   return {
-    type: SET_ROOMID,
+    type: RoomId.SET_ROOMID,
     payload: id,
   };
 };

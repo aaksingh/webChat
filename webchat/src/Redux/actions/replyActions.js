@@ -1,21 +1,21 @@
-import { ADD_REPLY, CLEAR_REPLY, LOAD_REPLY } from "../constants/constants.js";
+import { Reply } from "../constants/constantsTypes";
 
 export const loadReply = (data) => {
   return {
-    type: LOAD_REPLY,
+    type: Reply.LOAD_REPLY,
     payload: data,
   };
 };
 
 export const addReply = (data) => {
   return {
-    type: ADD_REPLY,
+    type: Reply.ADD_REPLY,
     payload: data,
   };
 };
 
 export const clearReply = () => {
   return {
-    type: CLEAR_REPLY,
+    type: Reply.CLEAR_REPLY,
   };
 };

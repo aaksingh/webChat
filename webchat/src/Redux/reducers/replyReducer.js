@@ -1,4 +1,4 @@
-import { CLEAR_REPLY, LOAD_REPLY, ADD_REPLY } from "../constants/constants.js";
+import { Reply } from "../constants/constantsTypes";
 
 var STATE = {
   reply: [],
@@ -6,18 +6,18 @@ var STATE = {
 
 export const myReply = (state = STATE, action) => {
   switch (action.type) {
-    case LOAD_REPLY:
+    case Reply.LOAD_REPLY:
       return {
         ...state,
         reply: [...state.reply, action.payload],
       };
 
-    case CLEAR_REPLY: {
+    case Reply.CLEAR_REPLY: {
       STATE.reply = [];
       return STATE;
     }
 
-    case ADD_REPLY:
+    case Reply.ADD_REPLY:
       return {
         ...state,
         reply: [...state.reply, state.reply[0].push(action.payload)],

@@ -1,8 +1,8 @@
-import { USER_DETAIL } from "../constants/constants.js";
+import { UserDetail } from "../constants/constantsTypes";
 
 export const userDetail = (data) => {
   return {
-    type: USER_DETAIL,
+    type: UserDetail.USER_DETAIL,
     payload: data,
   };
 };

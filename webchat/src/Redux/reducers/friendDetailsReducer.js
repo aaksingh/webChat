@@ -1,4 +1,4 @@
-import { USER_DETAIL } from "../constants/constants.js";
+import { UserDetail } from "../constants/constantsTypes.ts";
 
 export const INITIAL_STATE = {
   friendDetail: "",
@@ -6,7 +6,7 @@ export const INITIAL_STATE = {
 
 export const detailsReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case USER_DETAIL:
+    case UserDetail.USER_DETAIL:
       return {
         ...state,
         friendDetail: action.payload,

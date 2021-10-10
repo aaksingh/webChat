@@ -1,4 +1,4 @@
-import { ADDONLINEUSER } from "../constants/constants.js";
+import { AddOnlineUser } from "../constants/constantsTypes";
 
 export interface OnlineUsers {
   socketId: string;
@@ -14,7 +14,7 @@ export const onlineUserReducer = (
   action: { type: string; payload: OnlineUsers }
 ) => {
   switch (action.type) {
-    case ADDONLINEUSER:
+    case AddOnlineUser.ADDONLINEUSER:
       return {
         ...state,
         users: action.payload,

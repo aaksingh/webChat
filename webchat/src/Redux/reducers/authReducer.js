@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_UP } from "../constants/constants.js";
+import { Cred } from "../constants/constantsTypes";
 
 export const INITIAL_STATE = {
     user=[]
@@ -7,12 +7,12 @@ export const INITIAL_STATE = {
 export const user = (state=INITIAL_STATE,action)=>{
 
     switch(action.type){
-        case SIGN_IN:
+        case Cred.SIGN_IN:
             return{
 
             }
 
-        case SIGN_UP:
+        case Cred.SIGN_UP:
             return{
 
             }   

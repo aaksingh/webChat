@@ -1,8 +1,4 @@
-import {
-  LOAD_MESSAGES,
-  CLEAR_MESSAGES,
-  ADD_MESSAGES,
-} from "../constants/constants.js";
+import { Messages } from "../constants/constantsTypes";
 import { MessageState } from "../../types/types";
 
 interface DataType {
@@ -11,22 +7,21 @@ interface DataType {
 }
 
 export const loadMeesages = (data: DataType) => {
-  console.log(data, "Dqwdq");
   return {
-    type: LOAD_MESSAGES,
+    type: Messages.LOAD_MESSAGES,
     payload: data,
   };
 };
 
-export const addMessage = (data: MessageState) => {
+export const addMessage = (data: any) => {
   return {
-    type: ADD_MESSAGES,
+    type: Messages.ADD_MESSAGES,
     payload: data,
   };
 };
 
 export const clearMessages = () => {
   return {
-    type: CLEAR_MESSAGES,
+    type: Messages.CLEAR_MESSAGES,
   };
 };

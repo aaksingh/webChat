@@ -1,8 +1,8 @@
-import { SHOW_PROFILE } from "../constants/constants.js";
+import { Profile } from "../constants/constantsTypes";
 
 export const showProfile = (data) => {
   return {
-    type: SHOW_PROFILE,
+    type: Profile.SHOW_PROFILE,
     payload: data,
   };
 };

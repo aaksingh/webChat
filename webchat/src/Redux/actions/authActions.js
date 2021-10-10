@@ -1,15 +1,15 @@
-import { SIGN_IN, SIGN_UP } from "../constants/constants.js";
+import { Cred } from "../constants/constantsTypes.ts";
 
 export const signIn = (formData) => {
   return {
-    type: SIGN_IN,
+    type: Cred.SIGN_IN,
     payload: formData,
   };
 };
 
 export const signUp = (formData) => {
   return {
-    type: SIGN_UP,
+    type: Cred.SIGN_UP,
     payload: formData,
   };
 };

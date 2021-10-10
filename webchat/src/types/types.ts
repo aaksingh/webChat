@@ -25,3 +25,18 @@ export interface message {
   attachments: Array<any>;
   referenceId: string;
 }
+export interface MessageState {
+  time: Array<string>;
+  senderId: string;
+  receiverId: string;
+  messageId: string;
+  message: {
+    message: string | number;
+    read: boolean;
+    attachments: Array<any>;
+    referenceId: string;
+  };
+  referenceId: string;
+  read: boolean;
+  attachments: Array<any>;
+}

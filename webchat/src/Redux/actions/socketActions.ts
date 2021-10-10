@@ -1,4 +1,4 @@
-import { UPDATE_USER } from "../constants/constants.js";
+import { OnlineUser } from "../constants/constantsTypes";
 
 export interface OnlineUsers {
   socketId: string;
@@ -7,7 +7,7 @@ export interface OnlineUsers {
 
 export const loadOnlineUsers = (data: OnlineUsers) => {
   return {
-    type: UPDATE_USER,
+    type: OnlineUser.UPDATE_USER,
     payload: data,
   };
 };

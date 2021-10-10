@@ -1,5 +1,4 @@
-import { LOAD_MESSAGES, ADD_MESSAGES } from "../constants/constants.js";
-
+import { Messages } from "../constants/constantsTypes";
 interface State {
   [key: string]: Array<any>;
 }
@@ -10,12 +9,12 @@ export const messageList = (
   action: { type: string; payload: any }
 ) => {
   switch (action.type) {
-    case LOAD_MESSAGES:
+    case Messages.LOAD_MESSAGES:
       return {
         [action.payload.receiver]: action.payload.messages,
       };
 
-    case ADD_MESSAGES:
+    case Messages.ADD_MESSAGES:
       let a = action.payload.message;
       var message = state[action.payload.receiver];
 

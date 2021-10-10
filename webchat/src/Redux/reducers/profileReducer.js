@@ -1,4 +1,4 @@
-import { SHOW_PROFILE } from "../constants/constants.js";
+import { Profile } from "../constants/constantsTypes";
 
 var INITIAL_STATE = {
   show: false,
@@ -6,7 +6,7 @@ var INITIAL_STATE = {
 
 export const showProfileReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case SHOW_PROFILE:
+    case Profile.SHOW_PROFILE:
       return {
         ...state,
         show: action.payload,

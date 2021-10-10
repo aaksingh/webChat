@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
 import { clearNewMessageses } from "../../Redux/actions/newMessageAction";
 import { reducer } from "../../store";
+import { MessageState } from "../../types/types";
 
 interface Props {
   socket: any;
@@ -17,23 +18,11 @@ interface Props {
   receiver: string;
 }
 
-interface MessageState {
-  messageId: string;
-  senderId: string;
-  receiverId: string;
-  message: {
-    message: string | number;
-    read: boolean;
-    attachments: Array<any>;
-    referenceId: string;
-  };
-  time: Array<string>;
-}
-
 const Chat = ({ socket, sender, receiver }: Props) => {
   type RootState = ReturnType<typeof reducer>;
 
   const messages: any = useSelector((state: RootState) => state.messages);
+
   const { friendDetail } = useSelector(
     (state: RootState) => state.friendDetails
   );
@@ -100,7 +89,10 @@ const Chat = ({ socket, sender, receiver }: Props) => {
         dispatch(addMessage({ message: messageData, receiver: receiver }));
 
         users &&
-          users?.some((user: any) => user?.userId === receiver) &&
+          users?.some(
+            (user: { userId: string; socketId: string }) =>
+              user?.userId === receiver
+          ) &&
           socket.current.emit("sendmessage", {
             time: time,
             senderId: sender,
@@ -140,13 +132,7 @@ const Chat = ({ socket, sender, receiver }: Props) => {
                       !(i > 0 && mess[i - 1]?.senderId === mess[i]?.senderId)
                     }
                     userName={friendDetail}
-                    // id={m?._id}
-
                     message={m}
-                    // handleClick={() => {
-                    // setShow(true);
-                    // setRepMessage(m);
-                    // }}
                   />
                 </div>
               );

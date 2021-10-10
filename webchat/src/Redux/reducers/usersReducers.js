@@ -1,4 +1,4 @@
-import { LOAD_USERS } from "../constants/constants.js";
+import { Users } from "../constants/constantsTypes";
 
 export const INITIAL_STATE = {
   users: [],
@@ -6,7 +6,7 @@ export const INITIAL_STATE = {
 
 export const usersList = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case LOAD_USERS:
+    case Users.LOAD_USERS:
       return {
         ...state,
         users: [...state.users, action.payload],
