@@ -2,33 +2,14 @@ import { useState, useEffect } from "react";
 import "./Message.scss";
 import UserAvatar from "../Avatar/Avatar";
 
-type IMessageProps = {
-  message: {
-    attachments: Array<any>;
-    message: string | number;
-    read: boolean;
-    referenceId: string;
-  };
-  messageId: string;
-  receiverId: string;
-  senderId: string;
-  time: Array<string>;
-};
-
-interface IProps {
-  message: IMessageProps;
-  visible: boolean;
-  userName: string;
-}
-
-const Message = ({ message, visible, userName }: IProps) => {
+const Message = ({ message, visible, userName }) => {
   const [link, setLink] = useState(false);
 
   useEffect(() => {
     (() => {
       var strRegex = "^((https|http|ftp|rtsp|mms)?://)";
       var re = new RegExp(strRegex);
-      setLink(re.test(message?.message.message as string));
+      setLink(re.test(message?.message.message));
     })();
   }, [message]);
 
@@ -47,9 +28,7 @@ const Message = ({ message, visible, userName }: IProps) => {
 
       <div className="messageSection flex-column">
         <span
-          onClick={() =>
-            link ? window.open(message?.message.message as string) : null
-          }
+          onClick={() => (link ? window.open(message?.message.message) : null)}
           className={link ? "link" : ""}
         >
           {message?.message.message}

@@ -1,12 +1,6 @@
 import "./MyButton.scss";
 
-interface MyButtonProps {
-  title: string;
-  id: string;
-  handleClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-}
-
-const MyButton = ({ title, id, handleClick }: MyButtonProps) => {
+const MyButton = ({ title, id, handleClick }) => {
   return (
     <div
       className={"myButton " + (id === "1" ? " oneButton" : " twoButton")}

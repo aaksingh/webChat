@@ -21,18 +21,27 @@ const useStyles = makeStyles((theme) => ({
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-const WDialog = (props) => {
+const WDialog = ({ show, children, maxWidth, minWidth, height }) => {
   const classes = useStyles();
 
   return (
     <Dialog
-      fullScreen
-      open={props.show}
+      open={show}
       TransitionComponent={Transition}
-      className={classes.dialog}
+      PaperProps={{
+        style: {
+          minWidth: maxWidth ?? "34%",
+          maxWidth: minWidth ?? "36%",
+          height: height ?? "30%",
+        },
+      }}
+      // BackdropProps={{
+      //   style: {
+      //     backgroundColor: "rgba(27, 27, 27, 0.95)",
+      //   },
+      // }}
     >
-      <div style={{ height: "3rem", background: "black" }}></div>
-      {props.children}
+      {children}
     </Dialog>
   );
 };

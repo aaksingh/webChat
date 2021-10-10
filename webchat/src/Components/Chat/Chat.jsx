@@ -12,27 +12,17 @@ import { clearNewMessageses } from "../../Redux/actions/newMessageAction";
 import { reducer } from "../../store";
 import { MessageState } from "../../types/types";
 
-interface Props {
-  socket: any;
-  sender: string | null;
-  receiver: string;
-}
+const Chat = ({ socket, sender, receiver }) => {
+  const messages = useSelector((state) => state.messages);
 
-const Chat = ({ socket, sender, receiver }: Props) => {
-  type RootState = ReturnType<typeof reducer>;
-
-  const messages: any = useSelector((state: RootState) => state.messages);
-
-  const { friendDetail } = useSelector(
-    (state: RootState) => state.friendDetails
-  );
-  const { users } = useSelector((state: RootState) => state.showOnlineUsers);
+  const { friendDetail } = useSelector((state) => state.friendDetails);
+  const { users } = useSelector((state) => state.showOnlineUsers);
 
   const dispatch = useDispatch();
 
-  const [mess, setMess] = useState<MessageState[]>();
+  const [mess, setMess] = useState();
   const [text, setText] = useState("");
-  const scrollRefArray: any = useRef();
+  const scrollRefArray = useRef();
 
   useEffect(() => {
     dispatch(clearNewMessageses(receiver));
@@ -51,9 +41,7 @@ const Chat = ({ socket, sender, receiver }: Props) => {
     messages && setMess(messages[receiver]);
   }, [messages, socket, receiver]);
 
-  const handleCreate = async (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  const handleCreate = async (e) => {
     e.preventDefault();
 
     let currentTimestamp = new Date();
@@ -89,10 +77,7 @@ const Chat = ({ socket, sender, receiver }: Props) => {
         dispatch(addMessage({ message: messageData, receiver: receiver }));
 
         users &&
-          users?.some(
-            (user: { userId: string; socketId: string }) =>
-              user?.userId === receiver
-          ) &&
+          users?.some((user) => user?.userId === receiver) &&
           socket.current.emit("sendmessage", {
             time: time,
             senderId: sender,
@@ -103,7 +88,7 @@ const Chat = ({ socket, sender, receiver }: Props) => {
             read: false,
             attachments: [],
           });
-      } catch (err: any) {
+      } catch (err) {
         console.log(err.message, "Fail to send message");
         return;
       }

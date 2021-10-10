@@ -1,12 +1,6 @@
 import "./Input.scss";
 
-interface InputProps {
-  id: string;
-  value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-const Input = ({ id, value, onChange }: InputProps) => {
+const Input = ({ id, value, onChange }) => {
   return (
     <div className="customField">
       {id === "1" ? (

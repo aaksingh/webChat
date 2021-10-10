@@ -1,6 +1,8 @@
 import { signIn, signUp } from "./api/api";
 import { useEffect, useState } from "react";
 import loadable from "@loadable/component";
+import WDialog from "./Components/Dialog/Dialog";
+import MyButton from "./Components/InputComponents/MyButton";
 const Login = loadable(() => import("./Screen/Authentication/Login"), {
   fallback: <></>,
 });
@@ -10,9 +12,11 @@ const DashBoard = loadable(() => import("./Screen/DashBoard/DashBoard"), {
 
 const App = () => {
   const [login, setlogin] = useState("false");
+  const [name, setName] = useState("");
   const [username, setUsername] = useState("");
-  const [password, setpassword] = useState("");
-  const [passwordConfirm, setpasswordConfirm] = useState("");
+  const [p1, setP1] = useState("");
+  const [p2, setP2] = useState("");
+  const [p3, setP3] = useState("");
 
   useEffect(() => {
     localStorage.removeItem("roomId");
@@ -23,21 +27,22 @@ const App = () => {
     }
   }, []);
 
-  const handleClick = async (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    i: number
-  ) => {
+  const handleClick = async (e, i) => {
     e.preventDefault();
 
     if (i === 0) {
-      await signUp({
-        username: username,
-        password: password,
-      });
+      if (p2 === p3) {
+        await signUp({
+          username: username,
+          password: p2,
+        });
+      } else {
+        alert("Invalid Credentials");
+      }
     } else if (i === 1) {
       const data = await signIn({
         username: username,
-        password: password,
+        password: p1,
       });
 
       if (data.data.status === "ok") {
@@ -65,13 +70,46 @@ const App = () => {
       {login === "false" ? (
         <Login
           onClick={handleClick}
+          {...{ name, setName }}
           {...{ username, setUsername }}
-          {...{ password, setpassword }}
-          {...{ passwordConfirm, setpasswordConfirm }}
+          {...{ p1, setP1 }}
+          {...{ p2, setP2 }}
+          {...{ p3, setP3 }}
         />
       ) : (
         <>
           <DashBoard onClick={logout} />
+          <WDialog show={false} maxWidth="36%" minWidth="34%" height="30%">
+            <div
+              className="flex-column"
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                height: "92%",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "2rem",
+                  paddingTop: "4%",
+                  paddingBottom: "4%",
+                }}
+              >
+                Logout?
+              </span>
+              <div
+                className="flex-row"
+                style={{
+                  width: "100%",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                }}
+              >
+                <MyButton title="Yes" id="2" handleClick={(e) => {}} />
+                <MyButton title="No" id="1" handleClick={(e) => {}} />
+              </div>
+            </div>
+          </WDialog>
         </>
       )}
     </div>

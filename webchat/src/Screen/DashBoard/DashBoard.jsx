@@ -35,15 +35,9 @@ const CButton = loadable(() => import("../../Components/Button/CButton"), {
   fallback: <></>,
 });
 
-interface Props {
-  onClick: () => void;
-}
-
-const DashBoard = ({ onClick }: Props) => {
-  type RootState = ReturnType<typeof reducer>;
-
-  const { users } = useSelector((state: RootState) => state.users);
-  const [user, setuser] = useState<UserDetails[]>();
+const DashBoard = ({ onClick }) => {
+  const { users } = useSelector((state) => state.users);
+  const [user, setuser] = useState();
 
   useEffect(() => {
     setuser(users[0]);
@@ -52,9 +46,9 @@ const DashBoard = ({ onClick }: Props) => {
   const dispatch = useDispatch();
   const val = localStorage.getItem("userId");
   const [loading, setLoading] = useState(false);
-  const [senderId, setsenderId] = useState<string | null>("");
-  const [receiverId, setreceiverId] = useState<string>("");
-  const socket: any = useRef();
+  const [senderId, setsenderId] = useState("");
+  const [receiverId, setreceiverId] = useState("");
+  const socket = useRef();
 
   useEffect(() => {
     (async () => {
@@ -82,13 +76,13 @@ const DashBoard = ({ onClick }: Props) => {
   }, [val]);
 
   useEffect(() => {
-    socket.current.on("getUsers", (data: UserOnline) => {
+    socket.current.on("getUsers", (data) => {
       dispatch(loadOnlineUsers(data));
     });
   }, [socket, loadOnlineUsers]);
 
   useEffect(() => {
-    socket.current.on("getMessage", (data: MessageData) => {
+    socket.current.on("getMessage", (data) => {
       let messageData = {
         time: data.time,
         senderId: data.senderId,
@@ -112,9 +106,9 @@ const DashBoard = ({ onClick }: Props) => {
     });
   }, [dispatch]);
 
-  const handleChat = async (j: number) => {
+  const handleChat = async (j) => {
     dispatch(clearMessages());
-    let user: UserDetails[] = users[0];
+    let user = users[0];
     localStorage.setItem("roomId", user[j]?._id);
     setreceiverId(user[j]._id);
     setsenderId(localStorage.getItem("userId"));
@@ -141,7 +135,7 @@ const DashBoard = ({ onClick }: Props) => {
             <div className="dm adspbtw font-h2 font-600">{String.CHAT}</div>
             <div className="userList flex-column">
               {user &&
-                user.map((user: UserDetails, i: number) => {
+                user.map((user, i) => {
                   return (
                     user?._id !== localStorage.getItem("userId") && (
                       <div

@@ -4,8 +4,7 @@ import MyButton from "../../Components/InputComponents/MyButton";
 import Input from "../../Components/InputComponents/Input";
 import PopUp from "../../Components/PopUp/PopUp";
 import { String } from "../../Constants/String";
-const Login = (props: any) => {
-  console.log(props);
+const Login = (props) => {
   const [active, setActive] = useState(false);
   return (
     <div className="login">
@@ -39,15 +38,23 @@ const Login = (props: any) => {
               <span>{String.CREAD}</span>
               <Input
                 id="1"
-                value={props.username}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  props.setUsername(e.target.value);
+                value={props.name}
+                onChange={(e) => {
+                  props.setName(e.target.value);
                 }}
               />
 
-              <Input id="2" />
+              <Input
+                id="2"
+                value={props.p2}
+                onChange={(e) => props.setP2(e.target.value)}
+              />
 
-              <Input id="2" />
+              <Input
+                id="2"
+                value={props.p3}
+                onChange={(e) => props.setP3(e.target.value)}
+              />
 
               <MyButton
                 title="Sign Up"
@@ -71,17 +78,13 @@ const Login = (props: any) => {
               <Input
                 id="1"
                 value={props.username}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  props.setUsername(e.target.value)
-                }
+                onChange={(e) => props.setUsername(e.target.value)}
               />
 
               <Input
                 id="2"
-                value={props.password}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  props.setpassword(e.target.value)
-                }
+                value={props.p1}
+                onChange={(e) => props.setP1(e.target.value)}
               />
 
               <MyButton
@@ -100,33 +103,3 @@ const Login = (props: any) => {
 };
 
 export default Login;
-
-// <Button
-//   variant="contained"
-//   className="cButton"
-//   onClick={(e) => props.onClick(e, 1)}
-//   style={{
-//     fontSize: "18px",
-//     fontWeight: 600,
-//     fontFamily: "Poppins",
-//     margin: "5% 0",
-//     background: "#4D774E",
-//     color: "#ffffff",
-//   }}
-// >
-//   Submit
-// </Button>
-//   <Button
-//     variant="contained"
-//     className="cButton"
-//     style={{
-//       fontSize: "18px",
-//       fontWeight: 600,
-//       fontFamily: "Poppins",
-//       margin: "5% 0",
-//       background: "#4D774E",
-//       color: "#ffffff",
-//     }}
-//   >
-//     Submit
-//   </Button>
