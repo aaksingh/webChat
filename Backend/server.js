@@ -7,7 +7,12 @@ import user from "./routes/user.js";
 import Conversation from "./models/conversation.js";
 import Rep from "./models/reply.js";
 import AddFriend from "./models/addfriend.js";
-import bodyParser from "body-parser";
+import fs from "fs";
+import { promisify } from "util";
+import { pipeline } from "stream";
+import multer from "multer";
+
+const pipelineAsync = promisify(pipeline);
 
 const port = process.env.PORT || 3001;
 const app = express();
@@ -94,6 +99,25 @@ app.post("/create", (req, res) => {
   } catch (error) {
     console.log(error.message, "chat creation failed.");
   }
+});
+const upload = multer();
+app.post("/upload", upload.single("file"), async (req, res, next) => {
+  const { file } = req;
+
+  const fileName =
+    "chat" + Math.floor(Math.random() * 1000) + file.detectedFileExtension;
+  if (file.detectedFileExtension === ".zip") {
+    await pipelineAsync(
+      file.stream,
+      fs.createWriteStream(`./public/zip/${fileName}`)
+    );
+  } else if (file.detectedFileExtension === ".jpg" || ".jpeg") {
+    await pipelineAsync(
+      file.stream,
+      fs.createWriteStream(`./public/images/${fileName}`)
+    );
+  }
+  res.send("file uploaded as" + fileName);
 });
 
 app.post("/reply", (req, res) => {
