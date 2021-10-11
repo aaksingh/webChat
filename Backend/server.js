@@ -41,7 +41,7 @@ app.get("/userDetails", user);
 app.get("/chatList", async (req, res) => {
   const senderId = req.query.s1;
   const receiverId = req.query.s2;
-  console.log(senderId, receiverId);
+  // console.log(senderId, receiverId);
   // client.get("postData", (err, redis_data) => {
   //   if (err) {
   //     throw error;
@@ -59,7 +59,7 @@ app.get("/chatList", async (req, res) => {
       ],
     });
 
-    console.log(data);
+    // console.log(data);
     // client.setex("postData", 3600, JSON.stringify(data));
     res.status(200).json(data);
   } catch (err) {
