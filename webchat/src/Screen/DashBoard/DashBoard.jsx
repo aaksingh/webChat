@@ -46,6 +46,7 @@ const DashBoard = ({ onClick, image }) => {
   const [loading, setLoading] = useState(false);
   const [senderId, setsenderId] = useState("");
   const [receiverId, setreceiverId] = useState("");
+  const [profile, setProfile] = useState(null);
   const socket = useRef();
 
   useEffect(() => {
@@ -104,12 +105,13 @@ const DashBoard = ({ onClick, image }) => {
     });
   }, [dispatch]);
 
-  const handleChat = async (j) => {
+  const handleChat = async (j, image) => {
     dispatch(clearMessages());
     let user = users[0];
     localStorage.setItem("roomId", user[j]?._id);
     setreceiverId(user[j]._id);
     setsenderId(localStorage.getItem("userId"));
+    setProfile(image);
   };
 
   function handleClick() {
@@ -141,14 +143,14 @@ const DashBoard = ({ onClick, image }) => {
                         onClick={() => {
                           dispatch(userDetail(user.username));
 
-                          handleChat(i);
+                          handleChat(i, user.image);
                         }}
                         key={i}
                       >
                         <Users
                           userName={user.username}
                           id={user._id}
-                          image={user?.image}
+                          image={user.image}
                         />
                       </div>
                     )
@@ -160,7 +162,12 @@ const DashBoard = ({ onClick, image }) => {
             <CButton title="Logout" disabled={false} onClick={handleClick} />
           </div>
           {receiverId ? (
-            <Chat socket={socket} sender={senderId} receiver={receiverId} />
+            <Chat
+              profile={profile}
+              socket={socket}
+              sender={senderId}
+              receiver={receiverId}
+            />
           ) : (
             <>
               <Connected />

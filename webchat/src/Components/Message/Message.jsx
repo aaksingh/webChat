@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import "./Message.scss";
-import UserAvatar from "../Avatar/Avatar";
+import { Avatar } from "@material-ui/core";
 
-const Message = ({ message, visible, userName }) => {
+const Message = ({ message, visible, userName, image }) => {
   const [link, setLink] = useState(false);
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const Message = ({ message, visible, userName }) => {
     <div className={"message flex-column" + (visible ? " show" : "")}>
       {visible ? (
         <div className="nameTime flex-row">
-          <UserAvatar id="2" />
+          <Avatar alt="Aakash Singh" src={image} />
           <div className="name">
             {localStorage.getItem("userId") === message.senderId
               ? localStorage.getItem("userName")

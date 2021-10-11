@@ -9,8 +9,9 @@ import { days, months } from "../../Constants/Array.js";
 import { useSelector, useDispatch } from "react-redux";
 import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
 import { clearNewMessageses } from "../../Redux/actions/newMessageAction";
+import Intro from "../Intro/Intro";
 
-const Chat = ({ socket, sender, receiver }) => {
+const Chat = ({ profile, socket, sender, receiver }) => {
   const messages = useSelector((state) => state.messages);
 
   const { friendDetail } = useSelector((state) => state.friendDetails);
@@ -103,10 +104,11 @@ const Chat = ({ socket, sender, receiver }) => {
     <div className="chatReply flex-row">
       <div className="chat flex-column font-family">
         <div className="chat__Header flex-row">
-          <ChatHeader detail={friendDetail} show={true} />
+          <ChatHeader profile={profile} detail={friendDetail} show={true} />
         </div>
         <div className="chatSection flex-column">
           <div className="chatStart flex-column">
+            <Intro {...{ profile, sender, receiver, friendDetail }} />
             {mess?.map((m, i) => {
               return (
                 <div className="messageSpan flex-column" ref={scrollRefArray}>
@@ -116,6 +118,7 @@ const Chat = ({ socket, sender, receiver }) => {
                     }
                     userName={friendDetail}
                     message={m}
+                    image={profile}
                   />
                 </div>
               );

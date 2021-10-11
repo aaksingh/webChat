@@ -11,7 +11,6 @@ const DashBoard = loadable(() => import("./Screen/DashBoard/DashBoard"), {
 });
 
 const App = () => {
-  console.log(localStorage.getItem("userImage"));
   const [login, setlogin] = useState("false");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");

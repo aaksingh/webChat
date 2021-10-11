@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { showProfile } from "../../Redux/actions/profileActions";
 
 const UserInfo = ({ detail, view = true, onClick }) => {
-  console.log(localStorage.getItem("userImage"));
   return (
     <>
       {view ? (

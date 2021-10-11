@@ -1,5 +1,5 @@
-import UserAvatar from "../Avatar/Avatar";
 import { useSelector } from "react-redux";
+import { Avatar } from "@material-ui/core";
 
 const Users = ({ userName, id, image }) => {
   const user = useSelector((state) => state.showOnlineUsers);
@@ -7,7 +7,8 @@ const Users = ({ userName, id, image }) => {
 
   return (
     <>
-      <UserAvatar id="2" image={image} />
+      <Avatar alt="Aakash Singh" src={image} />
+
       <div className="nameMessage flex-column">
         <div className="chatName flex-column font-h4 font-600">{userName}</div>
       </div>
