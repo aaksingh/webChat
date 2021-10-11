@@ -38,14 +38,6 @@ const Input = ({ text, setText, handleCreate, variant }) => {
           }}
           autoComplete="off"
         />
-      </div>
-      <div
-        className="flex-row adspbtw"
-        style={{
-          width: "98%",
-          background: "white",
-        }}
-      >
         <div
           style={{
             width: "20%",
@@ -70,6 +62,13 @@ const Input = ({ text, setText, handleCreate, variant }) => {
           <CButton title="Create" disabled={true} onClick={null} />
         )}
       </div>
+      <div
+        className="flex-row adspbtw"
+        style={{
+          width: "98%",
+          background: "white",
+        }}
+      ></div>
     </div>
   );
 };
