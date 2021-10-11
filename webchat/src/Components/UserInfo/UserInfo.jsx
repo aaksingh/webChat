@@ -1,24 +1,20 @@
-import React from "react";
 import "./UserInfo.scss";
-import UserAvatar from "../Avatar/Avatar";
 import { Avatar } from "@material-ui/core";
 import { connect } from "react-redux";
 import { showProfile } from "../../Redux/actions/profileActions";
 
 const UserInfo = ({ detail, view = true, onClick }) => {
+  console.log(localStorage.getItem("userImage"));
   return (
     <>
       {view ? (
         <div className="userDetails flex-row font-family" onClick={onClick}>
-          <UserAvatar id="2" />
+          <Avatar alt="Aakash Singh" src={localStorage.getItem("userImage")} />
           <div>{detail}</div>
         </div>
       ) : (
         <div className="userDetails flex-column font-family" onClick={onClick}>
-          <Avatar
-            alt="Aakash Singh"
-            src="https://thumbs.dreamstime.com/b/portrait-lion-black-detail-face-lion-hight-quality-portrait-lion-portrait-animal-portrait-lion-black-detail-145612151.jpg"
-          />
+          <Avatar alt="Aakash Singh" src={null} />
           <div>{detail}</div>
         </div>
       )}

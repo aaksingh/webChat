@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import "./Chat.scss";
 import "../../Styles/style.scss";
 import ChatHeader from "../ChatHeader/ChatHeader";
@@ -9,8 +9,6 @@ import { days, months } from "../../Constants/Array.js";
 import { useSelector, useDispatch } from "react-redux";
 import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
 import { clearNewMessageses } from "../../Redux/actions/newMessageAction";
-import { reducer } from "../../store";
-import { MessageState } from "../../types/types";
 
 const Chat = ({ socket, sender, receiver }) => {
   const messages = useSelector((state) => state.messages);

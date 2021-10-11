@@ -29,10 +29,12 @@ export const signUp = async (req, res) => {
   const password = await bcrypt.hash(req.body.password, 10);
   userDb.password = password;
   try {
-    User.create(userDb, (err, data) => {
+    await User.create(userDb, (err, data) => {
       if (err) {
+        console.log("fail");
         res.status(500).send(err);
       } else {
+        console.log("Done");
         res.status(201).send(data);
       }
     });

@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema({
     required: true,
   },
   password: String,
-  id: String,
+  image: String,
 });
 
 export default mongoose.model("UserDetail", userSchema);

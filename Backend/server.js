@@ -7,12 +7,18 @@ import user from "./routes/user.js";
 import Conversation from "./models/conversation.js";
 import Rep from "./models/reply.js";
 import AddFriend from "./models/addfriend.js";
+import bodyParser from "body-parser";
 
 const port = process.env.PORT || 3001;
 const app = express();
 // const client = redis.createClient(6379);
 //Middlewares
-app.use(express.json());
+
+app.use(express.json({ limit: "50mb" })); //For JSON requests
+app.use(
+  express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
+);
+
 app.use(cors());
 
 //DB configuration

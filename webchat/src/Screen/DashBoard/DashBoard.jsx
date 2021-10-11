@@ -11,9 +11,7 @@ import { addMessage, clearMessages } from "../../Redux/actions/messageActions";
 import Users from "../../Components/Users/Users";
 import { useDispatch, useSelector } from "react-redux";
 import { loadNewMessage } from "../../Redux/actions/newMessageAction";
-import { reducer } from "../../store";
 
-import { MessageData, UserDetails, UserOnline } from "../../types/types";
 const Chat = loadable(() => import("../../Components/Chat/Chat"));
 const Wait = loadable(() => import("../../Components/Wait/Wait"), {
   fallback: <></>,
@@ -35,7 +33,7 @@ const CButton = loadable(() => import("../../Components/Button/CButton"), {
   fallback: <></>,
 });
 
-const DashBoard = ({ onClick }) => {
+const DashBoard = ({ onClick, image }) => {
   const { users } = useSelector((state) => state.users);
   const [user, setuser] = useState();
 
@@ -150,7 +148,7 @@ const DashBoard = ({ onClick }) => {
                         <Users
                           userName={user.username}
                           id={user._id}
-                          // index={i}
+                          image={user?.image}
                         />
                       </div>
                     )

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./Login.scss";
 import MyButton from "../../Components/InputComponents/MyButton";
 import Input from "../../Components/InputComponents/Input";
@@ -6,6 +6,22 @@ import PopUp from "../../Components/PopUp/PopUp";
 import { String } from "../../Constants/String";
 const Login = (props) => {
   const [active, setActive] = useState(false);
+
+  function profilePicture(e) {
+    e.preventDefault();
+
+    let im = e.target.files[0];
+
+    var reader = new FileReader();
+    if (im) {
+      reader.readAsDataURL(im);
+      reader.onload = () => {
+        var base64 = reader.result;
+        console.log(base64);
+        props.setImage(base64);
+      };
+    }
+  }
   return (
     <div className="login">
       <div className={"loginContainer"}>
@@ -35,6 +51,13 @@ const Login = (props) => {
               >
                 <PopUp />
               </div>
+              {props.image && (
+                <img
+                  src={props.image}
+                  alt="aakash"
+                  style={{ height: "80px", width: "80px" }}
+                />
+              )}
               <span>{String.CREAD}</span>
               <Input
                 id="1"
@@ -55,7 +78,15 @@ const Login = (props) => {
                 value={props.p3}
                 onChange={(e) => props.setP3(e.target.value)}
               />
-
+              <label for="profileImage" className="uploadButton">
+                Upload Profile Pic
+              </label>
+              <input
+                id="profileImage"
+                type="file"
+                style={{ display: "none" }}
+                onChange={profilePicture}
+              />
               <MyButton
                 title="Sign Up"
                 id="2"
@@ -89,7 +120,7 @@ const Login = (props) => {
 
               <MyButton
                 title="Sign In"
-                id="1"
+                id="2"
                 handleClick={(e) => {
                   props.onClick(e, 1);
                 }}
