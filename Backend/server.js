@@ -11,9 +11,10 @@ import fs from "fs";
 import { promisify } from "util";
 import { pipeline } from "stream";
 import multer from "multer";
+import path from "path";
 
 const pipelineAsync = promisify(pipeline);
-
+const __dirname = path.resolve();
 const port = process.env.PORT || 3001;
 const app = express();
 // const client = redis.createClient(6379);
@@ -84,6 +85,18 @@ app.get("/replyList/:conversationId", async (req, res) => {
     res.status(500).json(err);
   }
 });
+app.get("/download", async (req, res) => {
+  const messageID = req.query.s1;
+
+  var p = {};
+  try {
+    p = await Conversation.find({ messageID });
+  } catch (err) {
+    console.log(err);
+  }
+  console.log(p[0].message.message);
+  res.download(__dirname + p[0].message.message);
+});
 
 app.post("/create", (req, res) => {
   const data = req.body;
@@ -110,7 +123,7 @@ app.post("/upload", upload.single("file"), async (req, res, next) => {
   const fileName =
     "chat" + Math.floor(Math.random() * 1000) + file.detectedFileExtension;
 
-  var path = `./public/images/${fileName}`;
+  var path = `/public/images/${fileName}`;
   if (file.detectedFileExtension === ".jpg" || ".jpeg") {
     await pipelineAsync(file.stream, fs.createWriteStream(path)).then(() => {
       let data = {

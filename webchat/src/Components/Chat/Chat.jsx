@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import "./Chat.scss";
 import "../../Styles/style.scss";
 import ChatHeader from "../ChatHeader/ChatHeader";
-import { create, chatList } from "../../api/api";
+import { create, chatList, downloadFile } from "../../api/api";
 import Message from "../Message/Message";
 import Input from "../Input/Input";
 import { days, months } from "../../Constants/Array.js";
@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
 import { clearNewMessageses } from "../../Redux/actions/newMessageAction";
 import Intro from "../Intro/Intro";
+import { FontDownload } from "@material-ui/icons";
 
 const Chat = ({ profile, socket, sender, receiver }) => {
   const messages = useSelector((state) => state.messages);
@@ -63,7 +64,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
         time: time,
         senderId: sender,
         receiverId: receiver,
-        messageID: new Date(),
+        messageID: null,
         message: {
           message: text,
           referenceId: null,
@@ -96,6 +97,10 @@ const Chat = ({ profile, socket, sender, receiver }) => {
     }
   };
 
+  const download = async (id) => {
+    await downloadFile(id);
+  };
+
   useEffect(() => {
     scrollRefArray.current?.scrollIntoView({ behaviour: "smooth" });
   }, [mess, messages]);
@@ -112,14 +117,26 @@ const Chat = ({ profile, socket, sender, receiver }) => {
             {mess?.map((m, i) => {
               return (
                 <div className="messageSpan flex-column" ref={scrollRefArray}>
-                  <Message
-                    visible={
-                      !(i > 0 && mess[i - 1]?.senderId === mess[i]?.senderId)
-                    }
-                    userName={friendDetail}
-                    message={m}
-                    image={profile}
-                  />
+                  {!m?.messageID ? (
+                    <Message
+                      visible={
+                        !(i > 0 && mess[i - 1]?.senderId === mess[i]?.senderId)
+                      }
+                      userName={friendDetail}
+                      message={m}
+                      image={profile}
+                    />
+                  ) : (
+                    <span
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        console.log(m?.message.message);
+                        download(m?.messageID, m?.message.message);
+                      }}
+                    >
+                      {m?.messageID}
+                    </span>
+                  )}
                 </div>
               );
             })}

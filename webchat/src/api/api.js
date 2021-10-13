@@ -28,5 +28,6 @@ export const friendlist = (id) => instance.get(`friendslist/${id}`);
 
 export const deleteMessage = (id) => instance.delete(`delete/${id}`);
 
+export const downloadFile = (id) => instance.get(`download?s1=${id}`);
 export const upload = (data) => instance.post("upload", data);
 export default instance;
