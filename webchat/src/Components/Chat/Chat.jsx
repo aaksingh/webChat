@@ -129,6 +129,8 @@ const Chat = ({ profile, socket, sender, receiver }) => {
               {...{ text, setText }}
               handleCreate={handleCreate}
               variant="Message"
+              receiver={receiver}
+              sender={sender}
             />
           </div>
         </div>

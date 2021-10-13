@@ -102,27 +102,39 @@ app.post("/create", (req, res) => {
 });
 const upload = multer();
 app.post("/upload", upload.single("file"), async (req, res, next) => {
-  const { file } = req;
+  const {
+    file,
+    body: { senderId, receiverId },
+  } = req;
 
   const fileName =
     "chat" + Math.floor(Math.random() * 1000) + file.detectedFileExtension;
-  if (file.detectedFileExtension === ".zip") {
-    await pipelineAsync(
-      file.stream,
-      fs.createWriteStream(`./public/zip/${fileName}`)
-    );
-  } else if (file.detectedFileExtension === ".jpg" || ".jpeg") {
-    await pipelineAsync(
-      file.stream,
-      fs.createWriteStream(`./public/images/${fileName}`)
-    );
-  } else if (file.detectedFileExtension === ".pdf") {
-    await pipelineAsync(
-      file.stream,
-      fs.createWriteStream(`./public/pdf/${fileName}`)
-    );
+
+  var path = `./public/images/${fileName}`;
+  if (file.detectedFileExtension === ".jpg" || ".jpeg") {
+    await pipelineAsync(file.stream, fs.createWriteStream(path)).then(() => {
+      let data = {
+        time: [],
+        senderId: req.body.sender,
+        receiverId: req.body.receiver,
+        messageID: Date.now(),
+        message: {
+          message: path,
+          referenceId: null,
+          read: false,
+          attachments: [],
+        },
+      };
+      Conversation.create(data, (err, data) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          console.log("donne");
+          res.status(201).send(data.messageID);
+        }
+      });
+    });
   }
-  res.send("file uploaded as" + fileName);
 });
 
 app.post("/reply", (req, res) => {
@@ -179,3 +191,10 @@ app.delete("/delete/:id", async (req, res) => {
 });
 
 app.listen(port, () => console.log(`Listening on Port:${port}`));
+
+// if (file.detectedFileExtension === ".zip") {
+//   await pipelineAsync(
+//     file.stream,
+//     fs.createWriteStream(`./public/zip/${fileName}`)
+//   );
+// } else if (file.detectedFileExtension === ".jpg" || ".jpeg") {
