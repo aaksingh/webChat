@@ -116,6 +116,11 @@ app.post("/upload", upload.single("file"), async (req, res, next) => {
       file.stream,
       fs.createWriteStream(`./public/images/${fileName}`)
     );
+  } else if (file.detectedFileExtension === ".pdf") {
+    await pipelineAsync(
+      file.stream,
+      fs.createWriteStream(`./public/pdf/${fileName}`)
+    );
   }
   res.send("file uploaded as" + fileName);
 });

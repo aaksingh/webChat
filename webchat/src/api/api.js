@@ -27,4 +27,6 @@ export const addFriends = (formdata) => instance.post("addfriend", formdata);
 export const friendlist = (id) => instance.get(`friendslist/${id}`);
 
 export const deleteMessage = (id) => instance.delete(`delete/${id}`);
+
+export const upload = (data) => instance.post("upload", data);
 export default instance;
