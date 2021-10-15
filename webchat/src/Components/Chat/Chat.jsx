@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import "./Chat.scss";
 import "../../Styles/style.scss";
 import ChatHeader from "../ChatHeader/ChatHeader";
-import { create, chatList, downloadFile } from "../../api/api";
+import { create, chatList, downloadFile, upload } from "../../api/api";
 import Message from "../Message/Message";
 import Input from "../Input/Input";
 import { days, months } from "../../Constants/Array.js";
@@ -10,9 +10,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
 import { clearNewMessageses } from "../../Redux/actions/newMessageAction";
 import Intro from "../Intro/Intro";
+import WDialog from "../Dialog/Dialog";
 
 const Chat = ({ profile, socket, sender, receiver }) => {
   const messages = useSelector((state) => state.messages);
+  const [file, setFile] = useState("");
 
   const { friendDetail } = useSelector((state) => state.friendDetails);
   const { users } = useSelector((state) => state.showOnlineUsers);
@@ -26,6 +28,21 @@ const Chat = ({ profile, socket, sender, receiver }) => {
   useEffect(() => {
     dispatch(clearNewMessageses(receiver));
   }, [receiver]);
+
+  const send = async (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+
+    data.append("file", file);
+    data.append("sender", sender);
+    data.append("receiver", receiver);
+
+    const result = await upload(data);
+    if (result?.status === 201) {
+      setFile("");
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -107,6 +124,46 @@ const Chat = ({ profile, socket, sender, receiver }) => {
 
   return (
     <div className="chatReply flex-row">
+      <WDialog show={file} maxWidth="100%" minWidth="100%" height="100%">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+          }}
+        >
+          <div
+            className="cancelButton"
+            style={{
+              fontSize: "30px",
+              fontWeight: "800",
+              right: "10px",
+              position: "absolute",
+              top: "10px",
+              cursor: "pointer",
+            }}
+            onClick={(e) => {
+              setFile("");
+            }}
+          >
+            X
+          </div>
+
+          <img
+            src={file && URL.createObjectURL(file)}
+            alt="img"
+            style={{
+              height: "80%",
+              width: "80%",
+            }}
+          />
+          <button onClick={send}>Send</button>
+        </div>
+      </WDialog>
       <div className="chat flex-column font-family">
         <div className="chat__Header flex-row">
           <ChatHeader profile={profile} detail={friendDetail} show={true} />
@@ -145,6 +202,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
               variant="Message"
               receiver={receiver}
               sender={sender}
+              {...{ file, setFile }}
             />
           </div>
         </div>
