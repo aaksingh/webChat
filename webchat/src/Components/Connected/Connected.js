@@ -1,5 +1,6 @@
 import "./Connected.scss";
 const Connected = () => {
+  console.log("connected");
   return (
     <div
       className="flex-column adjust"

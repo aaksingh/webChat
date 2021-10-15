@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { userDetails } from "../../api/api";
 import { loadUsers } from "../../Redux/actions/usersAction.js";
 import { String } from "../../Constants/String";
@@ -114,9 +114,9 @@ const DashBoard = ({ onClick, image }) => {
     setProfile(image);
   };
 
-  function handleClick() {
+  const handleClick = useCallback(() => {
     onClick();
-  }
+  }, [onClick]);
 
   return (
     <>
@@ -128,7 +128,7 @@ const DashBoard = ({ onClick, image }) => {
             <div className="logo flex-row">WebChat</div>
             <UserInfo
               detail={localStorage.getItem("userName")}
-              // onClick={handleClick}
+              onClick={handleClick}
             />
             <Welcome />
 

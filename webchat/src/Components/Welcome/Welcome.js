@@ -14,7 +14,7 @@ function Welcome({ show, profile }) {
   const handleClose = () => {
     profile(false);
   };
-
+  console.log("Inside Welcome");
   const [set, setSet] = useState(false);
 
   return (
