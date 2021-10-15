@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Input.scss";
 // import MicRoundedIcon from "@material-ui/icons/MicRounded";
 import AttachFileRoundedIcon from "@material-ui/icons/AttachFileRounded";
@@ -6,31 +6,24 @@ import AttachFileRoundedIcon from "@material-ui/icons/AttachFileRounded";
 import CButton from "../Button/CButton";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 import { upload } from "../../api/api";
-import { days, months } from "../../Constants/Array";
-
+// import { days, months } from "../../Constants/Array";
+import WDialog from "../Dialog/Dialog";
+// import MyButton from "../InputComponents/MyButton";
+// import { ReactComponent as Cancel } from "../../Assets/Can.svg";
 const Input = ({ text, setText, handleCreate, variant, sender, receiver }) => {
   // variant = Message or Group
   const [show] = useState(false);
   const [file, setFile] = useState("");
-  const [senderId, setSender] = useState(sender);
-  const [receiverId, setReceiver] = useState(receiver);
-  console.log(senderId, receiverId);
+  const [senderId] = useState(sender);
+  const [receiverId] = useState(receiver);
+
+  // useEffect(() => {
+  //   setImg(true);
+  //   console.log("erher");
+  // }, [file]);
   const send = async (e) => {
     e.preventDefault();
-    let currentTimestamp = new Date();
 
-    const dateDetails = new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "numeric",
-      minute: "2-digit",
-    }).format(currentTimestamp);
-
-    let time = dateDetails.split(" ");
-
-    time.push(days[currentTimestamp.getDay()]);
-    time.push(months[currentTimestamp.getMonth()]);
     const data = new FormData();
 
     data.append("file", file);
@@ -38,8 +31,9 @@ const Input = ({ text, setText, handleCreate, variant, sender, receiver }) => {
     data.append("receiver", receiverId);
 
     const result = await upload(data);
-
-    console.log(result);
+    if (result?.status === 201) {
+      setFile("");
+    }
   };
   const onEmojiClick = (event, emojiObject) => {
     setText(emojiObject.emoji);
@@ -47,6 +41,46 @@ const Input = ({ text, setText, handleCreate, variant, sender, receiver }) => {
 
   return (
     <div className="completeInput flex-column adjust">
+      <WDialog show={file} maxWidth="100%" minWidth="100%" height="100%">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+          }}
+        >
+          <div
+            className="cancelButton"
+            style={{
+              fontSize: "30px",
+              fontWeight: "800",
+              right: "10px",
+              position: "absolute",
+              top: "10px",
+              cursor: "pointer",
+            }}
+            onClick={(e) => {
+              setFile("");
+            }}
+          >
+            X
+          </div>
+
+          <img
+            src={file && URL.createObjectURL(file)}
+            alt="img"
+            style={{
+              height: "80%",
+              width: "80%",
+            }}
+          />
+          <button onClick={send}>Send</button>
+        </div>
+      </WDialog>
       {show && (
         <div className="emoji">
           <Picker
@@ -116,7 +150,6 @@ const Input = ({ text, setText, handleCreate, variant, sender, receiver }) => {
               }}
             />
           </form>
-          <button onClick={send}>Send</button>
         </div>
 
         <CButton

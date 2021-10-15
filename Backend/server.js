@@ -114,7 +114,7 @@ app.post("/create", (req, res) => {
   }
 });
 const upload = multer();
-app.post("/upload", upload.single("file"), async (req, res, next) => {
+app.post("/upload", upload.single("file"), (req, res, next) => {
   const {
     file,
     body: { senderId, receiverId },
@@ -124,8 +124,14 @@ app.post("/upload", upload.single("file"), async (req, res, next) => {
     "chat" + Math.floor(Math.random() * 1000) + file.detectedFileExtension;
 
   var path = `/public/images/${fileName}`;
-  if (file.detectedFileExtension === ".jpg" || ".jpeg") {
-    await pipelineAsync(file.stream, fs.createWriteStream(path)).then(() => {
+  if (
+    file.detectedFileExtension === ".jpg" ||
+    file.detectedFileExtension === ".jpeg"
+  ) {
+    pipelineAsync(
+      file.stream,
+      fs.createWriteStream(`./public/images/${fileName}`)
+    ).then(() => {
       let data = {
         time: [],
         senderId: req.body.sender,
@@ -135,7 +141,7 @@ app.post("/upload", upload.single("file"), async (req, res, next) => {
           message: path,
           referenceId: null,
           read: false,
-          attachments: [],
+          attachments: true,
         },
       };
       Conversation.create(data, (err, data) => {

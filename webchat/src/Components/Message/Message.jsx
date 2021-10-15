@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import "./Message.scss";
 import { Avatar } from "@material-ui/core";
-
-const Message = ({ message, visible, userName, image }) => {
+import { ReactComponent as Image } from "../../Assets/Images.svg";
+import WDialog from "../Dialog/Dialog";
+const Message = ({ message, visible, userName, image, attachments }) => {
   const [link, setLink] = useState(false);
-
+  const [img, setImg] = useState("");
   useEffect(() => {
     (() => {
       var strRegex = "^((https|http|ftp|rtsp|mms)?://)";
@@ -12,7 +13,7 @@ const Message = ({ message, visible, userName, image }) => {
       setLink(re.test(message?.message.message));
     })();
   }, [message]);
-
+  console.log("erer");
   return (
     <div className={"message flex-column" + (visible ? " show" : "")}>
       {visible ? (
@@ -31,11 +32,15 @@ const Message = ({ message, visible, userName, image }) => {
           onClick={() => (link ? window.open(message?.message.message) : null)}
           className={link ? "link" : ""}
         >
-          {message?.message.message}
+          {!attachments ? (
+            message?.message.message
+          ) : (
+            <Image style={{ cursor: "pointer" }} />
+          )}
         </span>
       </div>
     </div>
   );
 };
 
-export default Message;
+export default memo(Message);

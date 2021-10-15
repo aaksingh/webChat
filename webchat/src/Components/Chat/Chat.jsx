@@ -10,7 +10,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
 import { clearNewMessageses } from "../../Redux/actions/newMessageAction";
 import Intro from "../Intro/Intro";
-import { FontDownload } from "@material-ui/icons";
 
 const Chat = ({ profile, socket, sender, receiver }) => {
   const messages = useSelector((state) => state.messages);
@@ -64,12 +63,12 @@ const Chat = ({ profile, socket, sender, receiver }) => {
         time: time,
         senderId: sender,
         receiverId: receiver,
-        messageID: null,
+        messageID: Date.now(),
         message: {
           message: text,
           referenceId: null,
           read: false,
-          attachments: [],
+          attachments: false,
         },
       };
       try {
@@ -82,11 +81,11 @@ const Chat = ({ profile, socket, sender, receiver }) => {
             time: time,
             senderId: sender,
             receiverId: receiver,
-            messageId: new Date(),
+            messageId: Date.now(),
             message: text,
             referenceId: null,
             read: false,
-            attachments: [],
+            attachments: false,
           });
       } catch (err) {
         console.log(err.message, "Fail to send message");
@@ -98,6 +97,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
   };
 
   const download = async (id) => {
+    alert("fewf");
     await downloadFile(id);
   };
 
@@ -116,8 +116,14 @@ const Chat = ({ profile, socket, sender, receiver }) => {
             <Intro {...{ profile, sender, receiver, friendDetail }} />
             {mess?.map((m, i) => {
               return (
-                <div className="messageSpan flex-column" ref={scrollRefArray}>
-                  {!m?.messageID ? (
+                <div
+                  className="messageSpan flex-column"
+                  ref={scrollRefArray}
+                  onClick={() =>
+                    m?.message?.attachments ? download(m?.messageID) : null
+                  }
+                >
+                  {
                     <Message
                       visible={
                         !(i > 0 && mess[i - 1]?.senderId === mess[i]?.senderId)
@@ -125,18 +131,9 @@ const Chat = ({ profile, socket, sender, receiver }) => {
                       userName={friendDetail}
                       message={m}
                       image={profile}
+                      attachments={m?.message?.attachments}
                     />
-                  ) : (
-                    <span
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        console.log(m?.message.message);
-                        download(m?.messageID, m?.message.message);
-                      }}
-                    >
-                      {m?.messageID}
-                    </span>
-                  )}
+                  }
                 </div>
               );
             })}

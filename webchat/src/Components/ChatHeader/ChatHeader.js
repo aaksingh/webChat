@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import UserInfo from "../UserInfo/UserInfo";
 import "./ChatHeader.scss";
 import PhoneIcon from "@material-ui/icons/Phone";
@@ -30,4 +30,4 @@ const ChatHeader = ({ profile, detail, show }) => {
   );
 };
 
-export default ChatHeader;
+export default memo(ChatHeader);
