@@ -29,21 +29,6 @@ const Chat = ({ profile, socket, sender, receiver }) => {
     dispatch(clearNewMessageses(receiver));
   }, [receiver]);
 
-  const send = async (e) => {
-    e.preventDefault();
-
-    const data = new FormData();
-
-    data.append("file", file);
-    data.append("sender", sender);
-    data.append("receiver", receiver);
-
-    const result = await upload(data);
-    if (result?.status === 201) {
-      setFile("");
-    }
-  };
-
   useEffect(() => {
     (async () => {
       setTimeout(() => {}, 100);
@@ -75,12 +60,13 @@ const Chat = ({ profile, socket, sender, receiver }) => {
     time.push(days[currentTimestamp.getDay()]);
     time.push(months[currentTimestamp.getMonth()]);
 
+    let id = Date.now();
     if (text) {
       let messageData = {
         time: time,
         senderId: sender,
         receiverId: receiver,
-        messageID: Date.now(),
+        messageId: id,
         message: {
           message: text,
           referenceId: null,
@@ -98,7 +84,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
             time: time,
             senderId: sender,
             receiverId: receiver,
-            messageId: Date.now(),
+            messageId: id,
             message: text,
             referenceId: null,
             read: false,
@@ -111,11 +97,56 @@ const Chat = ({ profile, socket, sender, receiver }) => {
 
       setText("");
     }
+    if (file) {
+      const data = new FormData();
+
+      data.append("file", file);
+      data.append("sender", sender);
+      data.append("receiver", receiver);
+
+      const result = await upload(data);
+
+      if (result?.data?.data) {
+        console.log(result, "ferfwe");
+        dispatch(
+          addMessage({
+            message: {
+              time: time,
+              senderId: sender,
+              receiverId: receiver,
+              messageId: result.data,
+              message: {
+                message: null,
+                referenceId: null,
+                read: false,
+                attachments: true,
+              },
+            },
+
+            receiver: receiver,
+          })
+        );
+        let messageId = result.data;
+
+        users &&
+          users?.some((user) => user?.userId === receiver) &&
+          socket.current.emit("sendmessage", {
+            time: time,
+            senderId: sender,
+            receiverId: receiver,
+            messageId: messageId,
+            message: null,
+            referenceId: null,
+            read: false,
+            attachments: true,
+          });
+        setFile("");
+      }
+    }
   };
 
   const download = async (id) => {
-    alert("fewf");
-    await downloadFile(id);
+    // await downloadFile(id);
   };
 
   useEffect(() => {
@@ -161,7 +192,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
               width: "80%",
             }}
           />
-          <button onClick={send}>Send</button>
+          <button onClick={handleCreate}>Send</button>
         </div>
       </WDialog>
       <div className="chat flex-column font-family">
@@ -189,6 +220,8 @@ const Chat = ({ profile, socket, sender, receiver }) => {
                       message={m}
                       image={profile}
                       attachments={m?.message?.attachments}
+                      sender={m?.senderId}
+                      receiver={m?.receiverId}
                     />
                   }
                 </div>

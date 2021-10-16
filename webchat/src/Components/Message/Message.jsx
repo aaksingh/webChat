@@ -1,11 +1,16 @@
 import { useState, useEffect, memo } from "react";
 import "./Message.scss";
-import { Avatar } from "@material-ui/core";
-import { ReactComponent as Image } from "../../Assets/Images.svg";
-import WDialog from "../Dialog/Dialog";
-const Message = ({ message, visible, userName, image, attachments }) => {
+import sendImage from "../../Assets/sendImage.png";
+import receiveImage from "../../Assets/receiveimage.png";
+const Message = ({
+  message,
+  visible,
+  userName,
+  attachments,
+  sender,
+  receiver,
+}) => {
   const [link, setLink] = useState(false);
-  const [img, setImg] = useState("");
   useEffect(() => {
     (() => {
       var strRegex = "^((https|http|ftp|rtsp|mms)?://)";
@@ -18,7 +23,6 @@ const Message = ({ message, visible, userName, image, attachments }) => {
     <div className={"message flex-column" + (visible ? " show" : "")}>
       {visible ? (
         <div className="nameTime flex-row">
-          <Avatar alt="Aakash Singh" src={image} />
           <div className="name">
             {localStorage.getItem("userId") === message.senderId
               ? localStorage.getItem("userName")
@@ -34,8 +38,10 @@ const Message = ({ message, visible, userName, image, attachments }) => {
         >
           {!attachments ? (
             message?.message.message
+          ) : sender !== localStorage.getItem("userId") ? (
+            <img src={receiveImage} alt="receiverImage" />
           ) : (
-            <Image style={{ cursor: "pointer" }} />
+            <img src={sendImage} alt="SendImage" />
           )}
         </span>
       </div>

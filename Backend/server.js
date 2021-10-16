@@ -94,7 +94,7 @@ app.get("/download", async (req, res) => {
   } catch (err) {
     console.log(err);
   }
-  console.log(p[0].message.message);
+  // console.log(p[0].message.message);
   res.download(__dirname + p[0].message.message);
 });
 
@@ -132,11 +132,12 @@ app.post("/upload", upload.single("file"), (req, res, next) => {
       file.stream,
       fs.createWriteStream(`./public/images/${fileName}`)
     ).then(() => {
+      let id = Date.now();
       let data = {
         time: [],
         senderId: req.body.sender,
         receiverId: req.body.receiver,
-        messageID: Date.now(),
+        messageId: id,
         message: {
           message: path,
           referenceId: null,
@@ -149,7 +150,8 @@ app.post("/upload", upload.single("file"), (req, res, next) => {
           res.status(500).send(err);
         } else {
           console.log("donne");
-          res.status(201).send(data.messageID);
+          res.json({ data: data.messageId });
+          // res.sendStatus(201).send({ data: data.messageId });
         }
       });
     });

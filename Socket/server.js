@@ -35,11 +35,12 @@ io.on("connection", (socket) => {
       time,
       senderId,
       receiverId,
-      conversationId,
+
+      messageId,
       message,
       referenceId,
       read,
-      authorId,
+
       attachments,
     }) => {
       const user = getUser(receiverId);
@@ -48,11 +49,12 @@ io.on("connection", (socket) => {
         time,
         senderId,
         receiverId,
-        conversationId,
+
+        messageId,
         message,
         referenceId,
         read,
-        authorId,
+
         attachments,
       });
     }

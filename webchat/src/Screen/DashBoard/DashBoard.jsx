@@ -86,7 +86,7 @@ const DashBoard = ({ onClick, image }) => {
         time: data.time,
         senderId: data.senderId,
         receiverId: data.receiverId,
-        messageID: data.messageID,
+        messageId: data.messageId,
         message: {
           message: data.message,
           referenceId: data.referenceId,
@@ -94,6 +94,7 @@ const DashBoard = ({ onClick, image }) => {
           attachments: data.attachments,
         },
       };
+      console.log(messageData);
       // localStorage.removeItem("roomId");
       if (messageData.senderId === localStorage.getItem("roomId")) {
         dispatch(
