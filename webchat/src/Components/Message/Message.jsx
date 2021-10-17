@@ -2,14 +2,7 @@ import { useState, useEffect, memo } from "react";
 import "./Message.scss";
 import sendImage from "../../Assets/sendImage.png";
 import receiveImage from "../../Assets/receiveimage.png";
-const Message = ({
-  message,
-  visible,
-  userName,
-  attachments,
-  sender,
-  receiver,
-}) => {
+const Message = ({ message, visible, userName, attachments, sender }) => {
   const [link, setLink] = useState(false);
   useEffect(() => {
     (() => {
@@ -39,9 +32,21 @@ const Message = ({
           {!attachments ? (
             message?.message.message
           ) : sender !== localStorage.getItem("userId") ? (
-            <img src={receiveImage} alt="receiverImage" />
+            <a
+              href={`http://localhost:3001/${message?.message.message}`}
+              download
+              target="_blank"
+            >
+              <img src={receiveImage} alt="receiverImage" />
+            </a>
           ) : (
-            <img src={sendImage} alt="SendImage" />
+            <a
+              href={`http://localhost:3001/${message?.message.message}`}
+              download
+              target="_blank"
+            >
+              <img src={sendImage} alt="SendImage" />
+            </a>
           )}
         </span>
       </div>

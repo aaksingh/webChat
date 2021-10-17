@@ -24,8 +24,8 @@ app.use(express.json({ limit: "50mb" })); //For JSON requests
 app.use(
   express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
 );
-
-app.use(cors());
+app.use(express.static("public"));
+app.use(cors({ origin: "http://localhost:3000" }));
 
 //DB configuration
 const config_url =
@@ -86,16 +86,18 @@ app.get("/replyList/:conversationId", async (req, res) => {
   }
 });
 app.get("/download", async (req, res) => {
-  const messageID = req.query.s1;
+  const messageId = req.query.s1;
 
   var p = {};
   try {
-    p = await Conversation.find({ messageID });
+    p = await Conversation.find({ messageId });
   } catch (err) {
     console.log(err);
   }
-  // console.log(p[0].message.message);
-  res.download(__dirname + p[0].message.message);
+
+  console.log(__dirname, p);
+
+  res.download(__dirname + p[0]?.message.message);
 });
 
 app.post("/create", (req, res) => {
@@ -123,7 +125,7 @@ app.post("/upload", upload.single("file"), (req, res, next) => {
   const fileName =
     "chat" + Math.floor(Math.random() * 1000) + file.detectedFileExtension;
 
-  var path = `/public/images/${fileName}`;
+  var path = `images/${fileName}`;
   if (
     file.detectedFileExtension === ".jpg" ||
     file.detectedFileExtension === ".jpeg"

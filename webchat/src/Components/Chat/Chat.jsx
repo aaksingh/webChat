@@ -207,9 +207,9 @@ const Chat = ({ profile, socket, sender, receiver }) => {
                 <div
                   className="messageSpan flex-column"
                   ref={scrollRefArray}
-                  onClick={() =>
-                    m?.message?.attachments ? download(m?.messageID) : null
-                  }
+                  // onClick={() =>;
+                  //   m?.message?.attachments ? download(m?.messageId) : null
+                  // }
                 >
                   {
                     <Message
