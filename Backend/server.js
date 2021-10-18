@@ -152,7 +152,7 @@ app.post("/upload", upload.single("file"), (req, res, next) => {
           res.status(500).send(err);
         } else {
           console.log("donne");
-          res.json({ data: data.messageId });
+          res.json({ id: data.messageId, path: data.message.message });
           // res.sendStatus(201).send({ data: data.messageId });
         }
       });

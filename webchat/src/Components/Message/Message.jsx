@@ -37,7 +37,11 @@ const Message = ({ message, visible, userName, attachments, sender }) => {
               download
               target="_blank"
             >
-              <img src={receiveImage} alt="receiverImage" />
+              <img
+                src={`http://localhost:3001/${message?.message.message}`}
+                alt="receiverImage"
+                style={{ width: "400px", height: "400px" }}
+              />
             </a>
           ) : (
             <a
@@ -45,7 +49,11 @@ const Message = ({ message, visible, userName, attachments, sender }) => {
               download
               target="_blank"
             >
-              <img src={sendImage} alt="SendImage" />
+              <img
+                src={`http://localhost:3001/${message?.message.message}`}
+                alt="SendImage"
+                style={{ width: "400px", height: "400px" }}
+              />
             </a>
           )}
         </span>

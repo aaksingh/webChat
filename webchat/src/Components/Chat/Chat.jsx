@@ -106,7 +106,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
 
       const result = await upload(data);
 
-      if (result?.data?.data) {
+      if (result) {
         console.log(result, "ferfwe");
         dispatch(
           addMessage({
@@ -114,9 +114,9 @@ const Chat = ({ profile, socket, sender, receiver }) => {
               time: time,
               senderId: sender,
               receiverId: receiver,
-              messageId: result.data,
+              messageId: result.data.id,
               message: {
-                message: null,
+                message: result.data.path,
                 referenceId: null,
                 read: false,
                 attachments: true,
@@ -126,7 +126,8 @@ const Chat = ({ profile, socket, sender, receiver }) => {
             receiver: receiver,
           })
         );
-        let messageId = result.data;
+        let messageId = result.id;
+        let message = result.path;
 
         users &&
           users?.some((user) => user?.userId === receiver) &&
@@ -135,18 +136,14 @@ const Chat = ({ profile, socket, sender, receiver }) => {
             senderId: sender,
             receiverId: receiver,
             messageId: messageId,
-            message: null,
+            message: message,
             referenceId: null,
             read: false,
             attachments: true,
           });
-        setFile("");
       }
+      setFile("");
     }
-  };
-
-  const download = async (id) => {
-    // await downloadFile(id);
   };
 
   useEffect(() => {
