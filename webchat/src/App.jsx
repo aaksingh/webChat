@@ -68,8 +68,6 @@ const App = () => {
 
   function logout() {
     setShow(true);
-    // localStorage.setItem("Login", "false");
-    // setlogin("false");
   }
   function Done() {
     localStorage.setItem("Login", "false");

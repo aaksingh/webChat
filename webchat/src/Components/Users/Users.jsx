@@ -20,9 +20,7 @@ const Users = ({ userName, id, image }) => {
         Show Message one message received
       } */}
       {newMessages.ids.includes(id) && (
-        <div className="newMessage">
-          <div className="new">1</div>
-        </div>
+        <div className="newMessage flex-column adjust">1</div>
       )}
     </>
   );

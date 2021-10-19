@@ -1,6 +1,5 @@
-import React from "react";
 import { Avatar } from "@material-ui/core";
-
+import "./Intro.scss";
 const Intro = ({ profile, sender, receiver, friendDetail }) => {
   return (
     <div className="intro">
@@ -12,6 +11,7 @@ const Intro = ({ profile, sender, receiver, friendDetail }) => {
         This is the begining of your direct message history with{" "}
         <strong>{friendDetail}</strong>
       </span>
+      <div className="divider"></div>
     </div>
   );
 };

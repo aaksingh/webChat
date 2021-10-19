@@ -194,21 +194,14 @@ const Chat = ({ profile, socket, sender, receiver }) => {
         </div>
       </WDialog>
       <div className="chat flex-column font-family">
-        <div className="chat__Header flex-row">
-          <ChatHeader profile={profile} detail={friendDetail} show={true} />
-        </div>
+        <ChatHeader profile={profile} detail={friendDetail} show={true} />
+
         <div className="chatSection flex-column">
           <div className="chatStart flex-column">
             <Intro {...{ profile, sender, receiver, friendDetail }} />
             {mess?.map((m, i) => {
               return (
-                <div
-                  className="messageSpan flex-column"
-                  ref={scrollRefArray}
-                  // onClick={() =>;
-                  //   m?.message?.attachments ? download(m?.messageId) : null
-                  // }
-                >
+                <div className="messageSpan flex-column" ref={scrollRefArray}>
                   {
                     <Message
                       visible={

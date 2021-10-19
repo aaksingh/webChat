@@ -128,7 +128,7 @@ const DashBoard = ({ onClick, image }) => {
       ) : (
         <>
           <div className="dashboard flex-column font-family">
-            <div className="logo flex-row">WebChat</div>
+            <div className="logo flex-row adjust">WebChat</div>
             <UserInfo
               detail={localStorage.getItem("userName")}
               onClick={handleClick}

@@ -5,10 +5,6 @@ import "./Dialog.scss";
 import Slide from "@material-ui/core/Slide";
 const useStyles = makeStyles((theme) => ({
   dialog: {
-    // display: "flex",
-    // flexDirection: "column",
-    // alignItems: "center",
-    // justifyContent: "center",
     position: "relative",
     width: "100%",
   },
@@ -35,11 +31,6 @@ const WDialog = ({ show, children, maxWidth, minWidth, height }) => {
           height: height ?? "30%",
         },
       }}
-      // BackdropProps={{
-      //   style: {
-      //     backgroundColor: "rgba(27, 27, 27, 0.95)",
-      //   },
-      // }}
     >
       {children}
     </Dialog>
