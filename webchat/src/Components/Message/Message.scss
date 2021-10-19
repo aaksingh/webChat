@@ -12,6 +12,12 @@
       font-weight: 900;
       text-transform: uppercase;
     }
+    .date {
+      opacity: 0;
+      &:hover {
+        opacity: 1;
+      }
+    }
   }
   .menulist {
     opacity: 0;
@@ -54,6 +60,14 @@
     .replySpan {
       color: blue;
       cursor: pointer;
+    }
+  }
+  .date {
+    opacity: 0;
+    font-size: 10px;
+    font-weight: 700;
+    &:hover {
+      opacity: 1;
     }
   }
 }

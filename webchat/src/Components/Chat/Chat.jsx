@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import "./Chat.scss";
 import "../../Styles/style.scss";
 import ChatHeader from "../ChatHeader/ChatHeader";
-import { create, chatList, downloadFile, upload } from "../../api/api";
+import { create, chatList, upload } from "../../api/api";
 import Message from "../Message/Message";
 import Input from "../Input/Input";
 import { days, months } from "../../Constants/Array.js";
@@ -60,6 +60,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
     time.push(days[currentTimestamp.getDay()]);
     time.push(months[currentTimestamp.getMonth()]);
 
+    console.log(time);
     let id = Date.now();
     if (text) {
       let messageData = {
