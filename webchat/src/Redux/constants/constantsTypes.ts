@@ -42,3 +42,7 @@ export enum Profile {
 export enum AddOnlineUser {
   ADDONLINEUSER = "ADD_ONLINE_USER",
 }
+
+export enum AddRoomId {
+  ADD_ROOM_ID = "ADD_ROOM_ID",
+}

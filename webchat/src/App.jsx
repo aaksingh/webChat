@@ -21,7 +21,6 @@ const App = () => {
   const [show, setShow] = useState(false);
   const [images, setImages] = useState("");
   useEffect(() => {
-    localStorage.removeItem("roomId");
     if (localStorage.getItem("Login") === "true") {
       setlogin("true");
     } else if (localStorage.getItem("Login") === "false") {

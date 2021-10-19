@@ -2,7 +2,6 @@ import { useState, useEffect, memo } from "react";
 import "./Message.scss";
 
 const Message = ({ message, visible, userName, attachments, sender }) => {
-  console.log(message.time);
   const [link, setLink] = useState(false);
   useEffect(() => {
     (() => {
@@ -11,7 +10,7 @@ const Message = ({ message, visible, userName, attachments, sender }) => {
       setLink(re.test(message?.message.message));
     })();
   }, [message]);
-  console.log("erer");
+
   return (
     <div className={"message flex-column" + (visible ? " show" : "")}>
       {visible ? (

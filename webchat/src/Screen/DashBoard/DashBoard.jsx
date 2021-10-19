@@ -11,7 +11,7 @@ import { addMessage, clearMessages } from "../../Redux/actions/messageActions";
 import Users from "../../Components/Users/Users";
 import { useDispatch, useSelector } from "react-redux";
 import { loadNewMessage } from "../../Redux/actions/newMessageAction";
-
+import { setRoomId } from "../../Redux/actions/roomIdActions";
 const Chat = loadable(() => import("../../Components/Chat/Chat"));
 const Wait = loadable(() => import("../../Components/Wait/Wait"), {
   fallback: <></>,
@@ -35,6 +35,7 @@ const CButton = loadable(() => import("../../Components/Button/CButton"), {
 
 const DashBoard = ({ onClick, image }) => {
   const { users } = useSelector((state) => state.users);
+  const { roomId } = useSelector((state) => state.roomId);
   const [user, setuser] = useState();
 
   useEffect(() => {
@@ -94,9 +95,8 @@ const DashBoard = ({ onClick, image }) => {
           attachments: data.attachments,
         },
       };
-      console.log(messageData);
-      // localStorage.removeItem("roomId");
-      if (messageData.senderId === localStorage.getItem("roomId")) {
+
+      if (messageData.senderId === roomId) {
         dispatch(
           addMessage({ message: messageData, receiver: messageData.senderId })
         );
@@ -109,7 +109,9 @@ const DashBoard = ({ onClick, image }) => {
   const handleChat = async (j, image) => {
     dispatch(clearMessages());
     let user = users[0];
-    localStorage.setItem("roomId", user[j]?._id);
+
+    dispatch(setRoomId(user[j]._id));
+
     setreceiverId(user[j]._id);
     setsenderId(localStorage.getItem("userId"));
     setProfile(image);
