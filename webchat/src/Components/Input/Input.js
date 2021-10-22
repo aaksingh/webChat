@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./Input.scss";
-// import MicRoundedIcon from "@material-ui/icons/MicRounded";
+import { memo } from "react";
 import AttachFileRoundedIcon from "@material-ui/icons/AttachFileRounded";
-// import EmojiEmotionsRoundedIcon from "@material-ui/icons/EmojiEmotionsRounded";
-import CButton from "../Button/CButton";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
+import MyButton from "../InputComponents/MyButton";
 const Input = ({
   text,
   setText,
@@ -13,11 +12,8 @@ const Input = ({
   sender,
   receiver,
   setFile,
-  file,
 }) => {
-  // variant = Message or Group
   const [show] = useState(false);
-  // const [file, setFile] = useState("");
   const [senderId] = useState(sender);
   const [receiverId] = useState(receiver);
 
@@ -50,12 +46,7 @@ const Input = ({
           }}
           autoComplete="off"
         />
-        <div
-          style={{
-            width: "20%",
-          }}
-          className="flex-row adspbtw"
-        >
+        <div className="flex-row adspbtw">
           {/* <MicRoundedIcon /> */}
 
           {/* <EmojiEmotionsRoundedIcon
@@ -97,12 +88,9 @@ const Input = ({
             />
           </form>
         </div>
-
-        <CButton
-          title="Send"
-          disabled={false}
-          onClick={(e) => handleCreate(e)}
-        />
+        <div style={{ width: "30%" }}>
+          <MyButton title="Send" id="2" handleClick={handleCreate} />
+        </div>
       </div>
       <div
         className="flex-row adspbtw"
@@ -115,4 +103,4 @@ const Input = ({
   );
 };
 
-export default Input;
+export default memo(Input);

@@ -1,5 +1,5 @@
-import React, { memo } from "react";
-import UserInfo from "../UserInfo/UserInfo";
+import { memo } from "react";
+
 import "./ChatHeader.scss";
 import PhoneIcon from "@material-ui/icons/Phone";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -7,7 +7,6 @@ import VideoCallOutlinedIcon from "@material-ui/icons/VideoCallOutlined";
 import SearchInput from "../SearchInput/SearchInput";
 import Users from "../Users/Users";
 const ChatHeader = ({ profile, detail, show }) => {
-  console.log(detail);
   return (
     <div className="chatHeader flex-row adspbtw">
       <Users userName={detail} image={profile} />

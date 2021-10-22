@@ -1,6 +1,8 @@
 import { signIn, signUp } from "./api/api";
 import { useEffect, useState } from "react";
+
 import loadable from "@loadable/component";
+
 import WDialog from "./Components/Dialog/Dialog";
 import MyButton from "./Components/InputComponents/MyButton";
 const Login = loadable(() => import("./Screen/Authentication/Login"), {
@@ -33,7 +35,6 @@ const App = () => {
 
     if (i === 0) {
       if (p2 === p3) {
-        console.log(image);
         await signUp({
           username: name,
           password: p2,
@@ -50,7 +51,6 @@ const App = () => {
 
       if (data.data.status === "ok") {
         setImages(data.data.user?.image);
-        console.log(data.data.user?.image, "images is");
         localStorage.setItem("userImage", data.data.user.image);
         localStorage.setItem("Login", "true");
         localStorage.setItem("userName", data.data.user?.username);

@@ -12,7 +12,7 @@ const Message = ({ message, visible, userName, attachments, sender }) => {
   }, [message]);
 
   return (
-    <div className={"message flex-column" + (visible ? " show" : "")}>
+    <div className={`message flex-column  ${visible ? " show" : ""}`}>
       {visible ? (
         <div className="nameTime flex-row">
           <div className="name">

@@ -25,7 +25,7 @@ const Login = (props) => {
   return (
     <div className="login">
       <div className={"loginContainer"}>
-        <div className={"bluebg " + (active ? "" : " blueActive")}>
+        <div className={`bluebg " ${active ? "" : " blueActive"}`}>
           {active ? (
             <div className="box" onClick={() => setActive(false)}>
               <h2>{String.WELCOME}</h2>
@@ -41,7 +41,7 @@ const Login = (props) => {
           )}
         </div>
 
-        <div className={"formBx" + (active ? " active" : "")}>
+        <div className={`formBx ${active ? " active" : ""}`}>
           {active ? (
             <>
               <span className="signText">{String.SIGNUP}</span>
@@ -87,13 +87,15 @@ const Login = (props) => {
                 style={{ display: "none" }}
                 onChange={profilePicture}
               />
-              <MyButton
-                title="Sign Up"
-                id="2"
-                handleClick={(e) => {
-                  props.onClick(e, 0);
-                }}
-              />
+              <div style={{ width: "50%", marginTop: "1rem" }}>
+                <MyButton
+                  title="Sign Up"
+                  id="2"
+                  handleClick={(e) => {
+                    props.onClick(e, 0);
+                  }}
+                />
+              </div>
             </>
           ) : (
             <>
@@ -117,14 +119,15 @@ const Login = (props) => {
                 value={props.p1}
                 onChange={(e) => props.setP1(e.target.value)}
               />
-
-              <MyButton
-                title="Sign In"
-                id="2"
-                handleClick={(e) => {
-                  props.onClick(e, 1);
-                }}
-              />
+              <div style={{ width: "50%", marginTop: "1rem" }}>
+                <MyButton
+                  title="Sign In"
+                  id="2"
+                  handleClick={(e) => {
+                    props.onClick(e, 1);
+                  }}
+                />
+              </div>
             </>
           )}{" "}
         </div>

@@ -1,10 +1,9 @@
 import { useSelector } from "react-redux";
 import { Avatar } from "@material-ui/core";
-
 const Users = ({ userName, id, image }) => {
   const user = useSelector((state) => state.showOnlineUsers);
   const newMessages = useSelector((state) => state.newMessages);
-
+  // console.log("Inside Users");
   return (
     <>
       <Avatar alt="Aakash Singh" src={image} />

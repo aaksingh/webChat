@@ -1,4 +1,7 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, memo } from "react";
+
+import { useSelector, useDispatch } from "react-redux";
+
 import "./Chat.scss";
 import "../../Styles/style.scss";
 import ChatHeader from "../ChatHeader/ChatHeader";
@@ -6,12 +9,10 @@ import { create, chatList, upload } from "../../api/api";
 import Message from "../Message/Message";
 import Input from "../Input/Input";
 import { days, months } from "../../Constants/Array.js";
-import { useSelector, useDispatch } from "react-redux";
 import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
 import { clearNewMessageses } from "../../Redux/actions/newMessageAction";
 import Intro from "../Intro/Intro";
 import WDialog from "../Dialog/Dialog";
-
 const Chat = ({ profile, socket, sender, receiver }) => {
   const messages = useSelector((state) => state.messages);
   const [file, setFile] = useState("");
@@ -60,7 +61,6 @@ const Chat = ({ profile, socket, sender, receiver }) => {
     time.push(days[currentTimestamp.getDay()]);
     time.push(months[currentTimestamp.getMonth()]);
 
-    console.log(time);
     let id = Date.now();
     if (text) {
       let messageData = {
@@ -108,7 +108,6 @@ const Chat = ({ profile, socket, sender, receiver }) => {
       const result = await upload(data);
 
       if (result) {
-        console.log(result, "ferfwe");
         dispatch(
           addMessage({
             message: {
@@ -190,6 +189,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
               width: "80%",
             }}
           />
+
           <button onClick={handleCreate}>Send</button>
         </div>
       </WDialog>
@@ -201,7 +201,11 @@ const Chat = ({ profile, socket, sender, receiver }) => {
             <Intro {...{ profile, sender, receiver, friendDetail }} />
             {mess?.map((m, i) => {
               return (
-                <div className="messageSpan flex-column" ref={scrollRefArray}>
+                <div
+                  className="messageSpan flex-column"
+                  ref={scrollRefArray}
+                  key={i}
+                >
                   {
                     <Message
                       visible={
@@ -235,7 +239,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
   );
 };
 
-export default Chat;
+export default memo(Chat);
 /* {show && (
   <Reply message={repMessage} {...{ show, setShow }} user={user} />
   )} */

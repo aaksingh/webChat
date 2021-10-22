@@ -77,7 +77,7 @@ const Reply = ({
   const [text, setText] = useState("");
   return (
     <div
-      className={"side flex-column" + (show ? " sideReply" : " sideReplyHide")}
+      className={`side flex-column ${show ? " sideReply" : " sideReplyHide"}`}
     >
       <div className="thread flex-column">
         Thread

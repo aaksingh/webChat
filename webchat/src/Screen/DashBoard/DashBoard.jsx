@@ -1,21 +1,28 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+
 import { userDetails } from "../../api/api";
 import { loadUsers } from "../../Redux/actions/usersAction.js";
 import { String } from "../../Constants/String";
 import { userDetail } from "../../Redux/actions/friendDetails";
-import { io } from "socket.io-client";
 import { loadOnlineUsers } from "../../Redux/actions/socketActions";
-import loadable from "@loadable/component";
 import "./DashBoard.scss";
 import { addMessage, clearMessages } from "../../Redux/actions/messageActions";
 import Users from "../../Components/Users/Users";
-import { useDispatch, useSelector } from "react-redux";
 import { loadNewMessage } from "../../Redux/actions/newMessageAction";
 import { setRoomId } from "../../Redux/actions/roomIdActions";
+import WDialog from "../../Components/Dialog/Dialog";
+import Input from "../../Components/InputComponents/Input";
+
+import loadable from "@loadable/component";
+import { io } from "socket.io-client";
+import { useDispatch, useSelector } from "react-redux";
+import MyButton from "../../Components/InputComponents/MyButton";
+
 const Chat = loadable(() => import("../../Components/Chat/Chat"));
 const Wait = loadable(() => import("../../Components/Wait/Wait"), {
   fallback: <></>,
 });
+
 const Welcome = loadable(() => import("../../Components/Welcome/Welcome"), {
   fallback: <></>,
 });
@@ -29,26 +36,24 @@ const Connected = loadable(
     fallback: <></>,
   }
 );
-const CButton = loadable(() => import("../../Components/Button/CButton"), {
-  fallback: <></>,
-});
 
 const DashBoard = ({ onClick, image }) => {
   const { users } = useSelector((state) => state.users);
-  const { roomId } = useSelector((state) => state.roomId);
+  const roomId = useSelector((state) => state.roomId);
+  console.log(roomId?.roomId, "roomid");
+  const dispatch = useDispatch();
   const [user, setuser] = useState();
+  const val = localStorage.getItem("userId");
+  const [loading, setLoading] = useState(false);
+  const [senderId, setsenderId] = useState("");
+  const [receiverId, setreceiverId] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [groupD, setGroupD] = useState(false);
+  const socket = useRef();
 
   useEffect(() => {
     setuser(users[0]);
   }, [users]);
-
-  const dispatch = useDispatch();
-  const val = localStorage.getItem("userId");
-  const [loading, setLoading] = useState(false);
-  const [senderId, setsenderId] = useState("");
-  const [receiverId, setreceiverId] = useState("");
-  const [profile, setProfile] = useState(null);
-  const socket = useRef();
 
   useEffect(() => {
     (async () => {
@@ -81,6 +86,17 @@ const DashBoard = ({ onClick, image }) => {
     });
   }, [socket, loadOnlineUsers]);
 
+  const handleChat = async (j, image) => {
+    setreceiverId(null);
+    dispatch(clearMessages());
+    let user = users[0];
+    // console.log(user[j]._id, "Setting roomId");
+    dispatch(setRoomId(user[j]._id));
+    localStorage.setItem("roomId", user[j]._id);
+    setreceiverId(user[j]._id);
+    setsenderId(localStorage.getItem("userId"));
+    setProfile(image);
+  };
   useEffect(() => {
     socket.current.on("getMessage", (data) => {
       let messageData = {
@@ -96,7 +112,10 @@ const DashBoard = ({ onClick, image }) => {
         },
       };
 
-      if (messageData.senderId === roomId) {
+      if (
+        data.senderId === localStorage.getItem("roomId") ||
+        data.receiverId === localStorage.getItem("roomId")
+      ) {
         dispatch(
           addMessage({ message: messageData, receiver: messageData.senderId })
         );
@@ -105,17 +124,6 @@ const DashBoard = ({ onClick, image }) => {
       }
     });
   }, [dispatch]);
-
-  const handleChat = async (j, image) => {
-    dispatch(clearMessages());
-    let user = users[0];
-
-    dispatch(setRoomId(user[j]._id));
-
-    setreceiverId(user[j]._id);
-    setsenderId(localStorage.getItem("userId"));
-    setProfile(image);
-  };
 
   const handleClick = useCallback(() => {
     onClick();
@@ -133,7 +141,7 @@ const DashBoard = ({ onClick, image }) => {
               detail={localStorage.getItem("userName")}
               onClick={handleClick}
             />
-            <Welcome />
+            {/* <Welcome /> */}
 
             <div className="dm adspbtw font-h2 font-600">{String.CHAT}</div>
             <div className="userList flex-column">
@@ -160,10 +168,31 @@ const DashBoard = ({ onClick, image }) => {
                   );
                 })}
             </div>
-            <div className="dm adspbtw font-h2 font-600">Groups</div>
+            <div
+              className="dm adspbtw font-h2 font-600"
+              style={{ cursor: "pointer" }}
+              onClick={() => setGroupD(true)}
+            >
+              Groups
+            </div>
             <div>--None--</div>
-            <CButton title="Logout" disabled={false} onClick={handleClick} />
+            {/* <CButton title="Logout" disabled={false} onClick={handleClick} /> */}
+            <MyButton title="Logout" id="2" handleClick={handleClick} />
           </div>
+          <WDialog show={groupD} maxWidth="50%" minWidth="50%" height="60%">
+            <span>Enter Group Name</span>
+            <Input
+              id="3"
+              // value={}
+              // onChange={(e) => props.setUsername(e.target.value)}
+            />
+            <span>Please Choose atleast One User</span>
+            <Input
+              id=""
+              // value={props.username}
+              // onChange={(e) => props.setUsername(e.target.value)}
+            />
+          </WDialog>
           {receiverId ? (
             <Chat
               profile={profile}

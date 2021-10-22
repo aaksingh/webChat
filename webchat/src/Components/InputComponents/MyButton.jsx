@@ -1,9 +1,9 @@
 import "./MyButton.scss";
-
+import { memo } from "react";
 const MyButton = ({ title, id, handleClick }) => {
   return (
     <div
-      className={"myButton " + (id === "1" ? " oneButton" : " twoButton")}
+      className={`myButton ${id === "1" ? " oneButton" : " twoButton"}`}
       onClick={handleClick}
     >
       {title}
@@ -11,4 +11,4 @@ const MyButton = ({ title, id, handleClick }) => {
   );
 };
 
-export default MyButton;
+export default memo(MyButton);

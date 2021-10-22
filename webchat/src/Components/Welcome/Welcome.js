@@ -1,6 +1,5 @@
 import WDialog from "../Dialog/Dialog";
 import "./Welcome.scss";
-import ClearTwoToneIcon from "@material-ui/icons/ClearTwoTone";
 import EditTwoToneIcon from "@material-ui/icons/EditTwoTone";
 import MoodRoundedIcon from "@material-ui/icons/MoodRounded";
 import MoreHorizTwoToneIcon from "@material-ui/icons/MoreHorizTwoTone";
@@ -14,12 +13,11 @@ function Welcome({ show, profile }) {
   const handleClose = () => {
     profile(false);
   };
-  console.log("Inside Welcome");
   const [set, setSet] = useState(false);
 
   return (
     <WDialog full={set} show={show}>
-      <div className={"profile flex-column adjust" + (set ? " flexSet" : "")}>
+      <div className={`profile flex-column adjust  ${set ? " flexSet" : ""}`}>
         {/* <ClearTwoToneIcon className="cancel" onClick={handleClose} /> */}
         <Avatar
           alt="Aakash Singh"
