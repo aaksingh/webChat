@@ -34,7 +34,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
     (async () => {
       setTimeout(() => {}, 100);
       let data = await chatList(sender, receiver);
-
+      // console.log(data.data);
       dispatch(loadMeesages({ messages: data.data, receiver }));
     })();
   }, [sender, receiver, dispatch]);
