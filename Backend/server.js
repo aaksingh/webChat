@@ -20,6 +20,11 @@ const port = process.env.PORT || 3001;
 const app = express();
 // const client = redis.createClient(6379);
 //Middlewares
+const redisPort = 6379;
+const client = redis.createClient(redisPort);
+client.on("error", (err) => {
+  console.log(err);
+});
 
 app.use(express.json({ limit: "50mb" })); //For JSON requests
 app.use(
@@ -60,27 +65,23 @@ app.get("/userDetails", user);
 app.get("/chatList", async (req, res) => {
   const senderId = req.query.s1;
   const receiverId = req.query.s2;
-  // console.log(senderId, receiverId);
-  // client.get("postData", (err, redis_data) => {
-  //   if (err) {
-  //     throw error;
-  //   }
-  //   if (redis_data) {
-  //     console.log(JSON.parse(redis_data));
-  //     return res.status(200).send(JSON.parse(redis_data));
-  //   }
-  // });
   try {
-    const data = await Conversation.find({
-      $or: [
-        { $and: [{ senderId: senderId }, { receiverId: receiverId }] },
-        { $and: [{ senderId: receiverId }, { receiverId: senderId }] },
-      ],
-    });
+    client.get(senderId, async (err, chatS) => {
+      if (chatS) {
+        res.status(200).send(JSON.parse(chatS));
+      } else {
+        const data = await Conversation.find({
+          $or: [
+            { $and: [{ senderId: senderId }, { receiverId: receiverId }] },
+            { $and: [{ senderId: receiverId }, { receiverId: senderId }] },
+          ],
+        });
 
-    // console.log(data);
-    // client.setex("postData", 3600, JSON.stringify(data));
-    res.status(200).json(data);
+        client.setex(senderId, 600, JSON.stringify(data));
+
+        res.status(200).json(data);
+      }
+    });
   } catch (err) {
     res.status(500).send(err);
     console.log(err);
