@@ -9,7 +9,7 @@ export const detailsReducer = (state = INITIAL_STATE, action) => {
     case UserDetail.USER_DETAIL:
       return {
         ...state,
-        friendDetail: action.payload,
+        friendDetail: action.payload.data,
       };
 
     default:

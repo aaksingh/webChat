@@ -1,15 +1,15 @@
 import { NewMessages } from "../constants/constantsTypes";
 
-export const loadNewMessage = (data: Object) => {
+export const loadNewMessage = (data) => {
   return {
     type: NewMessages.ADD_NEW_MESSAGE,
-    payload: data,
+    payload: { data: data },
   };
 };
 
-export const clearNewMessageses = (id: string) => {
+export const clearNewMessageses = (id) => {
   return {
     type: NewMessages.CLEAR_NEW_MESSAGE,
-    payload: id,
+    payload: { data: id },
   };
 };

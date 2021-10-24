@@ -12,7 +12,8 @@ import { promisify } from "util";
 import { pipeline } from "stream";
 import multer from "multer";
 import path from "path";
-
+import runMessageQueue from "./messageQueue.js";
+import moment from "moment";
 const pipelineAsync = promisify(pipeline);
 const __dirname = path.resolve();
 const port = process.env.PORT || 3001;
@@ -35,6 +36,18 @@ mongoose.connect(config_url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+let queue = [];
+
+setInterval(async () => {
+  for (let queueLength = 0; queueLength < queue.length; queueLength++) {
+    let data = queue[queueLength];
+    if (Date.now() - data.timestamp >= 1000 * 50) {
+      let result = await runMessageQueue(queue[queueLength]);
+      queue.splice(queueLength, 1);
+    }
+  }
+}, 1000 * 2);
 
 app.get("/", (req, res) => {
   res.status(200).send("Hello");
@@ -102,6 +115,9 @@ app.get("/download", async (req, res) => {
 
 app.post("/create", (req, res) => {
   const data = req.body;
+  console.log(data);
+  // queue.push(data);
+  // res.status(201).send(data);
 
   try {
     Conversation.create(data, (err, data) => {

@@ -68,6 +68,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
         senderId: sender,
         receiverId: receiver,
         messageId: id,
+        timestamp: Date.now(),
         message: {
           message: text,
           referenceId: null,

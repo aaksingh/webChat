@@ -9,7 +9,7 @@ export const usersList = (state = INITIAL_STATE, action) => {
     case Users.LOAD_USERS:
       return {
         ...state,
-        users: [...state.users, action.payload],
+        users: [...state.users, action.payload.data],
       };
 
     default:

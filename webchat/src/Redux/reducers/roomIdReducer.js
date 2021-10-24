@@ -8,7 +8,7 @@ export const roomIdReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case AddRoomId.ADD_ROOM_ID:
       return {
-        roomId: action.payload,
+        roomId: action.payload.data,
       };
 
     default:

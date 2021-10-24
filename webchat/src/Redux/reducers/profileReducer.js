@@ -9,7 +9,7 @@ export const showProfileReducer = (state = INITIAL_STATE, action) => {
     case Profile.SHOW_PROFILE:
       return {
         ...state,
-        show: action.payload,
+        show: action.payload.data,
       };
 
     default:

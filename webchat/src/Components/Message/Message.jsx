@@ -42,27 +42,15 @@ const Message = ({ message, visible, userName, attachments, sender }) => {
           >
             {!attachments ? (
               message?.message.message
-            ) : sender !== localStorage.getItem("userId") ? (
+            ) : (
               <a
                 href={`http://localhost:3001/${message?.message.message}`}
-                download
                 target="_blank"
+                download
               >
                 <img
                   src={`http://localhost:3001/${message?.message.message}`}
                   alt="receiverImage"
-                  style={{ width: "400px", height: "400px" }}
-                />
-              </a>
-            ) : (
-              <a
-                href={`http://localhost:3001/${message?.message.message}`}
-                download
-                target="_blank"
-              >
-                <img
-                  src={`http://localhost:3001/${message?.message.message}`}
-                  alt="SendImage"
                   style={{ width: "400px", height: "400px" }}
                 />
               </a>

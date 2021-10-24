@@ -30,13 +30,17 @@ const Login = (props) => {
             <div className="box" onClick={() => setActive(false)}>
               <h2>{String.WELCOME}</h2>
               <h1>{String.SIGN}</h1>;
-              <MyButton title="SIGN IN" id="1" />
+              <div style={{ width: "50%" }}>
+                <MyButton title="SIGN IN" id="1" />
+              </div>
             </div>
           ) : (
             <div className="box" onClick={() => setActive(true)}>
               <h2>{String.HELLO}</h2>
               <h1>{String.CREATE}</h1>
-              <MyButton title="SIGN UP" id="1" />
+              <div style={{ width: "50%" }}>
+                <MyButton title="SIGN UP" id="1" />
+              </div>
             </div>
           )}
         </div>

@@ -112,10 +112,7 @@ const DashBoard = ({ onClick, image }) => {
         },
       };
 
-      if (
-        data.senderId === localStorage.getItem("roomId") ||
-        data.receiverId === localStorage.getItem("roomId")
-      ) {
+      if (data.senderId === localStorage.getItem("roomId")) {
         dispatch(
           addMessage({ message: messageData, receiver: messageData.senderId })
         );

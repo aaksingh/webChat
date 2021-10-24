@@ -9,7 +9,7 @@ export const showOnlineUsers = (state = INITIAL_STATE, action) => {
     case OnlineUser.UPDATE_USER:
       return {
         ...state,
-        users: action.payload,
+        users: action.payload.data,
       };
 
     default:

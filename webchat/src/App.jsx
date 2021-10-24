@@ -116,20 +116,24 @@ const App = () => {
                   alignItems: "center",
                 }}
               >
-                <MyButton
-                  title="Yes"
-                  id="2"
-                  handleClick={() => {
-                    Done();
-                  }}
-                />
-                <MyButton
-                  title="No"
-                  id="1"
-                  handleClick={(e) => {
-                    setShow(false);
-                  }}
-                />
+                <div style={{ width: "100%" }}>
+                  <MyButton
+                    title="Yes"
+                    id="2"
+                    handleClick={() => {
+                      Done();
+                    }}
+                  />
+                </div>
+                <div style={{ width: "100%" }}>
+                  <MyButton
+                    title="No"
+                    id="1"
+                    handleClick={(e) => {
+                      setShow(false);
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </WDialog>
