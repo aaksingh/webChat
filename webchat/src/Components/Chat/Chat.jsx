@@ -21,7 +21,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
   const { friends } = useSelector((state) => state.friends);
   const dispatch = useDispatch();
 
-  const [mess, setMess] = useState();
+  const [mess, setMess] = useState([]);
   const [text, setText] = useState("");
   const scrollRefArray = useRef();
 
@@ -41,6 +41,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
       }
       if (result.data.length) {
         let data = await chatList(result.data[0]._id);
+
         dispatch(loadMeesages({ messages: data.data, receiver }));
       }
     }
@@ -197,29 +198,47 @@ const Chat = ({ profile, socket, sender, receiver }) => {
         <div className="chatSection flex-column">
           <div className="chatStart flex-column">
             <Intro {...{ profile, sender, receiver, friendDetail }} />
-            {mess?.map((m, i) => {
-              return (
-                <div
-                  className="messageSpan flex-column"
-                  ref={scrollRefArray}
-                  key={i}
-                >
-                  {
-                    <Message
-                      visible={
-                        !(i > 0 && mess[i - 1]?.senderId === mess[i]?.senderId)
+            {mess
+              ? mess?.map((m, i) => {
+                  return (
+                    <div
+                      className="messageSpan flex-column"
+                      ref={scrollRefArray}
+                      key={i}
+                    >
+                      {
+                        <Message
+                          visible={
+                            !(
+                              i > 0 &&
+                              mess[i - 1]?.senderId === mess[i]?.senderId
+                            )
+                          }
+                          userName={friendDetail}
+                          message={m}
+                          image={profile}
+                          attachments={m?.message?.attachments}
+                          sender={m?.senderId}
+                          receiver={m?.receiverId}
+                        />
                       }
-                      userName={friendDetail}
-                      message={m}
-                      image={profile}
-                      attachments={m?.message?.attachments}
-                      sender={m?.senderId}
-                      receiver={m?.receiverId}
-                    />
-                  }
-                </div>
-              );
-            })}
+                    </div>
+                  );
+                })
+              : [1, 2, 3, 4, 5, 6]?.map((m, i) => {
+                  return (
+                    <div className="messageSpan flex-column">
+                      <div
+                        style={{
+                          height: "2rem",
+                          background: "#8e9297",
+                          margin: "10px",
+                          borderRadius: "10px",
+                        }}
+                      ></div>
+                    </div>
+                  );
+                })}
           </div>
           <div className="chatInput flex-row adjust">
             {canMessage && (

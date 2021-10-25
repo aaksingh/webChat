@@ -95,8 +95,10 @@ const DashBoard = ({ onClick, image }) => {
 
     dispatch(setRoomId(user[j]._id));
     localStorage.setItem("roomId", user[j]._id);
+
     setreceiverId(user[j]._id);
     setsenderId(localStorage.getItem("userId"));
+
     setProfile(image);
   };
   useEffect(() => {
