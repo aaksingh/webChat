@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 
 const conversationSchema = mongoose.Schema({
-  time: Array,
+  time: Number,
   senderId: String,
   receiverId: String,
   messageId: Number,
+  roomId: String,
   message: {
     message: String,
     referenceId: String,

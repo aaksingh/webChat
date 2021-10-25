@@ -5,10 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import "./Chat.scss";
 import "../../Styles/style.scss";
 import ChatHeader from "../ChatHeader/ChatHeader";
-import { create, chatList, upload } from "../../api/api";
+import { create, chatList, upload, friendsList } from "../../api/api";
 import Message from "../Message/Message";
 import Input from "../Input/Input";
-import { days, months } from "../../Constants/Array.js";
 import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
 import { clearNewMessageses } from "../../Redux/actions/newMessageAction";
 import Intro from "../Intro/Intro";
@@ -19,25 +18,34 @@ const Chat = ({ profile, socket, sender, receiver }) => {
 
   const { friendDetail } = useSelector((state) => state.friendDetails);
   const { users } = useSelector((state) => state.showOnlineUsers);
-
+  const { friends } = useSelector((state) => state.friends);
   const dispatch = useDispatch();
 
   const [mess, setMess] = useState();
   const [text, setText] = useState("");
   const scrollRefArray = useRef();
 
+  const [canMessage, setCanMessage] = useState(false);
+  const [unique, setUniqueId] = useState("");
   useEffect(() => {
     dispatch(clearNewMessageses(receiver));
   }, [receiver]);
 
   useEffect(() => {
-    (async () => {
-      setTimeout(() => {}, 100);
-      let data = await chatList(sender, receiver);
-      // console.log(data.data);
-      dispatch(loadMeesages({ messages: data.data, receiver }));
-    })();
-  }, [sender, receiver, dispatch]);
+    async function friendsID() {
+      let result = await friendsList(receiver, sender);
+      if (result.data.length) setUniqueId(result.data[0]._id);
+      setCanMessage(false);
+      if (friends.includes(receiver)) {
+        setCanMessage(true);
+      }
+      if (result.data.length) {
+        let data = await chatList(result.data[0]._id);
+        dispatch(loadMeesages({ messages: data.data, receiver }));
+      }
+    }
+    friendsID();
+  }, [friends, receiver, sender]);
 
   useEffect(() => {
     messages && setMess(messages[receiver]);
@@ -46,29 +54,15 @@ const Chat = ({ profile, socket, sender, receiver }) => {
   const handleCreate = async (e) => {
     e.preventDefault();
 
-    let currentTimestamp = new Date();
-
-    const dateDetails = new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "numeric",
-      minute: "2-digit",
-    }).format(currentTimestamp);
-
-    let time = dateDetails.split(" ");
-
-    time.push(days[currentTimestamp.getDay()]);
-    time.push(months[currentTimestamp.getMonth()]);
-
     let id = Date.now();
     if (text) {
       let messageData = {
-        time: time,
+        time: id,
         senderId: sender,
         receiverId: receiver,
         messageId: id,
-        timestamp: Date.now(),
+
+        roomId: unique,
         message: {
           message: text,
           referenceId: null,
@@ -83,7 +77,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
         users &&
           users?.some((user) => user?.userId === receiver) &&
           socket.current.emit("sendmessage", {
-            time: time,
+            time: id,
             senderId: sender,
             receiverId: receiver,
             messageId: id,
@@ -91,6 +85,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
             referenceId: null,
             read: false,
             attachments: false,
+            roomId: unique,
           });
       } catch (err) {
         console.log(err.message, "Fail to send message");
@@ -112,10 +107,11 @@ const Chat = ({ profile, socket, sender, receiver }) => {
         dispatch(
           addMessage({
             message: {
-              time: time,
+              time: id,
               senderId: sender,
               receiverId: receiver,
               messageId: result.data.id,
+              roomId: unique,
               message: {
                 message: result.data.path,
                 referenceId: null,
@@ -133,7 +129,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
         users &&
           users?.some((user) => user?.userId === receiver) &&
           socket.current.emit("sendmessage", {
-            time: time,
+            time: id,
             senderId: sender,
             receiverId: receiver,
             messageId: messageId,
@@ -141,6 +137,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
             referenceId: null,
             read: false,
             attachments: true,
+            roomId: unique,
           });
       }
       setFile("");
@@ -225,14 +222,16 @@ const Chat = ({ profile, socket, sender, receiver }) => {
             })}
           </div>
           <div className="chatInput flex-row adjust">
-            <Input
-              {...{ text, setText }}
-              handleCreate={handleCreate}
-              variant="Message"
-              receiver={receiver}
-              sender={sender}
-              {...{ file, setFile }}
-            />
+            {canMessage && (
+              <Input
+                {...{ text, setText }}
+                handleCreate={handleCreate}
+                variant="Message"
+                receiver={receiver}
+                sender={sender}
+                {...{ file, setFile }}
+              />
+            )}
           </div>
         </div>
       </div>

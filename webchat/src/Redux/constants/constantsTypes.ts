@@ -46,3 +46,7 @@ export enum AddOnlineUser {
 export enum AddRoomId {
   ADD_ROOM_ID = "ADD_ROOM_ID",
 }
+
+export enum Friends {
+  ADD_FRIEND = "ADD_FRIEND",
+}

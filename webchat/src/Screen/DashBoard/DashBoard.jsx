@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-import { userDetails } from "../../api/api";
+import { addFriends, userDetails } from "../../api/api";
 import { loadUsers } from "../../Redux/actions/usersAction.js";
 import { String } from "../../Constants/String";
 import { userDetail } from "../../Redux/actions/friendDetails";
@@ -17,6 +17,7 @@ import loadable from "@loadable/component";
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import MyButton from "../../Components/InputComponents/MyButton";
+import Follow from "../../Components/Follow/Follow";
 
 const Chat = loadable(() => import("../../Components/Chat/Chat"));
 const Wait = loadable(() => import("../../Components/Wait/Wait"), {
@@ -40,13 +41,13 @@ const Connected = loadable(
 const DashBoard = ({ onClick, image }) => {
   const { users } = useSelector((state) => state.users);
   const roomId = useSelector((state) => state.roomId);
-  console.log(roomId?.roomId, "roomid");
+
   const dispatch = useDispatch();
   const [user, setuser] = useState();
   const val = localStorage.getItem("userId");
   const [loading, setLoading] = useState(false);
   const [senderId, setsenderId] = useState("");
-  const [receiverId, setreceiverId] = useState(null);
+  const [receiverId, setreceiverId] = useState("");
   const [profile, setProfile] = useState(null);
   const [groupD, setGroupD] = useState(false);
   const socket = useRef();
@@ -86,11 +87,12 @@ const DashBoard = ({ onClick, image }) => {
     });
   }, [socket, loadOnlineUsers]);
 
-  const handleChat = async (j, image) => {
-    setreceiverId(null);
+  const handleChat = (j, image) => {
+    setreceiverId("");
+
     dispatch(clearMessages());
     let user = users[0];
-    // console.log(user[j]._id, "Setting roomId");
+
     dispatch(setRoomId(user[j]._id));
     localStorage.setItem("roomId", user[j]._id);
     setreceiverId(user[j]._id);
@@ -132,49 +134,58 @@ const DashBoard = ({ onClick, image }) => {
         <Wait />
       ) : (
         <>
-          <div className="dashboard flex-column font-family">
+          <div
+            className="dashboard flex-column font-family"
+            style={{ position: "relative" }}
+          >
             <div className="logo flex-row adjust">WebChat</div>
             <UserInfo
               detail={localStorage.getItem("userName")}
               onClick={handleClick}
             />
-            {/* <Welcome /> */}
 
             <div className="dm adspbtw font-h2 font-600">{String.CHAT}</div>
             <div className="userList flex-column">
               {user &&
                 user.map((user, i) => {
+                  let friendId = user._id;
+                  let userId = localStorage.getItem("userId");
                   return (
                     user?._id !== localStorage.getItem("userId") && (
                       <div
-                        className="list flex-row"
-                        onClick={() => {
-                          dispatch(userDetail(user.username));
-
-                          handleChat(i, user.image);
+                        className="flex-row"
+                        style={{
+                          width: "100%",
+                          alignItems: "center",
+                          cursor: "pointer",
                         }}
                         key={i}
                       >
-                        <Users
-                          userName={user.username}
-                          id={user._id}
-                          image={user.image}
-                        />
+                        <div
+                          className="list flex-row"
+                          onClick={() => {
+                            dispatch(userDetail(user.username));
+
+                            handleChat(i, user.image);
+                          }}
+                          key={i}
+                        >
+                          <Users
+                            userName={user.username}
+                            id={user._id}
+                            image={user.image}
+                          />
+                        </div>
+
+                        <Follow {...{ friendId, userId }} />
                       </div>
                     )
                   );
                 })}
             </div>
-            <div
-              className="dm adspbtw font-h2 font-600"
-              style={{ cursor: "pointer" }}
-              onClick={() => setGroupD(true)}
-            >
-              Groups
+            <div style={{ bottom: "0", position: "absolute", width: "100%" }}>
+              <MyButton title="Logout" id="2" handleClick={handleClick} />
             </div>
-            <div>--None--</div>
-            {/* <CButton title="Logout" disabled={false} onClick={handleClick} /> */}
-            <MyButton title="Logout" id="2" handleClick={handleClick} />
           </div>
           <WDialog show={groupD} maxWidth="50%" minWidth="50%" height="60%">
             <span>Enter Group Name</span>

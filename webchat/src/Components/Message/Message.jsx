@@ -1,14 +1,33 @@
 import { useState, useEffect, memo } from "react";
 import "./Message.scss";
+import { days, months } from "../../Constants/Array.js";
 
 const Message = ({ message, visible, userName, attachments, sender }) => {
-  const [link, setLink] = useState(false);
+  // const [link, setLink] = useState(false);
+
+  const [t, setTime] = useState("");
   useEffect(() => {
-    (() => {
-      var strRegex = "^((https|http|ftp|rtsp|mms)?://)";
-      var re = new RegExp(strRegex);
-      setLink(re.test(message?.message.message));
-    })();
+    function call() {
+      let currentTimestamp = new Date(message?.time);
+
+      let time = [];
+      time.push(currentTimestamp.getHours());
+      time.push(currentTimestamp.getMinutes());
+      time.push(currentTimestamp.getFullYear());
+      time.push(days[currentTimestamp.getDay()]);
+      time.push(months[currentTimestamp.getMonth()]);
+      time.push(currentTimestamp.getDate());
+      time.push([currentTimestamp.getMonth()]);
+
+      setTime(time);
+    }
+    // (() => {
+    //   var strRegex = "^((https|http|ftp|rtsp|mms)?://)";
+    //   var re = new RegExp(strRegex);
+    //   setLink(re.test(message?.message.message));
+    // })();
+
+    call();
   }, [message]);
 
   return (
@@ -21,9 +40,8 @@ const Message = ({ message, visible, userName, attachments, sender }) => {
               : userName}
           </div>
           <div className="date">
-            &nbsp;&nbsp;
-            {message.time[0]}&nbsp;{message.time[3]}&nbsp;{message.time[1]}
-            &nbsp;{message.time[2]}
+            {" "}
+            {t[0]}:{t[1]},&nbsp;{t[2]},&nbsp;{t[3]},&nbsp;{t[4]}
           </div>
         </div>
       ) : null}
@@ -31,29 +49,23 @@ const Message = ({ message, visible, userName, attachments, sender }) => {
       <div className="messageSection flex-column">
         <div className="flex-row">
           <div className="date flex-row">
-            &nbsp;{message.time[1]}
-            &nbsp;{message.time[2]}&nbsp;&nbsp;
+            {t[0]}&nbsp;:&nbsp;{t[1]},&nbsp;&nbsp;{t[2]}
           </div>
-          <span
-            onClick={() =>
-              link ? window.open(message?.message.message) : null
-            }
-            className={link ? " link" : ""}
-          >
+          <span>
             {!attachments ? (
               message?.message.message
             ) : (
-              <a
-                href={`http://localhost:3001/${message?.message.message}`}
-                target="_blank"
-                download
-              >
-                <img
-                  src={`http://localhost:3001/${message?.message.message}`}
-                  alt="receiverImage"
-                  style={{ width: "400px", height: "400px" }}
-                />
-              </a>
+              // <a
+              //   href={`http://localhost:3001/${message?.message.message}`}
+              //   target="_blank"
+              //   download
+              // >
+              <img
+                src={`http://localhost:3001/${message?.message.message}`}
+                alt="receiverImage"
+                style={{ width: "400px", height: "400px" }}
+              />
+              // </a>
             )}
           </span>
         </div>

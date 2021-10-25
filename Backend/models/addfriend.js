@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
 
 const addfriendSchema = mongoose.Schema({
-  members: {
-    type: Array,
-  },
+  s1: String,
+  s2: String,
 });
 
 export default mongoose.model("AddFriend", addfriendSchema);

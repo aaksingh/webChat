@@ -61,27 +61,45 @@ app.post("/signUp", user);
 app.post("/login", user);
 app.get("/userDetails", user);
 
-// get Messages
-app.get("/chatList", async (req, res) => {
-  const senderId = req.query.s1;
-  const receiverId = req.query.s2;
+app.get("/friendsList", async (req, res) => {
+  const s1 = req.query.s1;
+  const s2 = req.query.s2;
+
   try {
-    client.get(senderId, async (err, chatS) => {
-      if (chatS) {
-        res.status(200).send(JSON.parse(chatS));
-      } else {
-        const data = await Conversation.find({
-          $or: [
-            { $and: [{ senderId: senderId }, { receiverId: receiverId }] },
-            { $and: [{ senderId: receiverId }, { receiverId: senderId }] },
-          ],
-        });
-
-        client.setex(senderId, 600, JSON.stringify(data));
-
-        res.status(200).json(data);
-      }
+    const data = await AddFriend.find({
+      $or: [
+        { $and: [{ s1: s1 }, { s2: s2 }] },
+        { $and: [{ s1: s2 }, { s2: s1 }] },
+      ],
     });
+
+    if (data.length) {
+      res.status(200).json(data);
+    } else {
+      res.status(200).json(false);
+    }
+  } catch (err) {
+    res.status(500).send(err);
+    console.log(err);
+  }
+});
+
+// get Messages
+app.get("/chatList/:id", async (req, res) => {
+  const roomId = req.params.id;
+
+  try {
+    //   client.get(senderId, async (err, chatS) => {
+    //     if (chatS) {
+    //       res.status(200).send(JSON.parse(chatS));
+    //     } else {
+    const data = await Conversation.find({ roomId });
+    console.log(data);
+    // client.setex(senderId, 600, JSON.stringify(data));
+
+    res.status(200).json(data);
+    //   }
+    // });
   } catch (err) {
     res.status(500).send(err);
     console.log(err);
@@ -193,30 +211,21 @@ app.post("/reply", (req, res) => {
   }
 });
 
-app.get("/friendslist/:id", async (req, res) => {
-  try {
-    const data = await AddFriend.find({
-      members: {
-        $in: req.params.id,
-      },
-    });
-
-    res.status(200).json(data);
-  } catch (err) {
-    console.log(err.message);
-  }
-});
-
 app.post("/addfriend", async (req, res) => {
-  const AddFriends = new AddFriend({
-    members: [req.body.userId, req.body.friendId],
-  });
-
+  let data = {
+    s1: req.body.userId,
+    s2: req.body.friendId,
+  };
   try {
-    const savedFriend = await AddFriends.save();
-    res.status(200).json(savedFriend);
-  } catch (err) {
-    res.status(500).json(err);
+    AddFriend.create(data, (err, data) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.status(201).send(data);
+      }
+    });
+  } catch (error) {
+    console.log(error.message, "chat creation failed.");
   }
 });
 
@@ -231,10 +240,3 @@ app.delete("/delete/:id", async (req, res) => {
 });
 
 app.listen(port, () => console.log(`Listening on Port:${port}`));
-
-// if (file.detectedFileExtension === ".zip") {
-//   await pipelineAsync(
-//     file.stream,
-//     fs.createWriteStream(`./public/zip/${fileName}`)
-//   );
-// } else if (file.detectedFileExtension === ".jpg" || ".jpeg") {
