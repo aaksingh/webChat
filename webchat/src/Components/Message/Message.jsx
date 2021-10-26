@@ -1,9 +1,13 @@
 import { useState, useEffect, memo } from "react";
 import "./Message.scss";
 import { days, months } from "../../Constants/Array.js";
+import Reply from "../Rep/Reply";
+import { useSelector, useDispatch } from "react-redux";
+import { loadReplyFor } from "../../Redux/actions/loadReplyAction";
 
 const Message = ({ message, visible, userName, attachments, sender }) => {
   // const [link, setLink] = useState(false);
+  const dispatch = useDispatch();
 
   const [t, setTime] = useState("");
   useEffect(() => {
@@ -29,7 +33,9 @@ const Message = ({ message, visible, userName, attachments, sender }) => {
 
     call();
   }, [message]);
-
+  const handleReply = () => {
+    dispatch(loadReplyFor(message));
+  };
   return (
     <div className={`message flex-column  ${visible ? " show" : ""}`}>
       {visible ? (
@@ -47,26 +53,23 @@ const Message = ({ message, visible, userName, attachments, sender }) => {
       ) : null}
 
       <div className="messageSection flex-column">
+        <div className="replyIcon">
+          <Reply handleReply={handleReply} />
+        </div>
         <div className="flex-row">
           <span className="date flex-row">
             {t[0]}&nbsp;:&nbsp;{t[1]},&nbsp;&nbsp;{t[2]}
           </span>
           <li>
-            {!attachments ? (
+            {!message?.message.attachments ? (
               message?.message.message
             ) : (
-              <a
-                href={`http://localhost:3001/${message?.message.message}`}
-                target="_blank"
-                rel="noreferre"
-                download
-              >
-                <img
-                  src={`http://localhost:3001/${message?.message.message}`}
-                  alt="receiverImage"
-                  style={{ width: "400px", height: "400px" }}
-                />
-              </a>
+              <div className="replyMessage">
+                <div className="repliedSpan">{message?.message.replied}</div>
+                <span className="repliedMessageSpan">
+                  {message?.message.message}
+                </span>
+              </div>
             )}
           </li>
         </div>
@@ -76,3 +79,24 @@ const Message = ({ message, visible, userName, attachments, sender }) => {
 };
 
 export default memo(Message);
+
+{
+  /* <li>
+{!attachments ? (
+  message?.message.message
+) : (
+  <a
+    href={`http://localhost:3001/${message?.message.message}`}
+    target="_blank"
+    rel="noreferre"
+    download
+  >
+    <img
+      src={`http://localhost:3001/${message?.message.message}`}
+      alt="receiverImage"
+      style={{ width: "400px", height: "400px" }}
+    />
+  </a>
+)}
+</li> */
+}

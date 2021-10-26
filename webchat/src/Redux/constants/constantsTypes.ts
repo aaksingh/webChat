@@ -50,3 +50,8 @@ export enum AddRoomId {
 export enum Friends {
   ADD_FRIEND = "ADD_FRIEND",
 }
+
+export enum LoadReply {
+  LOAD_MESSAGE = "LOAD_MESSAGE",
+  REMOVE_MESSAGE = "REMOVE_MESSAGE",
+}

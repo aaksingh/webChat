@@ -12,6 +12,8 @@ import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
 import { clearNewMessageses } from "../../Redux/actions/newMessageAction";
 import Intro from "../Intro/Intro";
 import WDialog from "../Dialog/Dialog";
+import Cross from "../Cross/Cross";
+import { clearReply } from "../../Redux/actions/loadReplyAction";
 const Chat = ({ profile, socket, sender, receiver }) => {
   const messages = useSelector((state) => state.messages);
   const [file, setFile] = useState("");
@@ -19,11 +21,15 @@ const Chat = ({ profile, socket, sender, receiver }) => {
   const { friendDetail } = useSelector((state) => state.friendDetails);
   const { users } = useSelector((state) => state.showOnlineUsers);
   const { friends } = useSelector((state) => state.friends);
+  const { replyMessage } = useSelector((state) => state.loadReply);
+
   const dispatch = useDispatch();
 
   const [mess, setMess] = useState([]);
   const [text, setText] = useState("");
   const scrollRefArray = useRef();
+
+  // const scrollReply = useRef([]);
 
   const [canMessage, setCanMessage] = useState(false);
   const [unique, setUniqueId] = useState("");
@@ -55,6 +61,7 @@ const Chat = ({ profile, socket, sender, receiver }) => {
   const handleCreate = async (e) => {
     e.preventDefault();
 
+    replyMessage?.messageId && dispatch(clearReply());
     let id = Date.now();
     if (text) {
       let messageData = {
@@ -64,11 +71,12 @@ const Chat = ({ profile, socket, sender, receiver }) => {
         messageId: id,
 
         roomId: unique,
-        referenceId: null,
+        referenceId: replyMessage ? replyMessage?.messageId : null,
         message: {
           message: text,
+          replied: replyMessage ? replyMessage.message.message : null,
           read: false,
-          attachments: false,
+          attachments: replyMessage ? 1 : null,
         },
       };
       try {
@@ -83,9 +91,10 @@ const Chat = ({ profile, socket, sender, receiver }) => {
             receiverId: receiver,
             messageId: id,
             message: text,
-            referenceId: null,
+            referenceId: replyMessage ? replyMessage?.messageId : null,
+            replied: replyMessage ? replyMessage.message.message : null,
             read: false,
-            attachments: false,
+            attachments: replyMessage ? 1 : null,
             roomId: unique,
           });
       } catch (err) {
@@ -113,11 +122,13 @@ const Chat = ({ profile, socket, sender, receiver }) => {
               receiverId: receiver,
               messageId: result.data.id,
               roomId: unique,
-              referenceId: null,
+              referenceId: replyMessage ? replyMessage?.messageId : null,
+
               message: {
                 message: result.data.path,
+                replied: replyMessage ? replyMessage.message.message : null,
                 read: false,
-                attachments: true,
+                attachments: replyMessage ? 1 : null,
               },
             },
 
@@ -135,20 +146,27 @@ const Chat = ({ profile, socket, sender, receiver }) => {
             receiverId: receiver,
             messageId: messageId,
             message: message,
-            referenceId: null,
+            referenceId: replyMessage ? replyMessage?.messageId : null,
+            replied: replyMessage ? replyMessage.message.message : null,
             read: false,
-            attachments: true,
+            attachments: replyMessage ? 1 : null,
             roomId: unique,
           });
       }
       setFile("");
     }
   };
-
+  const handleScroll = (i) => {
+    let domElement = document.getElementById(i);
+    domElement.scrollIntoView({ block: "start", behavior: "smooth" });
+  };
   useEffect(() => {
     scrollRefArray.current?.scrollIntoView({ behaviour: "smooth" });
   }, [mess, messages]);
 
+  const handleCrossIcon = () => {
+    dispatch(clearReply());
+  };
   return (
     <div className="chatReply flex-row">
       <WDialog show={file} maxWidth="100%" minWidth="100%" height="100%">
@@ -204,7 +222,11 @@ const Chat = ({ profile, socket, sender, receiver }) => {
                     <div
                       className="messageSpan flex-column"
                       ref={scrollRefArray}
-                      key={i}
+                      key={m?.messageId}
+                      id={m?.messageId}
+                      onClick={() =>
+                        m?.referenceId && handleScroll(m?.referenceId)
+                      }
                     >
                       {
                         <Message
@@ -240,6 +262,13 @@ const Chat = ({ profile, socket, sender, receiver }) => {
                   );
                 })}
           </div>
+          {replyMessage && (
+            <div className="replyContainer">
+              {replyMessage?.message.message}
+              <Cross handleCross={handleCrossIcon} />
+            </div>
+          )}
+
           <div className="chatInput flex-row adjust">
             {canMessage && (
               <Input

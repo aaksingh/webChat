@@ -9,8 +9,9 @@ const conversationSchema = mongoose.Schema({
   referenceId: Number,
   message: {
     message: String,
+    replied: String,
     read: Boolean,
-    attachments: Boolean,
+    attachments: Number,
   },
 });
 

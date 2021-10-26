@@ -9,6 +9,7 @@ import { showOnlineUsers } from "./Redux/reducers/socketReducer.js";
 import { newMessageList } from "./Redux/reducers/newMessageReducer.js";
 import { roomIdReducer } from "./Redux/reducers/roomIdReducer.js";
 import { friendReducer } from "./Redux/reducers/friendReducer.js";
+import { loadReplyList } from "./Redux/reducers/loadReplyReducer.js";
 export const reducer = combineReducers({
   users: usersList,
   messages: messageList,
@@ -19,6 +20,7 @@ export const reducer = combineReducers({
   newMessages: newMessageList,
   roomId: roomIdReducer,
   friends: friendReducer,
+  loadReply: loadReplyList,
 });
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
