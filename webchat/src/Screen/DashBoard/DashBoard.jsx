@@ -40,7 +40,6 @@ const Connected = loadable(
 
 const DashBoard = ({ onClick, image }) => {
   const { users } = useSelector((state) => state.users);
-  const roomId = useSelector((state) => state.roomId);
 
   const dispatch = useDispatch();
   const [user, setuser] = useState();

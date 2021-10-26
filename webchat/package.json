@@ -61,6 +61,7 @@
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.4",
     "react-refresh": "^0.8.3",
+    "react-scripts": "^4.0.3",
     "redux": "^4.1.0",
     "redux-thunk": "^2.3.0",
     "resolve": "1.18.1",
@@ -161,5 +162,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "terser-brunch": "^4.1.0"
   }
 }

@@ -34,40 +34,41 @@ const Message = ({ message, visible, userName, attachments, sender }) => {
     <div className={`message flex-column  ${visible ? " show" : ""}`}>
       {visible ? (
         <div className="nameTime flex-row">
-          <div className="name">
+          <span className="name">
             {localStorage.getItem("userId") === message.senderId
               ? localStorage.getItem("userName")
               : userName}
-          </div>
-          <div className="date">
+          </span>
+          <span className="date">
             {" "}
             {t[0]}:{t[1]},&nbsp;{t[2]},&nbsp;{t[3]},&nbsp;{t[4]}
-          </div>
+          </span>
         </div>
       ) : null}
 
       <div className="messageSection flex-column">
         <div className="flex-row">
-          <div className="date flex-row">
+          <span className="date flex-row">
             {t[0]}&nbsp;:&nbsp;{t[1]},&nbsp;&nbsp;{t[2]}
-          </div>
-          <span>
+          </span>
+          <li>
             {!attachments ? (
               message?.message.message
             ) : (
-              // <a
-              //   href={`http://localhost:3001/${message?.message.message}`}
-              //   target="_blank"
-              //   download
-              // >
-              <img
-                src={`http://localhost:3001/${message?.message.message}`}
-                alt="receiverImage"
-                style={{ width: "400px", height: "400px" }}
-              />
-              // </a>
+              <a
+                href={`http://localhost:3001/${message?.message.message}`}
+                target="_blank"
+                rel="noreferre"
+                download
+              >
+                <img
+                  src={`http://localhost:3001/${message?.message.message}`}
+                  alt="receiverImage"
+                  style={{ width: "400px", height: "400px" }}
+                />
+              </a>
             )}
-          </span>
+          </li>
         </div>
       </div>
     </div>
