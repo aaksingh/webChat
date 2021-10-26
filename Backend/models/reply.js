@@ -1,15 +1,17 @@
 import mongoose from "mongoose";
 
 const replySchema = mongoose.Schema({
-  chat: {
-    type: String,
-    trim: true,
-    required: true,
-  },
+  time: Number,
   senderId: String,
-  conversationId: String,
   receiverId: String,
-  time: Array,
+  messageId: Number,
+  roomId: String,
+  referenceId: Number,
+  message: {
+    message: String,
+    read: Boolean,
+    attachments: Boolean,
+  },
 });
 
 export default mongoose.model("Rep", replySchema);

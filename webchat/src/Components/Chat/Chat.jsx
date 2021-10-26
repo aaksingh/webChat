@@ -64,9 +64,9 @@ const Chat = ({ profile, socket, sender, receiver }) => {
         messageId: id,
 
         roomId: unique,
+        referenceId: null,
         message: {
           message: text,
-          referenceId: null,
           read: false,
           attachments: false,
         },
@@ -113,9 +113,9 @@ const Chat = ({ profile, socket, sender, receiver }) => {
               receiverId: receiver,
               messageId: result.data.id,
               roomId: unique,
+              referenceId: null,
               message: {
                 message: result.data.path,
-                referenceId: null,
                 read: false,
                 attachments: true,
               },

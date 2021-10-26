@@ -44,13 +44,13 @@ const Reply = ({
         time: time,
         senderId: localStorage.getItem("userId"),
         receiverId: user,
-        conversationId: message._id,
+        messageId: message._id,
+        roomId: null,
+        referenceId: message._id,
         message: {
           message: text,
-          referenceId: message._id,
           read: false,
-          authorId: localStorage.getItem("userId"),
-          attachments: [],
+          attachments: false,
         },
       };
       try {

@@ -107,9 +107,9 @@ const DashBoard = ({ onClick, image }) => {
         senderId: data.senderId,
         receiverId: data.receiverId,
         messageId: data.messageId,
+        referenceId: data.referenceId,
         message: {
           message: data.message,
-          referenceId: data.referenceId,
           read: data.read,
           attachments: data.attachments,
         },
