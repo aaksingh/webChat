@@ -6,7 +6,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import VideoCallOutlinedIcon from "@material-ui/icons/VideoCallOutlined";
 import SearchInput from "../SearchInput/SearchInput";
 import Users from "../Users/Users";
-const ChatHeader = ({ profile, detail, show }) => {
+const ChatHeader = ({ profile, detail, show, videoCalling, audioCalling }) => {
   return (
     <div className="chatHeader flex-row adspbtw">
       <Users userName={detail} image={profile} />
@@ -14,15 +14,16 @@ const ChatHeader = ({ profile, detail, show }) => {
       {show && (
         <div className="headerContent flex-row">
           <SearchInput />
-          <div className="iconParent flex-column adjust">
-            <PhoneIcon style={{ color: "#a71b1b" }} />
-          </div>
-          <div className="iconParent flex-column adjust">
-            <VideoCallOutlinedIcon />
-          </div>
-          <div className="iconParent flex-column adjust">
-            <MoreVertIcon />
-          </div>
+          <PhoneIcon
+            className="iconParent flex-column adjust"
+            onClick={audioCalling}
+            style={{ color: "#a71b1b" }}
+          />
+          <VideoCallOutlinedIcon
+            className="iconParent flex-column adjust"
+            onClick={videoCalling}
+          />
+          <MoreVertIcon className="iconParent flex-column adjust" />
         </div>
       )}
     </div>

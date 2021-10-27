@@ -5,7 +5,7 @@ import { messageList } from "./Redux/reducers/messageReducer.js";
 import { myReply } from "./Redux/reducers/replyReducer.js";
 import { detailsReducer } from "./Redux/reducers/friendDetailsReducer.js";
 import { showProfileReducer } from "./Redux/reducers/profileReducer.js";
-import { showOnlineUsers } from "./Redux/reducers/socketReducer.js";
+import { showOnlineUsers } from "./Redux/reducers/onlineReducer.js";
 import { newMessageList } from "./Redux/reducers/newMessageReducer.js";
 import { roomIdReducer } from "./Redux/reducers/roomIdReducer.js";
 import { friendReducer } from "./Redux/reducers/friendReducer.js";

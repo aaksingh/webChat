@@ -60,12 +60,11 @@ io.on("connection", (socket) => {
 
   //calling user
 
-  socket.on("calluser", ({ userToCall, signalData, from, name }) => {
-    io.to(userToCall).emit("calluser", {
-      signal: signalData,
-      from: from,
-      name: name,
-    });
+  socket.on("callUser", (data) => {
+    console.log(data, "Fawefq");
+    // io.to(userToCall).emit("calluser", (data) => {
+    //   console.log(data);
+    // });
   });
 
   socket.on("answerCall", (data) => {

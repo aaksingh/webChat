@@ -4,7 +4,7 @@ import { addFriends, userDetails } from "../../api/api";
 import { loadUsers } from "../../Redux/actions/usersAction.js";
 import { String } from "../../Constants/String";
 import { userDetail } from "../../Redux/actions/friendDetails";
-import { loadOnlineUsers } from "../../Redux/actions/socketActions";
+import { loadOnlineUsers } from "../../Redux/actions/onlineActions";
 import "./DashBoard.scss";
 import { addMessage, clearMessages } from "../../Redux/actions/messageActions";
 import Users from "../../Components/Users/Users";

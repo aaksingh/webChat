@@ -1,25 +1,18 @@
 import { Cred } from "../constants/constantsTypes";
 
 export const INITIAL_STATE = {
-    user=[]
-}
+  // user=[]
+};
 
-export const user = (state=INITIAL_STATE,action)=>{
+export const user = (state = INITIAL_STATE, action) => {
+  switch (action.type) {
+    case Cred.SIGN_IN:
+      return {};
 
-    switch(action.type){
-        case Cred.SIGN_IN:
-            return{
+    case Cred.SIGN_UP:
+      return {};
 
-            }
-
-        case Cred.SIGN_UP:
-            return{
-
-            }   
-            
-        default:
-            return state;
-
-
-    }
-}
+    default:
+      return state;
+  }
+};

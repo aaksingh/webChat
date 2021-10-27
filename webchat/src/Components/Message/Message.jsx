@@ -6,7 +6,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { loadReplyFor } from "../../Redux/actions/loadReplyAction";
 
 const Message = ({ message, visible, userName, attachments, sender }) => {
-  // const [link, setLink] = useState(false);
   const dispatch = useDispatch();
 
   const [t, setTime] = useState("");
@@ -25,11 +24,6 @@ const Message = ({ message, visible, userName, attachments, sender }) => {
 
       setTime(time);
     }
-    // (() => {
-    //   var strRegex = "^((https|http|ftp|rtsp|mms)?://)";
-    //   var re = new RegExp(strRegex);
-    //   setLink(re.test(message?.message.message));
-    // })();
 
     call();
   }, [message]);
@@ -97,6 +91,12 @@ export default memo(Message);
       style={{ width: "400px", height: "400px" }}
     />
   </a>
-)}
+  )}
 </li> */
 }
+
+  // (() => {
+  //   var strRegex = "^((https|http|ftp|rtsp|mms)?://)";
+  //   var re = new RegExp(strRegex);
+  //   setLink(re.test(message?.message.message));
+  // })();
