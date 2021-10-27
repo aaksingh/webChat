@@ -1,10 +1,13 @@
 import { signIn, signUp } from "./api/api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import loadable from "@loadable/component";
+import Peer from "simple-peer";
 
 import WDialog from "./Components/Dialog/Dialog";
 import MyButton from "./Components/InputComponents/MyButton";
+import { useSelector } from "react-redux";
+
 const Login = loadable(() => import("./Screen/Authentication/Login"), {
   fallback: <></>,
 });
@@ -22,6 +25,13 @@ const App = () => {
   const [image, setImage] = useState(null);
   const [show, setShow] = useState(false);
   const [images, setImages] = useState("");
+  const [call, setCall] = useState({});
+  const [me, setMe] = useState("");
+  const [stream, setStream] = useState("");
+  const [caller, setCaller] = useState();
+
+  const { users } = useSelector((state) => state.showOnlineUsers);
+
   useEffect(() => {
     if (localStorage.getItem("Login") === "true") {
       setlogin("true");
@@ -29,6 +39,101 @@ const App = () => {
       setlogin("false");
     }
   }, []);
+
+  const { socketVal } = useSelector((state) => state.socketValue);
+
+  // useEffect(() => {
+  //   socketVal?.on("me", (id) => setMe(id));
+
+  //   socketVal?.on("callUser", ({ from, name: callerName, signal }) => {
+  //     setCall({
+  //       isReceivingCall: true,
+  //       from,
+  //       name: callerName,
+  //       signal,
+  //     });
+  //   });
+  // }, []);
+  const myVideo = useRef();
+  const userVideo = useRef();
+  const connectionRef = useRef();
+  const [callAccepted, setCallAccepted] = useState(false);
+  var currentStream = {};
+  const answerCall = () => {
+    setCallAccepted(true);
+    const peer = new Peer({ initiator: false, trickle: false, stream });
+
+    peer.on("signal", (data) => {
+      socketVal?.emit("answerCall", { signal: data, to: caller });
+    });
+
+    peer.on("stream", (currentStream) => {
+      userVideo.current.srcObject = currentStream;
+    });
+
+    peer.signal(call.signal);
+
+    connectionRef.current = peer;
+  };
+  const [showVideo, setShowVideo] = useState(false);
+
+  const audioCalling = () => {
+    alert("Shanti");
+  };
+  const videoCalling = async () => {
+    // console.log(users, receiver);
+    let online = false;
+    users.map((user) => {
+      if (user?.userId === localStorage.getItem("receiverId")) {
+        online = true;
+      }
+    });
+    if (online) {
+      setCaller(users[1]?.socketId);
+
+      currentStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+
+      setShowVideo(true);
+      setStream(currentStream);
+
+      myVideo.current.srcObject = currentStream;
+
+      const peer = new Peer({ initiator: true, trickle: false, stream });
+
+      peer.on("signal", (data) => {
+        socketVal?.emit("callUser", {
+          userToCall: localStorage.getItem("receiverId"),
+          signalData: data,
+          from: localStorage.getItem("senderId"),
+        });
+      });
+
+      peer.on("stream", (currentStream) => {
+        userVideo.current.srcObject = currentStream;
+      });
+
+      socketVal?.on("callAccepted", (signal) => {
+        setCallAccepted(true);
+        peer.signal(signal);
+      });
+      connectionRef.current = peer;
+    } else {
+      alert("User Not Online");
+    }
+  };
+
+  const endCall = async () => {
+    const streamClose = stream;
+    const tracks = streamClose.getTracks();
+
+    tracks.forEach((track) => track.stop());
+
+    connectionRef.current.destroy();
+    setShowVideo(false);
+  };
 
   const handleClick = async (e, i) => {
     e.preventDefault();
@@ -89,7 +194,12 @@ const App = () => {
         />
       ) : (
         <>
-          <DashBoard onClick={logout} image={images} />
+          <DashBoard
+            onClick={logout}
+            image={images}
+            videoCalling={videoCalling}
+            audioCalling={audioCalling}
+          />
           <WDialog show={show} maxWidth="30%" minWidth="30%" height="30%">
             <div
               className="flex-column"
@@ -136,6 +246,23 @@ const App = () => {
                 </div>
               </div>
             </div>
+          </WDialog>
+          <WDialog
+            show={showVideo}
+            maxWidth="100%"
+            minWidth="100%"
+            height="100%"
+          >
+            <div className="video">
+              <video
+                playsInline
+                muted
+                ref={myVideo}
+                autoPlay
+                className="videoCont"
+              />
+            </div>
+            <button onClick={endCall}>End</button>
           </WDialog>
         </>
       )}

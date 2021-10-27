@@ -1,6 +1,5 @@
 import { useRef, useState, useEffect, memo } from "react";
 
-import Peer from "simple-peer";
 import { useSelector, useDispatch } from "react-redux";
 
 import "./Chat.scss";
@@ -16,7 +15,14 @@ import WDialog from "../Dialog/Dialog";
 import Cross from "../Cross/Cross";
 import { clearReply } from "../../Redux/actions/loadReplyAction";
 import { user } from "../../Redux/reducers/authReducer";
-const Chat = ({ profile, socket, sender, receiver }) => {
+const Chat = ({
+  profile,
+  socket,
+  sender,
+  receiver,
+  audioCalling,
+  videoCalling,
+}) => {
   const messages = useSelector((state) => state.messages);
   const [file, setFile] = useState("");
 
@@ -29,30 +35,15 @@ const Chat = ({ profile, socket, sender, receiver }) => {
   const [mess, setMess] = useState([]);
   const [text, setText] = useState("");
   const scrollRefArray = useRef();
-  const [me, setMe] = useState("");
-  const [call, setCall] = useState({});
-  const [caller, setCaller] = useState();
-  const [stream, setStream] = useState("");
   // const scrollReply = useRef([]);
 
   const [canMessage, setCanMessage] = useState(false);
   const [unique, setUniqueId] = useState("");
   useEffect(() => {
+    localStorage.setItem("receiverId", receiver);
+
     dispatch(clearNewMessageses(receiver));
   }, [receiver]);
-
-  useEffect(() => {
-    socket.current.on("me", (id) => setMe(id));
-
-    socket.current.on("callUser", ({ from, name: callerName, signal }) => {
-      setCall({
-        isReceivingCall: true,
-        from,
-        name: callerName,
-        signal,
-      });
-    });
-  }, []);
 
   useEffect(() => {
     async function friendsID() {
@@ -178,87 +169,6 @@ const Chat = ({ profile, socket, sender, receiver }) => {
     domElement.scrollIntoView({ block: "start", behavior: "smooth" });
   };
 
-  const myVideo = useRef();
-  const userVideo = useRef();
-  const connectionRef = useRef();
-  const [callAccepted, setCallAccepted] = useState(false);
-  var currentStream = {};
-  const answerCall = () => {
-    setCallAccepted(true);
-    const peer = new Peer({ initiator: false, trickle: false, stream });
-
-    peer.on("signal", (data) => {
-      socket.current.emit("answerCall", { signal: data, to: caller });
-    });
-
-    peer.on("stream", (currentStream) => {
-      userVideo.current.srcObject = currentStream;
-    });
-
-    peer.signal(call.signal);
-
-    connectionRef.current = peer;
-  };
-  const [show, setShow] = useState(false);
-
-  const audioCalling = () => {
-    alert("Shanti");
-  };
-  const videoCalling = async () => {
-    // console.log(users, receiver);
-    let online = false;
-    users.map((user) => {
-      if (user?.userId === receiver) {
-        online = true;
-      }
-    });
-    if (online) {
-      setCaller(users[1]?.socketId);
-
-      currentStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-
-      setShow(true);
-      setStream(currentStream);
-
-      myVideo.current.srcObject = currentStream;
-
-      const peer = new Peer({ initiator: true, trickle: false, stream });
-
-      peer.on("signal", (data) => {
-        socket.current.emit("callUser", {
-          userToCall: receiver,
-          signalData: data,
-          from: sender,
-        });
-      });
-
-      peer.on("stream", (currentStream) => {
-        userVideo.current.srcObject = currentStream;
-      });
-
-      socket.current.on("callAccepted", (signal) => {
-        setCallAccepted(true);
-        peer.signal(signal);
-      });
-      connectionRef.current = peer;
-    } else {
-      alert("User Not Online");
-    }
-  };
-
-  const endCall = async () => {
-    const streamClose = stream;
-    const tracks = streamClose.getTracks();
-
-    tracks.forEach((track) => track.stop());
-
-    connectionRef.current.destroy();
-    setShow(false);
-  };
-
   useEffect(() => {
     scrollRefArray.current?.scrollIntoView({ behaviour: "smooth" });
   }, [mess, messages]);
@@ -310,18 +220,6 @@ const Chat = ({ profile, socket, sender, receiver }) => {
         </div>
       </WDialog>
 
-      <WDialog show={show} maxWidth="100%" minWidth="100%" height="100%">
-        <div className="video">
-          <video
-            playsInline
-            muted
-            ref={myVideo}
-            autoPlay
-            className="videoCont"
-          />
-        </div>
-        <button onClick={endCall}>End</button>
-      </WDialog>
       <div className="chat flex-column font-family">
         <ChatHeader
           profile={profile}

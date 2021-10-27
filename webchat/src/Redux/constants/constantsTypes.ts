@@ -55,3 +55,7 @@ export enum LoadReply {
   LOAD_MESSAGE = "LOAD_MESSAGE",
   REMOVE_MESSAGE = "REMOVE_MESSAGE",
 }
+
+export enum SocketAction {
+  ADD_SOCKET = "ADD_SOCKET",
+}

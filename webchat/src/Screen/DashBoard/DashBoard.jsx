@@ -18,6 +18,7 @@ import { io } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import MyButton from "../../Components/InputComponents/MyButton";
 import Follow from "../../Components/Follow/Follow";
+import { socketActions } from "../../Redux/actions/socketActions";
 
 const Chat = loadable(() => import("../../Components/Chat/Chat"));
 const Wait = loadable(() => import("../../Components/Wait/Wait"), {
@@ -38,7 +39,7 @@ const Connected = loadable(
   }
 );
 
-const DashBoard = ({ onClick, image }) => {
+const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
   const { users } = useSelector((state) => state.users);
 
   const dispatch = useDispatch();
@@ -71,6 +72,7 @@ const DashBoard = ({ onClick, image }) => {
   useEffect(() => {
     socket.current = io("ws://localhost:3002");
 
+    dispatch(socketActions(socket.current));
     return () => {
       socket.current.close();
     };
@@ -208,6 +210,8 @@ const DashBoard = ({ onClick, image }) => {
               socket={socket}
               sender={senderId}
               receiver={receiverId}
+              audioCalling={audioCalling}
+              videoCalling={videoCalling}
             />
           ) : (
             <>
