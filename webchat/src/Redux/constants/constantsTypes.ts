@@ -20,6 +20,10 @@ export enum Users {
   LOAD_USERS = "LOAD_USERS",
 }
 
+export enum Groups {
+  LOADGROUPS = "LOADGROUPS",
+}
+
 export enum Cred {
   SIGN_UP = "SIGN_UP",
   SIGN_IN = "SIGN_IN",

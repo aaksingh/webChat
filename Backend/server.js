@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 import user from "./routes/user.js";
 import Conversation from "./models/conversation.js";
+import Groups from "./models/groups.js";
 import Rep from "./models/reply.js";
 import AddFriend from "./models/addfriend.js";
 import fs from "fs";
@@ -148,6 +149,41 @@ app.post("/create", (req, res) => {
     });
   } catch (error) {
     console.log(error.message, "chat creation failed.");
+  }
+});
+
+const rooms = {};
+app.post("/group", (req, res) => {
+  const data = req.body;
+
+  let d = {
+    ownerId: data.ownerId,
+    roomName: data.roomName,
+    room: [],
+    ownerName: data.onwerName,
+  };
+
+  try {
+    Groups.create(d, (err, data) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.status(201).send(data);
+      }
+    });
+  } catch (error) {
+    console.log(error.message, "chat creation failed.");
+  }
+});
+
+app.get("/groups", async (req, res) => {
+  var p = {};
+  try {
+    p = await Groups.find({});
+    console.log(p);
+    res.status(200).json(p);
+  } catch (err) {
+    console.log(err);
   }
 });
 const upload = multer();

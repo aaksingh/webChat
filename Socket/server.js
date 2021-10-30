@@ -6,6 +6,8 @@ const io = require("socket.io")(3002, {
 
 let id = [];
 
+const rooms = {};
+
 const addUser = (userId, socketId) => {
   !id.some((id) => id.userId === userId) && id.push({ userId, socketId });
 };
@@ -21,10 +23,28 @@ const getUser = (receiverId) => {
 io.on("connection", (socket) => {
   //When Socket Connects
   console.log("A user Connected");
+
+  socket.on("user_join", (data) => {
+    console.log(data);
+    socket.join(data.groupName);
+  });
+
+  socket.on("gmessage", (data) => {
+    console.log(data);
+    io.to(data.roomName).emit("takeMessage", data.message);
+  });
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
 
     io.emit("getUsers", id);
+  });
+
+  socket.on("room-created", (data) => {
+    rooms[data] = { users: [] };
+    io.emit("room", data);
+
+    rooms[data].users[socket.id] = data;
+    console.log(rooms);
   });
 
   //send and get message

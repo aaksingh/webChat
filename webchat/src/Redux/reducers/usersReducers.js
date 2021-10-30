@@ -5,11 +5,13 @@ export const INITIAL_STATE = {
 };
 
 export const usersList = (state = INITIAL_STATE, action) => {
+  // console.log(action.payload);
+
   switch (action.type) {
     case Users.LOAD_USERS:
       return {
         ...state,
-        users: [...state.users, action.payload.data],
+        users: [action.payload.data],
       };
 
     default:

@@ -11,6 +11,7 @@ import { roomIdReducer } from "./Redux/reducers/roomIdReducer.js";
 import { friendReducer } from "./Redux/reducers/friendReducer.js";
 import { loadReplyList } from "./Redux/reducers/loadReplyReducer.js";
 import { socketValue } from "./Redux/reducers/socketReducer.js";
+import { groupsList } from "./Redux/reducers/groupsReducer.js";
 export const reducer = combineReducers({
   users: usersList,
   messages: messageList,
@@ -23,6 +24,7 @@ export const reducer = combineReducers({
   friends: friendReducer,
   loadReply: loadReplyList,
   socketValue: socketValue,
+  groups: groupsList,
 });
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

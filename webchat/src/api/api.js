@@ -12,7 +12,8 @@ instance.interceptors.request.use((req) => {
 
 export const signIn = (formData) => instance.post("login", formData);
 export const signUp = (formData) => instance.post("signUp", formData);
-
+export const groupDetails = () => instance.get("groups");
+export const creategroup = (data) => instance.post("group", data);
 export const userDetails = () => instance.get("userDetails");
 
 export const create = (data) => instance.post("create", data);
