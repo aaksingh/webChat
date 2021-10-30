@@ -10,6 +10,7 @@ instance.interceptors.request.use((req) => {
   return req;
 });
 
+export const addUserToRoom = (data) => instance.put("/addtoroom", data);
 export const signIn = (formData) => instance.post("login", formData);
 export const signUp = (formData) => instance.post("signUp", formData);
 export const groupDetails = () => instance.get("groups");

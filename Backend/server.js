@@ -152,14 +152,36 @@ app.post("/create", (req, res) => {
   }
 });
 
+app.put("/addtoroom", (req, res) => {
+  const data = req.body;
+  console.log(data);
+
+  try {
+    Groups.findByIdAndUpdate(
+      { _id: data.receiver },
+      { $push: { room: data.sender } },
+      (err, data) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          console.log("done");
+          res.status(201).send(data);
+        }
+      }
+    );
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
 const rooms = {};
 app.post("/group", (req, res) => {
   const data = req.body;
-
+  let e = [];
   let d = {
     ownerId: data.ownerId,
     roomName: data.roomName,
-    room: [],
+    room: e,
     ownerName: data.onwerName,
   };
 

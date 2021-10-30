@@ -61,6 +61,7 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
   const [create, setCreate] = useState(false);
   const [roomName, setRoomName] = useState("");
   const socket = useRef();
+  const [gm, setGm] = useState(false);
 
   useEffect(() => {
     setuser(users[0]);
@@ -102,6 +103,7 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
   }, [socket, loadOnlineUsers]);
 
   const handleChat = (j, image) => {
+    setGm(false);
     setreceiverId("");
 
     dispatch(clearMessages());
@@ -158,7 +160,7 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
   const submit = async () => {
     const result = await creategroup({
       ownerId: localStorage.getItem("userId"),
-      onwerName: "Aakasj",
+      onwerName: "Aakash",
       roomName: roomName,
     });
     console.log(result);
@@ -167,31 +169,25 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
     // socket.current.emit("room-created", roomName);
     setCreate(false);
   };
-
-  const [gm, setGm] = useState(false);
-  const [mm, setMm] = useState("");
-  const handleGroup = (i) => {
+  const [roomList, setRoomList] = useState();
+  const handleGroup = (g) => {
+    setsenderId(localStorage.getItem("userId"));
+    setreceiverId(g._id);
+    setRoomList(g.room);
     setGm(true);
 
-    socket.current.emit("user_join", { groupName: i });
+    // socket.current.emit("user_join", { groupName: i });
   };
 
   useEffect(() => {
-    groups[0]?.map(
-      (user) => {}
-      // socket.current.emit("user_join", { groupName: user.roomName });
-    );
+    groups[0]?.map((user) => {
+      if (user.room.includes(localStorage.getItem("userId"))) {
+        console.log(user);
+        socket.current.emit("user_join", { groupName: user.roomName });
+      }
+    });
   }, [groups]);
 
-  const sendG = (data) => {
-    let val = {
-      name: data.name,
-      id: data.receiverId,
-      roomName: "dqwdqw",
-      message: mm,
-    };
-    socket.current.emit("gmessage", val);
-  };
   return (
     <>
       {loading ? (
@@ -261,7 +257,7 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
                     <div
                       className="list flex-row"
                       key={i}
-                      onClick={() => handleGroup(gro.roomName)}
+                      onClick={() => handleGroup(gro)}
                     >
                       <Users
                         userName={gro.roomName}
@@ -284,21 +280,28 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
             />
             <button onClick={submit}>Send</button>
           </WDialog>
-          {receiverId ? (
+          {!gm && receiverId ? (
             <Chat
+              privateChat={gm}
               profile={profile}
               socket={socket}
               sender={senderId}
               receiver={receiverId}
-              audioCalling={audioCalling}
-              videoCalling={videoCalling}
             />
           ) : (
-            <>
-              <Connected />
-            </>
+            <>{!gm && <Connected />}</>
           )}
           {gm && (
+            <Chat
+              room={roomList}
+              privateChat={gm}
+              profile={null}
+              socket={socket}
+              sender={senderId}
+              receiver={receiverId}
+            />
+          )}
+          {/* {gm && (
             <div>
               {" "}
               <input value={mm} onChange={(e) => setMm(e.target.value)} />
@@ -311,7 +314,7 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
                 send
               </button>
             </div>
-          )}
+          )} */}
         </>
       )}
     </>

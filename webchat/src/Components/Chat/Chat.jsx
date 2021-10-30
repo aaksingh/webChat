@@ -5,7 +5,13 @@ import { useSelector, useDispatch } from "react-redux";
 import "./Chat.scss";
 import "../../Styles/style.scss";
 import ChatHeader from "../ChatHeader/ChatHeader";
-import { create, chatList, upload, friendsList } from "../../api/api";
+import {
+  create,
+  chatList,
+  upload,
+  friendsList,
+  addUserToRoom,
+} from "../../api/api";
 import Message from "../Message/Message";
 import Input from "../Input/Input";
 import { loadMeesages, addMessage } from "../../Redux/actions/messageActions";
@@ -15,14 +21,8 @@ import WDialog from "../Dialog/Dialog";
 import Cross from "../Cross/Cross";
 import { clearReply } from "../../Redux/actions/loadReplyAction";
 import { user } from "../../Redux/reducers/authReducer";
-const Chat = ({
-  profile,
-  socket,
-  sender,
-  receiver,
-  audioCalling,
-  videoCalling,
-}) => {
+const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
+  console.log(sender, receiver, room, "Groups");
   const messages = useSelector((state) => state.messages);
   const [file, setFile] = useState("");
 
@@ -59,8 +59,19 @@ const Chat = ({
         dispatch(loadMeesages({ messages: data.data, receiver }));
       }
     }
-    friendsID();
+    !privateChat && friendsID();
   }, [friends, receiver, sender]);
+  const [join, setJoin] = useState(true);
+  useEffect(() => {
+    if (room?.includes(sender)) {
+      setJoin(false);
+      setCanMessage(true);
+    } else {
+      setCanMessage(false);
+
+      setJoin(true);
+    }
+  }, [room]);
 
   useEffect(() => {
     messages && setMess(messages[receiver]);
@@ -176,6 +187,68 @@ const Chat = ({
   const handleCrossIcon = () => {
     dispatch(clearReply());
   };
+
+  const joinGroup = async () => {
+    const result = await addUserToRoom({ sender, receiver });
+    if (result.status === 201) {
+      setJoin(false);
+      setCanMessage(true);
+    }
+  };
+
+  const [mm, setMm] = useState("");
+
+  const sendG = async (e) => {
+    e.preventDefault();
+    let id = Date.now();
+    if (text) {
+      let messageData = {
+        time: id,
+        senderId: sender,
+        receiverId: receiver,
+        messageId: id,
+
+        roomId: unique,
+        referenceId: replyMessage ? replyMessage?.messageId : null,
+        message: {
+          message: text,
+          replied: replyMessage ? replyMessage.message.message : null,
+          read: false,
+          attachments: replyMessage ? 1 : null,
+        },
+      };
+      try {
+        // await create(messageData);
+        // dispatch(addMessage({ message: messageData, receiver: receiver }));
+
+        socket.current.emit("gmessage", {
+          roomName: "dqwdqw",
+          time: id,
+          senderId: sender,
+          receiverId: receiver,
+          messageId: id,
+          message: text,
+          referenceId: replyMessage ? replyMessage?.messageId : null,
+          replied: replyMessage ? replyMessage.message.message : null,
+          read: false,
+          attachments: replyMessage ? 1 : null,
+          roomId: unique,
+        });
+      } catch (err) {
+        console.log(err.message, "Fail to send message");
+        return;
+      }
+
+      setText("");
+    }
+    // let val = {
+    //   name: data.name,
+    //   id: data.receiverId,
+    //   roomName: "dqwdqw",
+    //   message: mm,
+    // };
+    // socket.current.emit("gmessage", val);
+  };
   return (
     <div className="chatReply flex-row">
       <WDialog show={file} maxWidth="100%" minWidth="100%" height="100%">
@@ -221,13 +294,7 @@ const Chat = ({
       </WDialog>
 
       <div className="chat flex-column font-family">
-        <ChatHeader
-          profile={profile}
-          detail={friendDetail}
-          show={true}
-          videoCalling={videoCalling}
-          audioCalling={audioCalling}
-        />
+        <ChatHeader profile={profile} detail={friendDetail} show={true} />
 
         <div className="chatSection flex-column">
           <div className="chatStart flex-column">
@@ -289,13 +356,14 @@ const Chat = ({
             {canMessage && (
               <Input
                 {...{ text, setText }}
-                handleCreate={handleCreate}
+                handleCreate={sendG}
                 variant="Message"
                 receiver={receiver}
                 sender={sender}
                 {...{ file, setFile }}
               />
             )}
+            {join && <button onClick={joinGroup}>Join</button>}
           </div>
         </div>
       </div>
