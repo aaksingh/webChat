@@ -171,12 +171,13 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
   };
   const [roomList, setRoomList] = useState();
   const handleGroup = (g) => {
+    console.log(g);
     setsenderId(localStorage.getItem("userId"));
     setreceiverId(g._id);
     setRoomList(g.room);
     setGm(true);
 
-    // socket.current.emit("user_join", { groupName: i });
+    socket.current.emit("user_join", { groupName: g.roomName });
   };
 
   useEffect(() => {

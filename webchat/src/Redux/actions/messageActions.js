@@ -1,6 +1,7 @@
 import { Messages } from "../constants/constantsTypes";
 
 export const loadMeesages = (data) => {
+  console.log(data);
   return {
     type: Messages.LOAD_MESSAGES,
     payload: { data: data },

@@ -22,7 +22,6 @@ import Cross from "../Cross/Cross";
 import { clearReply } from "../../Redux/actions/loadReplyAction";
 import { user } from "../../Redux/reducers/authReducer";
 const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
-  console.log(sender, receiver, room, "Groups");
   const messages = useSelector((state) => state.messages);
   const [file, setFile] = useState("");
 
@@ -218,8 +217,8 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
         },
       };
       try {
-        // await create(messageData);
-        // dispatch(addMessage({ message: messageData, receiver: receiver }));
+        await create(messageData);
+        dispatch(addMessage({ message: messageData, receiver: receiver }));
 
         socket.current.emit("gmessage", {
           roomName: "dqwdqw",
@@ -241,13 +240,6 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
 
       setText("");
     }
-    // let val = {
-    //   name: data.name,
-    //   id: data.receiverId,
-    //   roomName: "dqwdqw",
-    //   message: mm,
-    // };
-    // socket.current.emit("gmessage", val);
   };
   return (
     <div className="chatReply flex-row">
@@ -372,3 +364,11 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
 };
 
 export default memo(Chat);
+
+// let val = {
+//   name: data.name,
+//   id: data.receiverId,
+//   roomName: "dqwdqw",
+//   message: mm,
+// };
+// socket.current.emit("gmessage", val);
