@@ -20,7 +20,7 @@ import Intro from "../Intro/Intro";
 import WDialog from "../Dialog/Dialog";
 import Cross from "../Cross/Cross";
 import { clearReply } from "../../Redux/actions/loadReplyAction";
-import { user } from "../../Redux/reducers/authReducer";
+import MyButton from "../InputComponents/MyButton";
 const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
   const messages = useSelector((state) => state.messages);
   const [file, setFile] = useState("");
@@ -121,15 +121,16 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
       }
 
       setText("");
+      dispatch(clearReply());
     }
     if (file) {
-      const data = new FormData();
+      let data = new FormData();
 
       data.append("file", file);
       data.append("sender", sender);
       data.append("receiver", receiver);
 
-      const result = await upload(data);
+      let result = await upload(data);
 
       if (result) {
         dispatch(
@@ -194,8 +195,6 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
       setCanMessage(true);
     }
   };
-
-  const [mm, setMm] = useState("");
 
   const sendG = async (e) => {
     e.preventDefault();
@@ -345,17 +344,33 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
           )}
 
           <div className="chatInput flex-row adjust">
-            {canMessage && (
+            {!privateChat ? (
               <Input
                 {...{ text, setText }}
-                handleCreate={sendG}
+                handleCreate={handleCreate}
                 variant="Message"
                 receiver={receiver}
                 sender={sender}
                 {...{ file, setFile }}
               />
+            ) : (
+              canMessage && (
+                <Input
+                  {...{ text, setText }}
+                  handleCreate={sendG}
+                  variant="Message"
+                  receiver={receiver}
+                  sender={sender}
+                  {...{ file, setFile }}
+                />
+              )
             )}
-            {join && <button onClick={joinGroup}>Join</button>}
+
+            <div style={privateChat && join ? { width: "100%" } : null}>
+              {privateChat && join && (
+                <MyButton title="Join" handleClick={joinGroup} id="2" />
+              )}
+            </div>
           </div>
         </div>
       </div>

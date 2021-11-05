@@ -183,7 +183,6 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
   useEffect(() => {
     groups[0]?.map((user) => {
       if (user.room.includes(localStorage.getItem("userId"))) {
-        console.log(user);
         socket.current.emit("user_join", { groupName: user.roomName });
       }
     });
