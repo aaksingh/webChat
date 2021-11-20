@@ -15,11 +15,13 @@ import { promisify } from "util";
 import { pipeline } from "stream";
 import multer from "multer";
 import path from "path";
+import redis from "redis";
 
 const pipelineAsync = promisify(pipeline);
 const __dirname = path.resolve();
 const port = process.env.PORT || 3001;
 const app = express();
+const redisClient = redis.createClient(6379);
 
 app.use(express.json({ limit: "50mb" })); //For JSON requests
 app.use(
@@ -37,6 +39,8 @@ mongoose.connect(config_url, {
   useUnifiedTopology: true,
 });
 
+let queue = [];
+
 app.get("/", (req, res) => {
   res.status(200).send("Hello");
 });
@@ -53,17 +57,16 @@ app.get("/chatList/:id", async (req, res) => {
   const roomId = req.params.id;
 
   try {
-    //   client.get(senderId, async (err, chatS) => {
-    //     if (chatS) {
-    //       res.status(200).send(JSON.parse(chatS));
-    //     } else {
-    const data = await Conversation.find({ roomId });
-    console.log(data);
-    // client.setex(senderId, 600, JSON.stringify(data));
+    redisClient.get(roomId, async (err, chatS) => {
+      if (chatS) {
+        res.status(200).send(JSON.parse(chatS));
+      } else {
+        const data = await Conversation.find({ roomId });
 
-    res.status(200).json(data);
-    //   }
-    // });
+        redisClient.set(roomId, JSON.stringify(data));
+        res.status(200).json(data);
+      }
+    });
   } catch (err) {
     res.status(500).send(err);
     console.log(err);
@@ -116,9 +119,8 @@ app.put("/addtoroom", (req, res) => {
   }
 });
 
-app.post("/create", (req, res) => {
+app.post("/create", async (req, res) => {
   const data = req.body;
-  console.log(data);
 
   try {
     Conversation.create(data, (err, data) => {
@@ -247,14 +249,12 @@ app.delete("/delete/:id", async (req, res) => {
 
 app.listen(port, () => console.log(`Listening on Port:${port}`));
 
-// let queue = [];
-
-// setInterval(async () => {
-//   for (let queueLength = 0; queueLength < queue.length; queueLength++) {
-//     let data = queue[queueLength];
-//     if (Date.now() - data.timestamp >= 1000 * 50) {
-//       let result = await runMessageQueue(queue[queueLength]);
-//       queue.splice(queueLength, 1);
-//     }
-//   }
-// }, 1000 * 2);
+setInterval(async () => {
+  for (let queueLength = 0; queueLength < queue.length; queueLength++) {
+    let data = queue[queueLength];
+    if (Date.now() - data.timestamp >= 1000 * 50) {
+      let result = await runMessageQueue(queue[queueLength]);
+      queue.splice(queueLength, 1);
+    }
+  }
+}, 1000 * 2);

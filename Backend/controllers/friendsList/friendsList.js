@@ -3,7 +3,7 @@ import addfriend from "../../models/addfriend.js";
 export const friendsLists = async (req, res) => {
   const s1 = req.query.s1;
   const s2 = req.query.s2;
-  console.log("fewf");
+
   try {
     const data = await addfriend.find({
       $or: [
