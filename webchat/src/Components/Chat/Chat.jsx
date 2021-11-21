@@ -24,6 +24,7 @@ import WDialog from "../Dialog/Dialog";
 import Cross from "../Cross/Cross";
 import { clearReply } from "../../Redux/actions/loadReplyAction";
 import MyButton from "../InputComponents/MyButton";
+import PhotoViewer from "../PhotoViewer/PhotoViewer";
 const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
   const messages = useSelector((state) => state.messages);
   const [file, setFile] = useState("");
@@ -41,6 +42,7 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
 
   const [canMessage, setCanMessage] = useState(false);
   const [unique, setUniqueId] = useState("");
+
   useEffect(() => {
     localStorage.setItem("receiverId", receiver);
 
@@ -76,6 +78,8 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
   }, [room]);
 
   useEffect(() => {
+    setText("");
+    setFile("");
     messages && setMess(messages[receiver]);
   }, [messages, socket, receiver]);
 
@@ -222,23 +226,22 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
       try {
         let res = await create(messageData);
         console.log(res);
-        if (res.status === 201) {
-          dispatch(addMessage({ message: messageData, receiver: receiver }));
 
-          socket.current.emit("gmessage", {
-            roomName: "dqwdqw",
-            time: id,
-            senderId: sender,
-            receiverId: receiver,
-            messageId: id,
-            message: text,
-            referenceId: replyMessage ? replyMessage?.messageId : null,
-            replied: replyMessage ? replyMessage.message.message : null,
-            read: false,
-            attachments: replyMessage ? 1 : null,
-            roomId: unique,
-          });
-        }
+        dispatch(addMessage({ message: messageData, receiver: receiver }));
+
+        // socket.current.emit("gmessage", {
+        //   roomName: "dqwdqw",
+        //   time: id,
+        //   senderId: sender,
+        //   receiverId: receiver,
+        //   messageId: id,
+        //   message: text,
+        //   referenceId: replyMessage ? replyMessage?.messageId : null,
+        //   replied: replyMessage ? replyMessage.message.message : null,
+        //   read: false,
+        //   attachments: replyMessage ? 1 : null,
+        //   roomId: unique,
+        // });
       } catch (err) {
         console.log(err.message, "Fail to send message");
         return;
@@ -249,48 +252,7 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
   };
   return (
     <div className="chatReply flex-row">
-      <WDialog show={file} maxWidth="100%" minWidth="100%" height="100%">
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-            width: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "relative",
-          }}
-        >
-          <div
-            className="cancelButton"
-            style={{
-              fontSize: "30px",
-              fontWeight: "800",
-              right: "10px",
-              position: "absolute",
-              top: "10px",
-              cursor: "pointer",
-            }}
-            onClick={(e) => {
-              setFile("");
-            }}
-          >
-            X
-          </div>
-
-          <img
-            src={file && URL.createObjectURL(file)}
-            alt="img"
-            style={{
-              height: "80%",
-              width: "80%",
-            }}
-          />
-
-          <button onClick={handleCreate}>Send</button>
-        </div>
-      </WDialog>
-
+      <PhotoViewer {...{ file, setFile, handleCreate }} />
       <div className="chat flex-column font-family">
         <ChatHeader profile={profile} detail={friendDetail} show={true} />
 
@@ -330,7 +292,7 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
             ) : (
               <>
                 <Skeleton duration={1} count={5} height={10} width={`100%`} />
-                <Skeleton duration={1} count={5} height={10} width={`100%`} />
+
                 <Skeleton duration={1} count={5} height={10} width={`100%`} />
               </>
             )}

@@ -16,7 +16,6 @@ import Users from "../../Components/Users/Users";
 import { loadNewMessage } from "../../Redux/actions/newMessageAction";
 import { setRoomId } from "../../Redux/actions/roomIdActions";
 import WDialog from "../../Components/Dialog/Dialog";
-import Input from "../../Components/InputComponents/Input";
 
 import loadable from "@loadable/component";
 import { io } from "socket.io-client";
@@ -32,9 +31,6 @@ const Wait = loadable(() => import("../../Components/Wait/Wait"), {
   fallback: <></>,
 });
 
-const Welcome = loadable(() => import("../../Components/Welcome/Welcome"), {
-  fallback: <></>,
-});
 const UserInfo = loadable(() => import("../../Components/UserInfo/UserInfo"), {
   fallback: <></>,
 });
@@ -46,7 +42,7 @@ const Connected = loadable(
   }
 );
 
-const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
+const DashBoard = ({ onClick }) => {
   const { users } = useSelector((state) => state.users);
 
   const { groups } = useSelector((state) => state.groups);
@@ -58,7 +54,7 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
   const [senderId, setsenderId] = useState("");
   const [receiverId, setreceiverId] = useState("");
   const [profile, setProfile] = useState(null);
-  const [groupD, setGroupD] = useState([]);
+
   const [create, setCreate] = useState(false);
   const [roomName, setRoomName] = useState("");
   const socket = useRef();
@@ -76,15 +72,11 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
         dispatch(loadUsers(data.data));
         const g = await groupDetails();
         dispatch(loadGroups(g.data));
-
         setLoading(false);
       } catch (err) {
         setLoading(false);
       }
     })();
-  }, []);
-
-  useEffect(() => {
     socket.current = io("ws://localhost:3002");
 
     dispatch(socketActions(socket.current));
@@ -105,7 +97,6 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
 
   const handleChat = (j, image) => {
     setGm(false);
-    setreceiverId("");
 
     dispatch(clearMessages());
     let user = users[0];
@@ -114,10 +105,11 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
     localStorage.setItem("roomId", user[j]._id);
 
     setreceiverId(user[j]._id);
-    setsenderId(localStorage.getItem("userId"));
 
+    setsenderId(localStorage.getItem("userId"));
     setProfile(image);
   };
+
   useEffect(() => {
     socket.current.on("getMessage", (data) => {
       let messageData = {
