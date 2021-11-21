@@ -175,6 +175,7 @@ const App = () => {
     setShow(true);
   }
   function Done() {
+    localStorage.removeItem("unread");
     localStorage.setItem("Login", "false");
     setlogin("false");
     setShow(false);

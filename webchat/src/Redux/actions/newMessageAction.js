@@ -13,3 +13,9 @@ export const clearNewMessageses = (id) => {
     payload: { data: id },
   };
 };
+
+export const showMessageFromLocal = () => {
+  return {
+    type: NewMessages.SHOW_NEW_MESSAGE,
+  };
+};

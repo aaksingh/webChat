@@ -10,6 +10,7 @@ export enum RoomId {
 export enum NewMessages {
   ADD_NEW_MESSAGE = "ADD_NEW_MESSAGE",
   CLEAR_NEW_MESSAGE = "CLEAR_NEW_MESSAGE",
+  SHOW_NEW_MESSAGE = "SHOW_NEW_MESSAGE",
 }
 
 export enum OnlineUser {

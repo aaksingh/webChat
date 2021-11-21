@@ -13,7 +13,11 @@ import { loadOnlineUsers } from "../../Redux/actions/onlineActions";
 import "./DashBoard.scss";
 import { addMessage, clearMessages } from "../../Redux/actions/messageActions";
 import Users from "../../Components/Users/Users";
-import { loadNewMessage } from "../../Redux/actions/newMessageAction";
+import {
+  loadNewMessage,
+  showMessage,
+  showMessageFromLocal,
+} from "../../Redux/actions/newMessageAction";
 import { setRoomId } from "../../Redux/actions/roomIdActions";
 import WDialog from "../../Components/Dialog/Dialog";
 
@@ -65,21 +69,22 @@ const DashBoard = ({ onClick }) => {
   }, [users]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        const data = await userDetails();
-        dispatch(loadUsers(data.data));
-        const g = await groupDetails();
-        dispatch(loadGroups(g.data));
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
-      }
-    })();
+    async function load() {
+      setLoading(true);
+      const data = await userDetails();
+      dispatch(loadUsers(data.data));
+      const g = await groupDetails();
+      dispatch(loadGroups(g.data));
+      console.log(data);
+
+      setLoading(false);
+    }
+    load();
+
     socket.current = io("ws://localhost:3002");
 
     dispatch(socketActions(socket.current));
+
     return () => {
       socket.current.close();
     };
@@ -126,11 +131,15 @@ const DashBoard = ({ onClick }) => {
       };
 
       if (data.senderId === localStorage.getItem("roomId")) {
+        console.log("here");
         dispatch(
           addMessage({ message: messageData, receiver: messageData.senderId })
         );
       } else {
-        dispatch(loadNewMessage({ id: messageData.senderId }));
+        let data = localStorage.getItem("unread");
+        if (true) {
+          dispatch(loadNewMessage({ id: messageData.senderId }));
+        }
       }
     });
   }, [dispatch]);
