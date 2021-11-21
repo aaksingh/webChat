@@ -45,7 +45,7 @@ const Login = (props) => {
           )}
         </div>
 
-        <div className={`formBx ${active ? " active" : ""}`}>
+        <div className={`formBx ${active ? " activeBox" : ""}`}>
           {active ? (
             <>
               <span className="signText">{String.SIGNUP}</span>

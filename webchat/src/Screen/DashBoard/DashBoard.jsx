@@ -25,6 +25,7 @@ import MyButton from "../../Components/InputComponents/MyButton";
 import Follow from "../../Components/Follow/Follow";
 import { socketActions } from "../../Redux/actions/socketActions";
 import { loadGroups } from "../../Redux/actions/groupActions";
+import Toggle from "../../Components/Toggle/Toggle";
 
 const Chat = loadable(() => import("../../Components/Chat/Chat"));
 const Wait = loadable(() => import("../../Components/Wait/Wait"), {
@@ -188,6 +189,11 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
     });
   }, [groups]);
 
+  const [toggle, setToggle] = useState(true);
+
+  function handleToggle() {
+    setToggle((toggle) => !toggle);
+  }
   return (
     <>
       {loading ? (
@@ -198,6 +204,9 @@ const DashBoard = ({ onClick, image, videoCalling, audioCalling }) => {
             className="dashboard flex-column font-family"
             style={{ position: "relative" }}
           >
+            <div className="toggleButton">
+              <Toggle {...{ toggle, setToggle }} handleToggle={handleToggle} />
+            </div>
             <div className="logo flex-row adjust">WebChat</div>
             <UserInfo
               detail={localStorage.getItem("userName")}

@@ -1,9 +1,14 @@
 @import "../../Styles/style.scss";
+
 .dashboard {
   min-height: 100vh;
   background-color: #e4e3e3;
   min-width: 20rem;
+  position: relative;
 
+  .toggleButton {
+    position: absolute;
+  }
   .logo {
     font-size: 2rem;
     font-weight: 700;

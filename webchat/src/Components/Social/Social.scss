@@ -20,7 +20,9 @@
   }
 
   .icons:hover {
-    background-color: #f5f5f5;
+    background-color: red;
+
     opacity: 0.8;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
   }
 }

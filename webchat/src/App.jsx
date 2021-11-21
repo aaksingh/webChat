@@ -174,11 +174,11 @@ const App = () => {
   function logout() {
     setShow(true);
   }
-  // function Done() {
-  //   localStorage.setItem("Login", "false");
-  //   setlogin("false");
-  //   setShow(false);
-  // }
+  function Done() {
+    localStorage.setItem("Login", "false");
+    setlogin("false");
+    setShow(false);
+  }
 
   return (
     <div className="App flex-row">
@@ -200,7 +200,7 @@ const App = () => {
             videoCalling={videoCalling}
             audioCalling={audioCalling}
           />
-          {/* <WDialog show={show} maxWidth="30%" minWidth="30%" height="30%">
+          <WDialog show={show} maxWidth="30%" minWidth="30%" height="30%">
             <div
               className="flex-column"
               style={{
@@ -246,7 +246,7 @@ const App = () => {
                 </div>
               </div>
             </div>
-          </WDialog> */}
+          </WDialog>
           <WDialog
             show={showVideo}
             maxWidth="100%"

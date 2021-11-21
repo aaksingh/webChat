@@ -1,3 +1,4 @@
+import "./PopUp.scss";
 const PopUp = () => {
   return (
     <>

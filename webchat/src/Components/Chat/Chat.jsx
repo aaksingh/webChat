@@ -1,5 +1,8 @@
 import { useRef, useState, useEffect, memo } from "react";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 import { useSelector, useDispatch } from "react-redux";
 
 import "./Chat.scss";
@@ -290,51 +293,43 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
         <div className="chatSection flex-column">
           <div className="chatStart flex-column">
             <Intro {...{ profile, sender, receiver, friendDetail }} />
-            {mess
-              ? mess?.map((m, i) => {
-                  return (
-                    <div
-                      className="messageSpan flex-column"
-                      ref={scrollRefArray}
-                      key={m?.messageId}
-                      id={m?.messageId}
-                      onClick={() =>
-                        m?.referenceId && handleScroll(m?.referenceId)
-                      }
-                    >
-                      {
-                        <Message
-                          visible={
-                            !(
-                              i > 0 &&
-                              mess[i - 1]?.senderId === mess[i]?.senderId
-                            )
-                          }
-                          userName={friendDetail}
-                          message={m}
-                          image={profile}
-                          attachments={m?.message?.attachments}
-                          sender={m?.senderId}
-                          receiver={m?.receiverId}
-                        />
-                      }
-                    </div>
-                  );
-                })
-              : [1, 2, 3, 4, 5, 6]?.map((m, i) => {
-                  return (
-                    <div className="messageSpan flex-column">
-                      <div
-                        style={{
-                          height: "2rem",
-                          background: "#8e9297",
-                          margin: "10px",
-                          borderRadius: "10px",
-                        }}
-                      ></div>
-                    </div>
-                  );
-                })}
+            {mess ? (
+              mess?.map((m, i) => {
+                return (
+                  <div
+                    className="messageSpan flex-column"
+                    ref={scrollRefArray}
+                    key={m?.messageId}
+                    id={m?.messageId}
+                    onClick={() =>
+                      m?.referenceId && handleScroll(m?.referenceId)
+                    }
+                  >
+                    {
+                      <Message
+                        visible={
+                          !(
+                            i > 0 && mess[i - 1]?.senderId === mess[i]?.senderId
+                          )
+                        }
+                        userName={friendDetail}
+                        message={m}
+                        image={profile}
+                        attachments={m?.message?.attachments}
+                        sender={m?.senderId}
+                        receiver={m?.receiverId}
+                      />
+                    }
+                  </div>
+                );
+              })
+            ) : (
+              <>
+                <Skeleton duration={1} count={5} height={10} width={`100%`} />
+                <Skeleton duration={1} count={5} height={10} width={`100%`} />
+                <Skeleton duration={1} count={5} height={10} width={`100%`} />
+              </>
+            )}
           </div>
           {replyMessage && (
             <div className="replyContainer">
