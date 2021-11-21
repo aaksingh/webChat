@@ -10,15 +10,12 @@ import groups from "./routes/groups/groups.js";
 import Conversation from "./models/conversation.js";
 import Rep from "./models/reply.js";
 import AddFriend from "./models/addfriend.js";
-import fs from "fs";
-import { promisify } from "util";
-import { pipeline } from "stream";
-import multer from "multer";
+
 import path from "path";
 import redis from "redis";
 
-const pipelineAsync = promisify(pipeline);
 const __dirname = path.resolve();
+console.log(__dirname);
 const port = process.env.PORT || 3001;
 const app = express();
 const redisClient = redis.createClient(6379);
@@ -33,13 +30,12 @@ app.use(cors({ origin: "http://localhost:3000" }));
 //DB configuration
 const config_url =
   "mongodb+srv://aakash:ATgYUPlifmn7p4qx@cluster0.gzv6s.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+
 mongoose.connect(config_url, {
   useCreateIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
-let queue = [];
 
 app.get("/", (req, res) => {
   res.status(200).send("Hello");
@@ -84,17 +80,6 @@ app.get("/replyList/:conversationId", async (req, res) => {
     res.status(500).json(err);
   }
 });
-app.get("/download", async (req, res) => {
-  const messageId = req.query.s1;
-  let p = {};
-  try {
-    p = await Conversation.find({ messageId });
-  } catch (err) {
-    console.log(err);
-  }
-
-  res.download(__dirname + p[0]?.message.message);
-});
 
 app.get("/groups", groups);
 app.put("/addtoroom", (req, res) => {
@@ -121,7 +106,7 @@ app.put("/addtoroom", (req, res) => {
 
 app.post("/create", async (req, res) => {
   const data = req.body;
-
+  console.log(data);
   try {
     Conversation.create(data, (err, data) => {
       if (err) {
@@ -155,51 +140,6 @@ app.post("/group", (req, res) => {
     });
   } catch (error) {
     console.log(error.message, "chat creation failed.");
-  }
-});
-
-const upload = multer();
-app.post("/upload", upload.single("file"), (req, res, next) => {
-  const {
-    file,
-    body: { senderId, receiverId },
-  } = req;
-
-  const fileName =
-    "chat" + Math.floor(Math.random() * 1000) + file.detectedFileExtension;
-
-  var path = `images/${fileName}`;
-  if (
-    file.detectedFileExtension === ".jpg" ||
-    file.detectedFileExtension === ".jpeg"
-  ) {
-    pipelineAsync(
-      file.stream,
-      fs.createWriteStream(`./public/images/${fileName}`)
-    ).then(() => {
-      let id = Date.now();
-      let data = {
-        time: [],
-        senderId: req.body.sender,
-        receiverId: req.body.receiver,
-        messageId: id,
-        message: {
-          message: path,
-          referenceId: null,
-          read: false,
-          attachments: true,
-        },
-      };
-      Conversation.create(data, (err, data) => {
-        if (err) {
-          res.status(500).send(err);
-        } else {
-          console.log("donne");
-          res.json({ id: data.messageId, path: data.message.message });
-          // res.sendStatus(201).send({ data: data.messageId });
-        }
-      });
-    });
   }
 });
 
@@ -249,12 +189,60 @@ app.delete("/delete/:id", async (req, res) => {
 
 app.listen(port, () => console.log(`Listening on Port:${port}`));
 
-setInterval(async () => {
-  for (let queueLength = 0; queueLength < queue.length; queueLength++) {
-    let data = queue[queueLength];
-    if (Date.now() - data.timestamp >= 1000 * 50) {
-      let result = await runMessageQueue(queue[queueLength]);
-      queue.splice(queueLength, 1);
-    }
-  }
-}, 1000 * 2);
+// setInterval(async () => {
+//   for (let queueLength = 0; queueLength < queue.length; queueLength++) {
+//     let data = queue[queueLength];
+//     if (Date.now() - data.timestamp >= 1000 * 50) {
+//       let result = await runMessageQueue(queue[queueLength]);
+//       queue.splice(queueLength, 1);
+//     }
+//   }
+// }, 1000 * 2);
+
+// let queue = [];
+
+// let upload = multer();
+// app.post("/upload", upload.single("file"), (req, res, next) => {
+//   const { file } = req;
+
+//   let extension = file.mimetype.split("image/");
+
+//   const fileName =
+//     "chat" + Math.floor(Math.random() * 1000) + "." + extension[1];
+
+//   // if (extension[1] === "jpg" || extension[1] === "jpeg") {
+//   //   pipelineAsync(
+//   //     file.buffer,
+//   //     fs.createWriteStream(`./public/images/${fileName}`)
+//   //   )
+//   //     .then(() => {
+//   //       console.log("Here");
+//   // let id = Date.now();
+//   // let data = {
+//   //   time: [],
+//   //   senderId: req.body.sender,
+//   //   receiverId: req.body.receiver,
+//   //   messageId: id,
+//   //   message: {
+//   //     message: path,
+//   //     referenceId: null,
+//   //     read: false,
+//   //     attachments: true,
+//   //   },
+//   // };
+//   // Conversation.create(data, (err, data) => {
+//   //   if (err) {
+//   //     res.status(500).send(err);
+//   //   } else {
+//   //     console.log("donne");
+//   //     res.json({ id: data.messageId, path: data.message.message });
+//   //     // res.sendStatus(201).send({ data: data.messageId });
+//   //   }
+//   // });
+//   // })
+//   // .catch((err) => {
+//   //   console.log("erer");
+//   //   console.log(err);
+//   // });
+//   // }
+// });

@@ -101,7 +101,8 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
         },
       };
       try {
-        await create(messageData);
+        let res = await create(messageData);
+        console.log(res);
         dispatch(addMessage({ message: messageData, receiver: receiver }));
 
         users &&
@@ -219,22 +220,25 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
         },
       };
       try {
-        await create(messageData);
-        dispatch(addMessage({ message: messageData, receiver: receiver }));
+        let res = await create(messageData);
+        console.log(res);
+        if (res.status === 201) {
+          dispatch(addMessage({ message: messageData, receiver: receiver }));
 
-        socket.current.emit("gmessage", {
-          roomName: "dqwdqw",
-          time: id,
-          senderId: sender,
-          receiverId: receiver,
-          messageId: id,
-          message: text,
-          referenceId: replyMessage ? replyMessage?.messageId : null,
-          replied: replyMessage ? replyMessage.message.message : null,
-          read: false,
-          attachments: replyMessage ? 1 : null,
-          roomId: unique,
-        });
+          socket.current.emit("gmessage", {
+            roomName: "dqwdqw",
+            time: id,
+            senderId: sender,
+            receiverId: receiver,
+            messageId: id,
+            message: text,
+            referenceId: replyMessage ? replyMessage?.messageId : null,
+            replied: replyMessage ? replyMessage.message.message : null,
+            read: false,
+            attachments: replyMessage ? 1 : null,
+            roomId: unique,
+          });
+        }
       } catch (err) {
         console.log(err.message, "Fail to send message");
         return;
@@ -350,14 +354,16 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
               />
             ) : (
               canMessage && (
-                <Input
-                  {...{ text, setText }}
-                  handleCreate={sendG}
-                  variant="Message"
-                  receiver={receiver}
-                  sender={sender}
-                  {...{ file, setFile }}
-                />
+                <>
+                  <Input
+                    {...{ text, setText }}
+                    handleCreate={sendG}
+                    variant="Message"
+                    receiver={receiver}
+                    sender={sender}
+                    {...{ file, setFile }}
+                  />
+                </>
               )
             )}
 
