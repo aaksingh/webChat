@@ -136,10 +136,10 @@ const DashBoard = ({ onClick }) => {
           addMessage({ message: messageData, receiver: messageData.senderId })
         );
       } else {
-        let data = localStorage.getItem("unread");
-        if (true) {
-          dispatch(loadNewMessage({ id: messageData.senderId }));
-        }
+        //let data = localStorage.getItem("unread");
+        //if (true) {
+        dispatch(loadNewMessage({ id: messageData.senderId }));
+        //}
       }
     });
   }, [dispatch]);

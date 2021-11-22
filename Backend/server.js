@@ -59,7 +59,7 @@ app.get("/chatList/:id", async (req, res) => {
       } else {
         const data = await Conversation.find({ roomId });
 
-        redisClient.set(roomId, JSON.stringify(data));
+        // redisClient.set(roomId, 600, JSON.stringify(data));
         res.status(200).json(data);
       }
     });
@@ -84,7 +84,7 @@ app.get("/replyList/:conversationId", async (req, res) => {
 app.get("/groups", groups);
 app.put("/addtoroom", (req, res) => {
   const data = req.body;
-  console.log(data);
+  // console.log(data);
 
   try {
     Groups.findByIdAndUpdate(
@@ -94,7 +94,7 @@ app.put("/addtoroom", (req, res) => {
         if (err) {
           res.status(500).send(err);
         } else {
-          console.log("done");
+          // console.log("done");
           res.status(201).send(data);
         }
       }
@@ -106,7 +106,7 @@ app.put("/addtoroom", (req, res) => {
 
 app.post("/create", async (req, res) => {
   const data = req.body;
-  console.log(data);
+  // console.log(data);
   try {
     Conversation.create(data, (err, data) => {
       if (err) {
