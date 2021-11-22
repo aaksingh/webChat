@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import {
   addFriends,
   creategroup,
+  friendsList,
   groupDetails,
   userDetails,
 } from "../../api/api";
@@ -50,7 +51,8 @@ const DashBoard = ({ onClick }) => {
   const { users } = useSelector((state) => state.users);
 
   const { groups } = useSelector((state) => state.groups);
-
+  const { roomId } = useSelector((state) => state.roomId);
+  console.log(roomId, "Roomid");
   const dispatch = useDispatch();
   const [user, setuser] = useState();
   const val = localStorage.getItem("userId");
@@ -81,6 +83,8 @@ const DashBoard = ({ onClick }) => {
     }
     load();
 
+    localStorage.removeItem("roomId");
+    localStorage.removeItem("unread");
     socket.current = io("ws://localhost:3002");
 
     dispatch(socketActions(socket.current));
@@ -100,14 +104,15 @@ const DashBoard = ({ onClick }) => {
     });
   }, [socket, loadOnlineUsers]);
 
-  const handleChat = (j, image) => {
+  const handleChat = async (j, image) => {
     setGm(false);
 
     dispatch(clearMessages());
     let user = users[0];
 
-    dispatch(setRoomId(user[j]._id));
-    localStorage.setItem("roomId", user[j]._id);
+    let result = await friendsList(user[j]._id, localStorage.getItem("userId"));
+    localStorage.setItem("roomId", result.data[0]._id);
+    dispatch(setRoomId(result.data[0]._id));
 
     setreceiverId(user[j]._id);
 
@@ -123,23 +128,27 @@ const DashBoard = ({ onClick }) => {
         receiverId: data.receiverId,
         messageId: data.messageId,
         referenceId: data.referenceId,
+        relied: data.replied,
+        roomId: data.roomId,
         message: {
           message: data.message,
           read: data.read,
           attachments: data.attachments,
         },
       };
-
-      if (data.senderId === localStorage.getItem("roomId")) {
-        console.log("here");
+      console.log(data);
+      console.table(
+        data.roomId === localStorage.getItem("roomId"),
+        messageData.roomId,
+        localStorage.getItem("roomId")
+      );
+      if (messageData.roomId === localStorage.getItem("roomId")) {
+        console.log("chat open");
         dispatch(
           addMessage({ message: messageData, receiver: messageData.senderId })
         );
       } else {
-        //let data = localStorage.getItem("unread");
-        //if (true) {
         dispatch(loadNewMessage({ id: messageData.senderId }));
-        //}
       }
     });
   }, [dispatch]);

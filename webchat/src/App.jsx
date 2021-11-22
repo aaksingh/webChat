@@ -175,7 +175,7 @@ const App = () => {
     setShow(true);
   }
   function Done() {
-    localStorage.removeItem("unread");
+    localStorage.removeItem("roomId");
     localStorage.setItem("Login", "false");
     setlogin("false");
     setShow(false);

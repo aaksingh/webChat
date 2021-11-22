@@ -14,7 +14,7 @@ const Follow = ({ friendId, userId }) => {
       let result = await friendsList(friendId, userId);
 
       if (result.data) {
-        dispatch(addFriend(friendId));
+        dispatch(addFriend(result.data[0]._id));
         setFollow(true);
       }
     }

@@ -59,9 +59,12 @@ io.on("connection", (socket) => {
       messageId,
       message,
       referenceId,
-      read,
 
+      replied,
+      read,
       attachments,
+
+      roomId,
     }) => {
       const user = getUser(receiverId);
 
@@ -72,8 +75,10 @@ io.on("connection", (socket) => {
         messageId,
         message,
         referenceId,
+        replied,
         read,
         attachments,
+        roomId,
       });
     }
   );

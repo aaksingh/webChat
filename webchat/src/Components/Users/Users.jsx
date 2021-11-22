@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 const Users = ({ userName, id, image }) => {
   const user = useSelector((state) => state.showOnlineUsers);
   const newMessages = useSelector((state) => state.newMessages);
-
   const [pop, setpop] = useState([]);
   useEffect(() => {
     setpop(localStorage.getItem("unread"));
   }, [user, newMessages]);
-  console.log(pop);
+
   return (
     <>
       <Avatar alt="Aakash Singh" src={image} />

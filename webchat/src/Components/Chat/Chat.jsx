@@ -33,6 +33,8 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
   const { users } = useSelector((state) => state.showOnlineUsers);
   const { friends } = useSelector((state) => state.friends);
   const { replyMessage } = useSelector((state) => state.loadReply);
+  const { roomId } = useSelector((state) => state.roomId);
+  console.log(roomId, "RoomId iss");
   const dispatch = useDispatch();
 
   const [mess, setMess] = useState([]);
@@ -106,7 +108,7 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
       };
       try {
         let res = await create(messageData);
-        console.log(res);
+
         dispatch(addMessage({ message: messageData, receiver: receiver }));
 
         users &&
@@ -164,7 +166,7 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
         );
         let messageId = result.id;
         let message = result.path;
-
+        alert(unique);
         users &&
           users?.some((user) => user?.userId === receiver) &&
           socket.current.emit("sendmessage", {
