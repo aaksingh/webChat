@@ -9,7 +9,7 @@ const Users = ({ userName, id, image }) => {
 
   const newMessages = useSelector((state) => state.newMessages);
   const [pop, setpop] = useState([]);
-  const [roomid, setRoomid] = useState("");
+  const [r, setr] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -17,20 +17,17 @@ const Users = ({ userName, id, image }) => {
     async function f() {
       try {
         let res = await friendsList(id, localStorage.getItem("userId"));
-
-        if (res.data.length) {
-          if (!roomId.includes(res.data[0]._id)) {
-            dispatch(setRoomId(res.data[0]._id));
-            setRoomid(res.data[0]._id);
-          }
+        setr(res.data[0]._id);
+        if (!roomId.includes(res.data[0]._id)) {
+          dispatch(setRoomId(res.data[0]._id));
         }
       } catch (e) {
         console.log(e);
       }
     }
     f();
-  }, [id, user, newMessages]);
-  console.log(roomid, pop, "Inside user");
+  }, [id, user, newMessages, roomId, dispatch]);
+
   return (
     <>
       <Avatar alt="Aakash Singh" src={image} />
@@ -43,7 +40,7 @@ const Users = ({ userName, id, image }) => {
         <span className="onLineTag"></span>
       )} */}
 
-      {pop?.includes(roomid) && (
+      {pop?.ids?.includes(r) && (
         <span className="newMessage flex-column adjust">1</span>
       )}
     </>

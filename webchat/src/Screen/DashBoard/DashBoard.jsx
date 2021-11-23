@@ -83,7 +83,8 @@ const DashBoard = ({ onClick }) => {
     }
     load();
     localStorage.removeItem("roomId");
-    // localStorage.removeItem("unread");
+    localStorage.removeItem("unread");
+    localStorage.removeItem("roomIDsList");
     socket.current = io("ws://localhost:3002");
     localStorage.removeItem("activeRoom");
 
@@ -166,7 +167,7 @@ const DashBoard = ({ onClick }) => {
     });
 
     socket.current.on("takeMessage", (data) => {
-      console.log(data);
+      console.log(data, "GroupMessages");
     });
   }, []);
 

@@ -235,23 +235,23 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
       };
       try {
         let res = await create(messageData);
+
         console.log(res);
+        // dispatch(addMessage({ message: messageData, receiver: receiver }));
 
-        dispatch(addMessage({ message: messageData, receiver: receiver }));
-
-        // socket.current.emit("gmessage", {
-        //   roomName: "dqwdqw",
-        //   time: id,
-        //   senderId: sender,
-        //   receiverId: receiver,
-        //   messageId: id,
-        //   message: text,
-        //   referenceId: replyMessage ? replyMessage?.messageId : null,
-        //   replied: replyMessage ? replyMessage.message.message : null,
-        //   read: false,
-        //   attachments: replyMessage ? 1 : null,
-        //   roomId: unique,
-        // });
+        socket.current.emit("gmessage", {
+          roomName: "dqwdqw",
+          time: id,
+          senderId: sender,
+          receiverId: receiver,
+          messageId: id,
+          message: text,
+          referenceId: replyMessage ? replyMessage?.messageId : null,
+          replied: replyMessage ? replyMessage.message.message : null,
+          read: false,
+          attachments: replyMessage ? 1 : null,
+          roomId: unique,
+        });
       } catch (err) {
         console.log(err.message, "Fail to send message");
         return;
