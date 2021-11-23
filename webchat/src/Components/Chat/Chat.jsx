@@ -34,7 +34,7 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
   const { friends } = useSelector((state) => state.friends);
   const { replyMessage } = useSelector((state) => state.loadReply);
   const { roomId } = useSelector((state) => state.roomId);
-  console.log(roomId, "RoomId iss");
+
   const dispatch = useDispatch();
 
   const [mess, setMess] = useState([]);
@@ -46,9 +46,13 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
   const [unique, setUniqueId] = useState("");
 
   useEffect(() => {
+    if (JSON.parse(localStorage.getItem("unread").includes(roomId))) {
+      console.log("IN here");
+      dispatch(clearNewMessageses(roomId));
+    }
+  }, []);
+  useEffect(() => {
     localStorage.setItem("receiverId", receiver);
-
-    dispatch(clearNewMessageses(receiver));
   }, [receiver]);
 
   useEffect(() => {

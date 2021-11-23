@@ -52,7 +52,7 @@ const DashBoard = ({ onClick }) => {
 
   const { groups } = useSelector((state) => state.groups);
   const { roomId } = useSelector((state) => state.roomId);
-  console.log(roomId, "Roomid");
+
   const dispatch = useDispatch();
   const [user, setuser] = useState();
   const val = localStorage.getItem("userId");
@@ -84,7 +84,7 @@ const DashBoard = ({ onClick }) => {
     load();
 
     localStorage.removeItem("roomId");
-    localStorage.removeItem("unread");
+    // localStorage.removeItem("unread");
     socket.current = io("ws://localhost:3002");
 
     dispatch(socketActions(socket.current));
@@ -136,19 +136,14 @@ const DashBoard = ({ onClick }) => {
           attachments: data.attachments,
         },
       };
-      console.log(data);
-      console.table(
-        data.roomId === localStorage.getItem("roomId"),
-        messageData.roomId,
-        localStorage.getItem("roomId")
-      );
+
       if (messageData.roomId === localStorage.getItem("roomId")) {
         console.log("chat open");
         dispatch(
           addMessage({ message: messageData, receiver: messageData.senderId })
         );
       } else {
-        dispatch(loadNewMessage({ id: messageData.senderId }));
+        dispatch(loadNewMessage({ id: messageData.roomId }));
       }
     });
   }, [dispatch]);
@@ -252,7 +247,7 @@ const DashBoard = ({ onClick }) => {
                         >
                           <Users
                             userName={user.username}
-                            id={user._id}
+                            id={roomId}
                             image={user.image}
                           />
                         </div>
