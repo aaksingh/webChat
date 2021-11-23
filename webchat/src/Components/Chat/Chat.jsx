@@ -33,7 +33,6 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
   const { users } = useSelector((state) => state.showOnlineUsers);
   const { friends } = useSelector((state) => state.friends);
   const { replyMessage } = useSelector((state) => state.loadReply);
-  const { roomId } = useSelector((state) => state.roomId);
 
   const dispatch = useDispatch();
 
@@ -46,19 +45,24 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
   const [unique, setUniqueId] = useState("");
 
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem("unread").includes(roomId))) {
-      console.log("IN here");
-      dispatch(clearNewMessageses(roomId));
-    }
-  }, []);
-  useEffect(() => {
     localStorage.setItem("receiverId", receiver);
   }, [receiver]);
 
   useEffect(() => {
+    //no need for this
     async function friendsID() {
       let result = await friendsList(receiver, sender);
-      if (result.data.length) setUniqueId(result.data[0]._id);
+      if (result.data.length) {
+        setUniqueId(result.data[0]._id);
+        // if (
+        //   JSON.parse(
+        //     localStorage.getItem("unread")?.includes(result.data[0]._id)
+        //   )
+        // ) {
+        //   console.log("IN here");
+        //   dispatch(clearNewMessageses(result.data[0]._id));
+        // }
+      }
       setCanMessage(false);
       if (friends.includes(receiver)) {
         setCanMessage(true);

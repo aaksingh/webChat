@@ -75,17 +75,17 @@ const DashBoard = ({ onClick }) => {
       setLoading(true);
       const data = await userDetails();
       dispatch(loadUsers(data.data));
-      const g = await groupDetails();
-      dispatch(loadGroups(g.data));
+      // const g = await groupDetails();
+      // dispatch(loadGroups(g.data));
       console.log(data);
 
       setLoading(false);
     }
     load();
-
     localStorage.removeItem("roomId");
     // localStorage.removeItem("unread");
     socket.current = io("ws://localhost:3002");
+    localStorage.removeItem("activeRoom");
 
     dispatch(socketActions(socket.current));
 
@@ -109,11 +109,19 @@ const DashBoard = ({ onClick }) => {
 
     dispatch(clearMessages());
     let user = users[0];
+    try {
+      let result = await friendsList(
+        user[j]._id,
+        localStorage.getItem("userId")
+      );
+      if (result.data.length) {
+        localStorage.setItem("activeRoom", result.data[0]._id);
 
-    let result = await friendsList(user[j]._id, localStorage.getItem("userId"));
-    localStorage.setItem("roomId", result.data[0]._id);
-    dispatch(setRoomId(result.data[0]._id));
-
+        // dispatch(setRoomId(result.data[0]._id));
+      }
+    } catch (e) {
+      console.log(e);
+    }
     setreceiverId(user[j]._id);
 
     setsenderId(localStorage.getItem("userId"));
@@ -137,7 +145,7 @@ const DashBoard = ({ onClick }) => {
         },
       };
 
-      if (messageData.roomId === localStorage.getItem("roomId")) {
+      if (messageData.roomId === localStorage.getItem("activeRoom")) {
         console.log("chat open");
         dispatch(
           addMessage({ message: messageData, receiver: messageData.senderId })
@@ -247,7 +255,7 @@ const DashBoard = ({ onClick }) => {
                         >
                           <Users
                             userName={user.username}
-                            id={roomId}
+                            id={user._id}
                             image={user.image}
                           />
                         </div>

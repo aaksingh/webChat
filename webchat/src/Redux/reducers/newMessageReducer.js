@@ -5,7 +5,7 @@ var initial = {
 };
 
 export const newMessageList = (state = initial, action) => {
-  console.log(action);
+  // console.log(action);
   switch (action.type) {
     case NewMessages.ADD_NEW_MESSAGE: {
       // let result = storeMessage(action, state);
