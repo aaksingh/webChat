@@ -71,6 +71,7 @@ const DashBoard = ({ onClick }) => {
   }, [users]);
 
   useEffect(() => {
+    console.log(JSON.parse(localStorage.getItem("unread")));
     async function load() {
       setLoading(true);
       const data = await userDetails();
@@ -83,8 +84,8 @@ const DashBoard = ({ onClick }) => {
     }
     load();
     localStorage.removeItem("roomId");
-    localStorage.removeItem("unread");
-    localStorage.removeItem("roomIDsList");
+    // localStorage.removeItem("unread");
+    // localStorage.removeItem("roomIDsList");
     socket.current = io("ws://localhost:3002");
     localStorage.removeItem("activeRoom");
 

@@ -14,6 +14,8 @@ import AddFriend from "./models/addfriend.js";
 import path from "path";
 import redis from "redis";
 
+import child_process from "child_process";
+
 const __dirname = path.resolve();
 console.log(__dirname);
 const port = process.env.PORT || 3001;
@@ -26,7 +28,19 @@ app.use(
 );
 app.use(express.static("public"));
 app.use(cors({ origin: "http://localhost:3000" }));
+var queue = [];
+{
+  /*Child process here*/
+}
+// const parentPro = child_process.fork("./messageQueue/messageQueue.js");
+// parentPro.on("message", (msg) => {
+//   console.log("Message from child", msg);
+// });
 
+// parentPro.send({ hello: "world" });
+{
+  /*child process ends here*/
+}
 //DB configuration
 const config_url =
   "mongodb+srv://aakash:ATgYUPlifmn7p4qx@cluster0.gzv6s.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
@@ -114,6 +128,8 @@ app.put("/addtoroom", (req, res) => {
 app.post("/create", async (req, res) => {
   const data = req.body;
 
+  queue.push(data);
+
   const conversation = new Conversation(data);
   try {
     await conversation.save();
@@ -191,16 +207,20 @@ app.delete("/delete/:id", async (req, res) => {
 });
 
 // setInterval(async () => {
+//   if (queue.length) {
+//     let data = queue[0];
+
+//     console.log(Date.now() - data.time);
+//   }
 //   for (let queueLength = 0; queueLength < queue.length; queueLength++) {
 //     let data = queue[queueLength];
-//     if (Date.now() - data.timestamp >= 1000 * 50) {
-//       let result = await runMessageQueue(queue[queueLength]);
+//     if (Date.now() - data.time > 5 * 1000) {
+//       console.log("jreee");
+//       let result = await MessageQueue(queue[queueLength]);
 //       queue.splice(queueLength, 1);
 //     }
 //   }
 // }, 1000 * 2);
-
-// let queue = [];
 
 // let upload = multer();
 // app.post("/upload", upload.single("file"), (req, res, next) => {
