@@ -36,9 +36,9 @@ const Users = ({ userName, id, image }) => {
         <li className="chatName flex-column font-h4 font-600">{userName}</li>
       </div>
 
-      {/* {user?.users && user?.users?.some((user) => user?.userId === id) && (
+      {user?.users && user?.users?.some((user) => user?.userId === id) && (
         <span className="onLineTag"></span>
-      )} */}
+      )}
 
       {pop?.ids?.includes(r) && (
         <span className="newMessage flex-column adjust">1</span>

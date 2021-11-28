@@ -2,7 +2,7 @@ import { NewMessages } from "../constants/constantsTypes";
 
 let data = JSON.parse(localStorage.getItem("unread")) ?? [];
 let d;
-if (data.ids.length) {
+if (data?.ids?.length) {
   d = data.ids[0];
 } else {
   d = [];

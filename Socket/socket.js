@@ -1,6 +1,6 @@
 const io = require("socket.io")(3002, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "http://localhost:3001"],
   },
 });
 
@@ -9,7 +9,9 @@ let id = [];
 const rooms = {};
 
 const addUser = (userId, socketId) => {
+  console.log(id, "Socket id is");
   !id.some((id) => id.userId === userId) && id.push({ userId, socketId });
+  console.log(id, "users in Socket are id is");
 };
 
 const removeUser = (socketId) => {
@@ -22,8 +24,32 @@ const getUser = (receiverId) => {
 
 io.on("connection", (socket) => {
   //When Socket Connects
-  console.log("A user Connected");
+  console.log("A user Connected", id);
 
+  io.emit("backend", { hello: "hello from socket" }); // FOR nodejs
+
+  socket.on("socket", (data) => {
+    const user = getUser(data.messageData.receiverId);
+
+    setTimeout(() => {
+      io.to(user?.socketId).emit(
+        "getMessage",
+        {
+          time: data.messageData.time,
+          senderId: data.messageData.senderId,
+          receiverId: data.messageData.receiverId,
+          messageId: data.messageData.time,
+          message: data.messageData.message.message,
+          referenceId: data.messageData.messageId,
+          replied: data.messageData.replied,
+          read: data.messageData.message.read,
+          attachments: data.messageData.message.attachments,
+          roomId: data.messageData.roomId,
+        },
+        [5 * 1000]
+      );
+    });
+  });
   socket.on("user_join", (data) => {
     console.log(data);
     socket.join(data.groupName);
@@ -35,8 +61,6 @@ io.on("connection", (socket) => {
   });
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
-
-    io.emit("getUsers", id);
   });
 
   socket.on("room-created", (data) => {

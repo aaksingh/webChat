@@ -138,7 +138,7 @@ const DashBoard = ({ onClick }) => {
         receiverId: data.receiverId,
         messageId: data.messageId,
         referenceId: data.referenceId,
-        relied: data.replied,
+        replied: data.replied,
         roomId: data.roomId,
         message: {
           message: data.message,
@@ -146,7 +146,7 @@ const DashBoard = ({ onClick }) => {
           attachments: data.attachments,
         },
       };
-
+      console.log(messageData, "Scheuled message");
       if (messageData.roomId === localStorage.getItem("activeRoom")) {
         console.log("chat open");
         dispatch(

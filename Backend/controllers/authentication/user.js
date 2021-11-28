@@ -5,11 +5,9 @@ import { secret } from "../../secret/secret.js";
 
 export const login = async (req, res) => {
   const { username, password } = req.body;
-  console.log(username, password);
 
   const user = await User.findOne({ username }).lean();
   if (user === null) {
-    console.log("erhere");
     return res.json({ status: "error", error: "Invalid" });
   }
 

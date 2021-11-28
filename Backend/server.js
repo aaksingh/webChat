@@ -5,6 +5,7 @@ import cors from "cors";
 import user from "./routes/user.js";
 import userDetails from "./routes/userDetails/userDetails.js";
 import list from "./routes/friendsList/friendsList.js";
+import { io } from "socket.io-client";
 
 import groups from "./routes/groups/groups.js";
 import Conversation from "./models/conversation.js";
@@ -13,14 +14,21 @@ import AddFriend from "./models/addfriend.js";
 
 import path from "path";
 import redis from "redis";
-
 import child_process from "child_process";
-
 const __dirname = path.resolve();
-console.log(__dirname);
-const port = process.env.PORT || 3001;
-const app = express();
+
 const redisClient = redis.createClient(6379);
+const port = process.env.PORT || 3001;
+
+const ios = io("ws://localhost:3002");
+ios.on("backend", (data) => {
+  console.log(data, "From Socket");
+});
+
+{
+  /*Express server connection*/
+}
+const app = express();
 
 app.use(express.json({ limit: "50mb" })); //For JSON requests
 app.use(
@@ -28,16 +36,21 @@ app.use(
 );
 app.use(express.static("public"));
 app.use(cors({ origin: "http://localhost:3000" }));
+
+{
+  /*Express server connection end*/
+}
+
 var queue = [];
 {
   /*Child process here*/
 }
-// const parentPro = child_process.fork("./messageQueue/messageQueue.js");
-// parentPro.on("message", (msg) => {
-//   console.log("Message from child", msg);
-// });
+const parentPro = child_process.fork("./messageQueue/messageQueue.js");
+parentPro.on("message", (msg) => {
+  ios.emit("socket", msg);
+});
 
-// parentPro.send({ hello: "world" });
+parentPro.send({ hello: "world" });
 {
   /*child process ends here*/
 }
@@ -74,16 +87,9 @@ app.get("/chatList/:id", async (req, res) => {
   const roomId = req.params.id;
 
   try {
-    redisClient.get(roomId, async (err, chatS) => {
-      if (chatS) {
-        res.status(200).send(JSON.parse(chatS));
-      } else {
-        const data = await Conversation.find({ roomId });
+    const data = await Conversation.find({ roomId });
 
-        // redisClient.set(roomId, 600, JSON.stringify(data));
-        res.status(200).json(data);
-      }
-    });
+    res.status(200).json(data);
   } catch (err) {
     res.status(500).send(err);
     console.log(err);

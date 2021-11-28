@@ -1,16 +1,31 @@
 import cron from "node-cron";
+
+let messageQueue = [];
 process.on("message", (msg) => {
   console.log("Message from parent:", msg);
 });
 
 let counter = 0;
 
-cron.schedule("*/10 * * * * *", () => {
+cron.schedule("*/1 * * * * *", () => {
   counter++;
-  // if (counter % 10 === 0) {
-  for (let i = 0; i < 1000; i++) {
-    if (i === 999) process.send({ counter: counter });
-  }
+  let messageData = {
+    time: 1638027883006,
+    senderId: "60f492297c726f3854f1f55a",
+    receiverId: "60f4921e7c726f3854f1f556",
+    messageId: 1638027883006,
+    referenceId: null,
+    replied: null,
+    roomId: "6176411d6fa39a3768824005",
+    message: {
+      message: "Check the scheduled message",
+      read: false,
+      attachments: null,
+    },
+  };
+
+  if (counter === 10) process.send({ messageData: messageData });
+
   // }
 });
 
