@@ -12,7 +12,6 @@ var initial = {
 };
 
 export const newMessageList = (state = initial, action) => {
-  console.log(d);
   switch (action.type) {
     case NewMessages.ADD_NEW_MESSAGE: {
       let mess = { ...state, ids: [...state.ids, action.payload.data.id] };

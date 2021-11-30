@@ -14,10 +14,16 @@ import AddFriend from "./models/addfriend.js";
 
 import path from "path";
 import redis from "redis";
-import child_process from "child_process";
+import { fork } from "child_process";
 const __dirname = path.resolve();
 
-const redisClient = redis.createClient(6379);
+// const redisClient = redis.createClient(6379);
+const forked = fork("./messageQueue/messageQueue.js");
+
+forked.on("message", (msg) => {
+  ios.emit("socket", msg);
+});
+
 const port = process.env.PORT || 3001;
 
 const ios = io("ws://localhost:3002");
@@ -42,18 +48,7 @@ app.use(cors({ origin: "http://localhost:3000" }));
 }
 
 var queue = [];
-{
-  /*Child process here*/
-}
-const parentPro = child_process.fork("./messageQueue/messageQueue.js");
-parentPro.on("message", (msg) => {
-  ios.emit("socket", msg);
-});
 
-parentPro.send({ hello: "world" });
-{
-  /*child process ends here*/
-}
 //DB configuration
 const config_url =
   "mongodb+srv://aakash:ATgYUPlifmn7p4qx@cluster0.gzv6s.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
@@ -133,15 +128,18 @@ app.put("/addtoroom", (req, res) => {
 
 app.post("/create", async (req, res) => {
   const data = req.body;
-
-  queue.push(data);
-
-  const conversation = new Conversation(data);
-  try {
-    await conversation.save();
+  if (data.scheduleTime) {
+    queue.push(data);
+    forked.send(data);
     res.status(201).send(data);
-  } catch (error) {
-    res.status(500).send(err);
+  } else {
+    const conversation = new Conversation(data);
+    try {
+      await conversation.save();
+      res.status(201).send(data);
+    } catch (error) {
+      res.status(500).send(err);
+    }
   }
 });
 

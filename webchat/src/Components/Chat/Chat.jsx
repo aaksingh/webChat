@@ -98,8 +98,10 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
 
     replyMessage?.messageId && dispatch(clearReply());
     let id = Date.now();
+
     if (text) {
       let messageData = {
+        scheduleTime: null,
         time: id,
         senderId: sender,
         receiverId: receiver,
@@ -193,6 +195,40 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
       setFile("");
     }
   };
+  const handleSchduled = async (e) => {
+    e.preventDefault();
+
+    let id = Date.now();
+
+    let scheduleTime = 30 * 60;
+
+    if (text) {
+      let messageData = {
+        scheduleTime: scheduleTime,
+        time: id,
+        senderId: sender,
+        receiverId: receiver,
+        messageId: id,
+
+        roomId: unique,
+        referenceId: replyMessage ? replyMessage?.messageId : null,
+        message: {
+          message: text,
+          replied: replyMessage ? replyMessage.message.message : null,
+          read: false,
+          attachments: replyMessage ? 1 : null,
+        },
+      };
+      try {
+        let res = await create(messageData);
+        if (res.status === 200) {
+          setText("");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
   const handleScroll = (i) => {
     let domElement = document.getElementById(i);
     domElement.scrollIntoView({ block: "start", behavior: "smooth" });
@@ -214,52 +250,6 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
     }
   };
 
-  const sendG = async (e) => {
-    e.preventDefault();
-    let id = Date.now();
-    if (text) {
-      let messageData = {
-        time: id,
-        senderId: sender,
-        receiverId: receiver,
-        messageId: id,
-
-        roomId: unique,
-        referenceId: replyMessage ? replyMessage?.messageId : null,
-        message: {
-          message: text,
-          replied: replyMessage ? replyMessage.message.message : null,
-          read: false,
-          attachments: replyMessage ? 1 : null,
-        },
-      };
-      try {
-        let res = await create(messageData);
-
-        console.log(res);
-        // dispatch(addMessage({ message: messageData, receiver: receiver }));
-
-        socket.current.emit("gmessage", {
-          roomName: "dqwdqw",
-          time: id,
-          senderId: sender,
-          receiverId: receiver,
-          messageId: id,
-          message: text,
-          referenceId: replyMessage ? replyMessage?.messageId : null,
-          replied: replyMessage ? replyMessage.message.message : null,
-          read: false,
-          attachments: replyMessage ? 1 : null,
-          roomId: unique,
-        });
-      } catch (err) {
-        console.log(err.message, "Fail to send message");
-        return;
-      }
-
-      setText("");
-    }
-  };
   return (
     <div className="chatReply flex-row">
       <PhotoViewer {...{ file, setFile, handleCreate }} />
@@ -318,7 +308,7 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
             {!privateChat ? (
               <Input
                 {...{ text, setText }}
-                handleCreate={handleCreate}
+                {...{ handleCreate, handleSchduled }}
                 variant="Message"
                 receiver={receiver}
                 sender={sender}
@@ -327,14 +317,14 @@ const Chat = ({ privateChat, profile, socket, sender, receiver, room }) => {
             ) : (
               canMessage && (
                 <>
-                  <Input
+                  {/* <Input
                     {...{ text, setText }}
                     handleCreate={sendG}
                     variant="Message"
                     receiver={receiver}
                     sender={sender}
                     {...{ file, setFile }}
-                  />
+                  /> */}
                 </>
               )
             )}
@@ -360,3 +350,50 @@ export default memo(Chat);
 //   message: mm,
 // };
 // socket.current.emit("gmessage", val);
+
+// const sendG = async (e) => {
+//   e.preventDefault();
+//   let id = Date.now();
+//   if (text) {
+//     let messageData = {
+//       time: id,
+//       senderId: sender,
+//       receiverId: receiver,
+//       messageId: id,
+
+//       roomId: unique,
+//       referenceId: replyMessage ? replyMessage?.messageId : null,
+//       message: {
+//         message: text,
+//         replied: replyMessage ? replyMessage.message.message : null,
+//         read: false,
+//         attachments: replyMessage ? 1 : null,
+//       },
+//     };
+//     try {
+//       let res = await create(messageData);
+
+//       console.log(res);
+//       // dispatch(addMessage({ message: messageData, receiver: receiver }));
+
+//       socket.current.emit("gmessage", {
+//         roomName: "dqwdqw",
+//         time: id,
+//         senderId: sender,
+//         receiverId: receiver,
+//         messageId: id,
+//         message: text,
+//         referenceId: replyMessage ? replyMessage?.messageId : null,
+//         replied: replyMessage ? replyMessage.message.message : null,
+//         read: false,
+//         attachments: replyMessage ? 1 : null,
+//         roomId: unique,
+//       });
+//     } catch (err) {
+//       console.log(err.message, "Fail to send message");
+//       return;
+//     }
+
+//     setText("");
+//   }
+// };

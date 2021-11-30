@@ -29,27 +29,23 @@ io.on("connection", (socket) => {
   io.emit("backend", { hello: "hello from socket" }); // FOR nodejs
 
   socket.on("socket", (data) => {
-    const user = getUser(data.messageData.receiverId);
+    console.log(data);
+    const user = getUser(data.receiverId);
 
-    setTimeout(() => {
-      io.to(user?.socketId).emit(
-        "getMessage",
-        {
-          time: data.messageData.time,
-          senderId: data.messageData.senderId,
-          receiverId: data.messageData.receiverId,
-          messageId: data.messageData.time,
-          message: data.messageData.message.message,
-          referenceId: data.messageData.messageId,
-          replied: data.messageData.replied,
-          read: data.messageData.message.read,
-          attachments: data.messageData.message.attachments,
-          roomId: data.messageData.roomId,
-        },
-        [5 * 1000]
-      );
+    io.to(user?.socketId).emit("getMessage", {
+      time: data.time,
+      senderId: data.senderId,
+      receiverId: data.receiverId,
+      messageId: data.time,
+      message: data.message.message,
+      referenceId: data.messageId,
+      replied: data.replied,
+      read: data.message.read,
+      attachments: data.message.attachments,
+      roomId: data.roomId,
     });
   });
+
   socket.on("user_join", (data) => {
     console.log(data);
     socket.join(data.groupName);

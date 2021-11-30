@@ -3,7 +3,7 @@ import { Avatar } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { friendsList } from "../../api/api";
 import { setRoomId } from "../../Redux/actions/roomIdActions";
-const Users = ({ userName, id, image }) => {
+const Users = ({ sender, userName, id, image }) => {
   const user = useSelector((state) => state.showOnlineUsers);
   const { roomId } = useSelector((state) => state.roomId);
 
@@ -16,7 +16,8 @@ const Users = ({ userName, id, image }) => {
     setpop(JSON.parse(localStorage.getItem("unread")));
     async function f() {
       try {
-        let res = await friendsList(id, localStorage.getItem("userId"));
+        let res = await friendsList(sender, id);
+        console.log(res.data[0]._id);
         setr(res.data[0]._id);
         if (!roomId.includes(res.data[0]._id)) {
           dispatch(setRoomId(res.data[0]._id));

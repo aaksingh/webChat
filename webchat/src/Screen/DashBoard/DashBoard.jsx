@@ -71,14 +71,14 @@ const DashBoard = ({ onClick }) => {
   }, [users]);
 
   useEffect(() => {
-    console.log(JSON.parse(localStorage.getItem("unread")));
+    // console.log(JSON.parse(localStorage.getItem("unread")));
     async function load() {
       setLoading(true);
       const data = await userDetails();
       dispatch(loadUsers(data.data));
       // const g = await groupDetails();
       // dispatch(loadGroups(g.data));
-      console.log(data);
+      // console.log(data);
 
       setLoading(false);
     }
@@ -256,6 +256,7 @@ const DashBoard = ({ onClick }) => {
                           key={i}
                         >
                           <Users
+                            sender={localStorage.getItem("userId")}
                             userName={user.username}
                             id={user._id}
                             image={user.image}

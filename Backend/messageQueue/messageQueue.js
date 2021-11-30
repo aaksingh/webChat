@@ -1,32 +1,21 @@
 import cron from "node-cron";
 
-let messageQueue = [];
-process.on("message", (msg) => {
-  console.log("Message from parent:", msg);
+let queue = [];
+process.on("message", (data) => {
+  queue.push(data);
 });
 
-let counter = 0;
-
 cron.schedule("*/1 * * * * *", () => {
-  counter++;
-  let messageData = {
-    time: 1638027883006,
-    senderId: "60f492297c726f3854f1f55a",
-    receiverId: "60f4921e7c726f3854f1f556",
-    messageId: 1638027883006,
-    referenceId: null,
-    replied: null,
-    roomId: "6176411d6fa39a3768824005",
-    message: {
-      message: "Check the scheduled message",
-      read: false,
-      attachments: null,
-    },
-  };
-
-  if (counter === 10) process.send({ messageData: messageData });
-
-  // }
+  for (let queueLength = 0; queueLength < queue.length; queueLength++) {
+    let data = queue[queueLength];
+    console.log(data.scheduleTime);
+    data.scheduleTime = data.scheduleTime - 1;
+    if (data.scheduleTime <= 0) {
+      console.log("Done");
+      process.send(data);
+      queue = queue.filter((q) => q.messageId !== data.messageId);
+    }
+  }
 });
 
 // import conversation from "../models/conversation.js";
